@@ -1,18 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Job Application Tracker</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
+<%- include('partials/head') %>
 <body>
   <div id="intro-container">
     <h1>Welcome to your favorite job application tracker</h1>
-    <p>Let's track some jobs</p>
-    <a href="/users">Sign Up</a>
-    <span>Log in</span>
+    <form action="/jeremy/irons" method="POST" id="sign-in-form">
+      <div class="input-container name">
+        <label>Name:</label>
+        <input id="name" type="text" name="name">
+      </div>
+      <div class="input-container email">
+        <label>Email:</label>
+        <input id="email" type="text" name="email">
+      </div>
+      <div class="input-container password">
+        <label id="password-label">Password:</label>
+        <input id="password" type="password" name="password">
+        <img class="toggle-pass hide" src="images/eye-strikethrough.svg" alt="Closed eye icon.">
+        <img class="toggle-pass view" src="images/eye.svg" alt="Open eye icon.">
+      </div>
+      <button onclick="handleSignIn(event);">Sign Up</button>
+      <span><span id="swap-form-pre">Already a user?</span> <span id="swap-form" onclick="toggleForm()">Sign In</span></span>
+    </form>
   </div>
 </body>
+
+<script>
+
+  // const PHONE_REG = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+  const EMAIL_REG = /[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
+
+  function toggleForm() {
+
+    if ($('#swap-form').text() === 'Sign In') {
+      $('#swap-form-pre').text('Not a user?');
+      $('#swap-form').text('Sign Up');
+      $('#sign-in-form button').text('Sign In');
+      $('.input-container.name').hide();
+    } else {
+      $('#swap-form-pre').text('Already a user?');
+      $('#swap-form').text('Sign In');
+      $('#sign-in-form button').text('Sign Up');
+      $('.input-container.name').show();
+    }
+    
+  }
+
+  async function handleSignIn(evt) {
+
+    evt.preventDefault();
+    
+    const newUser = $('#sign-in-form button').text() === 'Sign Up';
+    $('#sign-in-form').attr('action', (newUser ? '/users' : '/users/login'));
+    
+    data = {
+      name: $('#name').val(),
+      email: $('#email').val(),
+      password: $('#password').val(),
+    };
+    
+    let invalidInput;
+
+    if (newUser && !data.name.trim()) invalidInput ||= 'name';
+    if (!data.email.match(EMAIL_REG) || !data.email.trim()) invalidInput ||= 'email';
+    if (!data.password.trim() || data.password.length < 5) invalidInput ||= 'password';
+
+    if (invalidInput) {
+      swal({
+        text: `Invalid ${invalidInput}`,
+        icon: 'error',
+        title: 'Error'
+      });
+    } else {
+      $('#sign-in-form').submit();
+    }
+    
+  }
+
+  $('.toggle-pass').on('click', function() {
+    if ($(this).hasClass('view')) {
+      $('#password').attr('type', 'text');
+    } else {
+      $('#password').attr('type', 'password');
+    }
+    $('.toggle-pass').toggleClass('hide');
+  });
+  
+</script>
+
 </html>

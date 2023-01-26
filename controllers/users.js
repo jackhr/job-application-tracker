@@ -1,10 +1,21 @@
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
+  show,
   getAll,
-  create
+  create,
+  login
 };
+
+function show(req, res) {
+  User.findById(req.params.id, function(err, user) {
+    res.render('users/show', {
+      user
+    });
+  });
+}
 
 function getAll(req, res) {
   User.find({}, (err, users) => {
@@ -19,8 +30,17 @@ async function create(req, res) {
   user.save(function(err) {
     const token = createJWT(user);
     if (err) console.log(err);
-    res.json(token);
+    res.cookie('token', token, { httpOnly: true }).redirect('/users/'+user._id);
   });
+}
+
+async function login(req, res) {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) throw new Error();
+  const match = await bcrypt.compare(req.body.password, user.password);
+  if (!match) throw new Error();
+  const token = createJWT(user);
+  res.cookie('token', token, { httpOnly: true }).redirect('/users/'+user._id);
 }
 
 /*-- Helper Functions --*/
