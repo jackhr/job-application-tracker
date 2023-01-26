@@ -1,11 +1,22 @@
 const User = require('../models/user');
 
 module.exports = {
-  index
+  getAll,
+  create
 };
 
-function index(req, res) {
-  res.render('users/index', {
-    users: User.getAll()
+function getAll(req, res) {
+  User.find({}, (err, users) => {
+    res.render('users/index', {
+      users
+    });
+  })
+}
+
+async function create(req, res) {
+  const user = new User(req.body);
+  user.save(function(err) {
+    if (err) console.log(err);
+    res.redirect(`/`);
   });
 }
