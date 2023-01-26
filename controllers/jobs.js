@@ -1,4 +1,4 @@
-const Application = require('../models/application');
+const Job = require('../models/job');
 
 module.exports = {
   index
@@ -6,6 +6,6 @@ module.exports = {
 
 function index(req, res) {
   res.render('users/index', {
-    applications: Application.getAll()
+    jobs: Job.getAll()
   });
 }

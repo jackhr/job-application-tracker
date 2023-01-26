@@ -10,6 +10,8 @@ var methodOverride = require('method-override');
 require('dotenv').config();
 // connect to the database with Mongoose
 require('./config/database');
+
+var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var applicationsRouter = require('./routes/applications');
 
@@ -26,6 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/applications', applicationsRouter);
 
