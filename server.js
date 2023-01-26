@@ -4,6 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// It's very important to require dotenv before any other module
+// that depends upon the properties added to process.env 
+require('dotenv').config();
+// connect to the database with Mongoose
+require('./config/database');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
