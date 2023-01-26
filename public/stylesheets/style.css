@@ -76,3 +76,15 @@ a, a:focus, a:active, a:hover {
   position: absolute;
   right: 12px;
 }
+header {
+  background: black;
+  padding: 18px;
+  display: flex;
+}
+#logout {
+  background: #fff;
+  color: black;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: auto;
+}

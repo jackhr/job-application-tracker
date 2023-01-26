@@ -10,12 +10,21 @@ module.exports = {
   logout
 };
 
-function show(req, res) {
-  User.findById(req.params.id, function(err, user) {
-    res.render('users/show', {
-      user
-    });
-  });
+async function show(req, res) {
+  const token = req.cookies.token;
+  if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userId = payload.user._id;
+    const expiration = payload.exp * 1000;
+    if (Date.now() < expiration) {
+      const user = await User.findById(req.params.id);
+      return res.render('users/show', {
+        user,
+        isSameUser: req.params.id === userId
+      });
+    }
+  }
+  logout(req, res);
 }
 
 function getAll(req, res) {
