@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Application Tracker</title>
+</head>
+<body>
+  <div>
+    <label>Name:</label>
+    <input id="name" type="text" name="name">
+    <label>email:</label>
+    <input id="email" type="text" name="email">
+    <label id="password-label">password:</label>
+    <input id="password" type="password" name="password">
+    <div onclick="signUp('/users');">Sign Up</div>
+  </div>
+</body>
+
+<script>
+
+  const passwordLabel = document.getElementById('password-label');
+  const nameInput = document.getElementById('name');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+
+  passwordLabel.onclick = () => {
+    if (passwordInput.type == 'password') {
+      passwordInput.type = 'text';
+    } else {
+      passwordInput.type = 'password';
+    }
+  }
+
+  async function signUp(url = '', data = {}) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        name: nameInput.value,
+        email: emailInput.value,
+        password: passwordInput.value,
+      }) // body data type must match "Content-Type" header
+    });
+
+    var token = await response.json();
+
+    console.log(token, localStorage)
+
+    localStorage.setItem('job_app_tracker_token', token);
+    
+    
+
+    // return response.json(); // parses JSON response into native JavaScript objects
+  }
+  
+</script>
+
+</html>
