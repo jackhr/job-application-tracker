@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var applicationsCtrl = require('../controllers/applications');
+var applicationsCtrl = require('../controllers/jobs');
 
 /* GET applications listing. */
 router.get('/', applicationsCtrl.index);
