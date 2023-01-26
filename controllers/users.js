@@ -6,7 +6,8 @@ module.exports = {
   show,
   getAll,
   create,
-  login
+  login,
+  logout
 };
 
 function show(req, res) {
@@ -41,6 +42,11 @@ async function login(req, res) {
   if (!match) throw new Error();
   const token = createJWT(user);
   res.cookie('token', token, { httpOnly: true }).redirect('/users/'+user._id);
+}
+
+function logout(req, res) {
+  res.clearCookie('token');
+  res.redirect('/');
 }
 
 /*-- Helper Functions --*/

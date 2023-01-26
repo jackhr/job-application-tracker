@@ -4,6 +4,8 @@ var usersCtrl = require('../controllers/users');
 
 // GET /users
 router.get('/', usersCtrl.getAll);
+// GET /users/logout
+router.get('/logout', usersCtrl.logout);
 // GET /users/:id
 router.get('/:id', usersCtrl.show);
 // POST /users
