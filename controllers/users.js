@@ -46,9 +46,9 @@ async function create(req, res) {
 
 async function login(req, res) {
   const user = await User.findOne({ email: req.body.email });
-  if (!user) throw new Error();
+  if (!user) return res.redirect('/?invalid_creds=true');
   const match = await bcrypt.compare(req.body.password, user.password);
-  if (!match) throw new Error();
+  if (!match) return res.redirect('/?invalid_creds=true');
   const token = createJWT(user);
   res.cookie('token', token, { httpOnly: true }).redirect('/users/'+user._id);
 }

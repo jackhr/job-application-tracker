@@ -25,6 +25,23 @@
   </div>
 </body>
 
+<% if (invalid_creds) { %>
+  <script>
+
+    $(document).ready(() => {
+      swal({
+        title: 'Invalid Credentials',
+        icon: 'error',
+        text: 'Your username or passward was incorrect'
+      });
+
+      if ($('#swap-form').text() === 'Sign In') toggleForm();
+      
+    })
+    
+  </script>
+<% } %>
+
 <script>
 
   // const PHONE_REG = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
