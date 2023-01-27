@@ -5,9 +5,36 @@
   <%- include('../partials/header') %>
   <h1>Name: <%= user.name %> </h1>
   <h1>Email: <%= user.email %> </h1>
-  <% jobs.forEach(job => { %>
-    <h1><%= job.title %></h1>
-  <% }) %>
+  <table>
+    <thead>
+      <tr>
+        <th>companyName</th>
+        <th>title</th>
+        <th>location</th>
+        <th>Application Link</th>
+        <th>remote</th>
+        <th>dateFound</th>
+        <th>dateApplied</th>
+        <th>response</th>
+        <th>preferance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% jobs.forEach(job => { %>
+        <tr>
+          <td><%= job.companyName %></td>
+          <td><%= job.title %></td>
+          <td><%= job.location %></td>
+          <td><%= job.link %></td>
+          <td><%= job.remote %></td>
+          <td><%= job.dateFound %></td>
+          <td><%= job.dateApplied %></td>
+          <td><%= job.response %></td>
+          <td><%= job.preferance %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
   <form action="/jobs/" method="POST" id="add-job-form">
     <div class="input-container company">
       <label>Company:</label>
