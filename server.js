@@ -27,6 +27,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
+// Middleware to verify token and assign user object to req.user
+// Be sure to mount before routes
+app.use(require('./config/checkToken'));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

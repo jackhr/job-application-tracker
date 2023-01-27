@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Job = require('../models/job');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -12,19 +13,14 @@ module.exports = {
 
 async function show(req, res) {
   const token = req.cookies.token;
-  if (token) {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const userId = payload.user._id;
-    const expiration = payload.exp * 1000;
-    if (Date.now() < expiration) {
-      const user = await User.findById(req.params.id);
-      return res.render('users/show', {
-        user,
-        isSameUser: req.params.id === userId
-      });
-    }
-  }
-  logout(req, res);
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  const userId = payload.user._id;
+  if (userId !== req.params.id) return redirect('/users/'+userId);
+  const Jobs = await Job.find({user: req.params.id}).populate('user').exec();
+  return res.render('users/show', {
+    Jobs,
+    user: req.user
+  });
 }
 
 function getAll(req, res) {
@@ -65,7 +61,8 @@ function createJWT(user) {
     // data payload
     { user },
     process.env.SECRET,
-    { expiresIn: '24h' }
+    // expires in 15 minutes
+    { expiresIn: (60*15) }
   );
 }
 
