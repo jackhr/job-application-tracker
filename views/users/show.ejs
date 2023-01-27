@@ -5,5 +5,96 @@
   <%- include('../partials/header') %>
   <h1>Name: <%= user.name %> </h1>
   <h1>Email: <%= user.email %> </h1>
+  <% jobs.forEach(job => { %>
+    <h1><%= job.title %></h1>
+  <% }) %>
+  <form action="/jobs/" method="POST" id="add-job-form">
+    <div class="input-container company">
+      <label>Company:</label>
+      <input id="company" type="text" name="companyName">
+    </div>
+    <div class="input-container title">
+      <label>Title:</label>
+      <input id="title" type="text" name="title">
+    </div>
+    <div class="input-container location">
+      <label>Location:</label>
+      <input id="location" type="text" name="location">
+    </div>
+    <div class="input-container link">
+      <label>Link:</label>
+      <input id="link" type="text" name="link">
+    </div>
+    <div class="input-container remote">
+      <label>Remote:</label>
+      <select name="remote" id="remote">
+        <option selected value="Remote">Remote</option>
+        <option value="Hybrid">Hybrid</option>
+        <option value="On-site">On-site</option>
+      </select>
+    </div>
+    <div class="input-container datef">
+      <label>Date Found:</label>
+      <input id="datef" type="date" name="dateFound">
+    </div>
+    <div class="input-container datea">
+      <label>Date Applied:</label>
+      <input id="datea" type="date" name="dateApplied">
+    </div>
+    <div class="input-container response">
+      <label>Response:</label>
+      <select name="response" id="response">
+        <option selected value="0">NO</option>
+        <option value="1">YES</option>
+      </select>
+    </div>
+    <div class="input-container preference">
+      <label>Preference:</label>
+      <select name="preference" id="preference">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option selected value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+    <button type="submit">Create Job</button>
+  </form>
 </body>
+
+<script>
+
+  async function handleCreateJob(evt) {
+    evt.preventDefault();
+    console.log(evt.target)
+
+    const data = {
+      companyName: $('#company').val(),
+      title: $('#title').val(),
+      location: $('#location').val(),
+      link: $('#link').val(),
+      remote: $('#remote').val(),
+      dateFound: $('#datef').val(),
+      dateApplied: $('#datea').val(),
+      response: $('#response').val(),
+      preference: $('#preference').val(),
+    };
+
+    const response = await fetch('/jobs/', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+
+    const res = await response.json();
+
+    console.log(res);
+  }
+  
+</script>
+
 </html>

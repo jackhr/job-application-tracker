@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const jobSchema = Schema({
   companyName: String,
-  jobTitle: String,
+  title: String,
   location: String,
   link: String,
   remote: {
@@ -18,10 +18,6 @@ const jobSchema = Schema({
   dateApplied: {
     type: Date,
     default: Date.now
-  },
-  applied: {
-    type: Boolean,
-    default: false
   },
   response: {
     type: Boolean,
