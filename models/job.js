@@ -23,7 +23,7 @@ const jobSchema = Schema({
     type: Boolean,
     default: false
   },
-  preferance: {
+  preference: {
     type: Number,
     enum: [1, 2, 3, 4, 5],
     default: 3

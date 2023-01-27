@@ -35,8 +35,8 @@
               <% const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000); %>
               <% job.dateFound = new Date(UTCFoundTS); %>
               <% job.dateApplied = new Date(UTCAppliedTS); %>
-              <tr class="pref-<%= job.preferance %>">
-                <td><%= job.companyName %></td>
+              <tr class="pref-<%= job.preference %>" data-id="<%= job._id %>">
+                <td class="company"><%= job.companyName %></td>
                 <td><%= job.title %></td>
                 <td><%= job.location %></td>
                 <td><a target="_blank" href="<%= job.link %>"><%= job.link %></a></td>
@@ -44,7 +44,12 @@
                 <td><%= job.dateFound.toDateString() %></td>
                 <td><%= job.dateApplied.toDateString() %></td>
                 <td><%= job.response ? 'Yes' : 'No' %></td>
-                <td><%= job.preferance %></td>
+                <td>
+                  <span><%= job.preference %></span>
+                  <form class="close-btn" action="/jobs/<%= job._id %>?_method=DELETE" method="POST">
+                    <img src="/images/close-black.svg" alt="Close button">
+                  </form>
+                </td>
               </tr>
             <% }) %>
           </tbody>
@@ -120,6 +125,23 @@
     $(this).addClass('active');
     $(`.main-section.${$(this).data('selector')}`).addClass('active');
   });
+
+  $('.close-btn').on('click', function() {
+
+    let company = $(this).parents('tr').find('td.company').text();
+    const deleteJobForm = this;
+
+    swal({
+      icon: 'warning',
+      title: 'Delete Job Application',
+      text: `Are you sure you would like to delete your application for ${company}`,
+      buttons: ["GO BACK", "Yes, Delete"],
+      className: 'swal-delete-job'
+    }).then(deleteJob => {
+      if (deleteJob) deleteJobForm.submit();
+    })
+    
+  })
   
 </script>
 

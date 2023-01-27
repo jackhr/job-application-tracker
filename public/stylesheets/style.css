@@ -99,6 +99,9 @@ header {
 #all-jobs-table a {
   color: inherit;
 }
+#all-jobs-table tbody tr {
+  position: relative;
+}
 .pref-1 {
   background-color: #ffd7008c !important;
 }
@@ -170,4 +173,25 @@ aside div.user-info h2 {
 }
 .main-section.active {
   display: block;
+}
+.close-btn {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  cursor: pointer;
+  background: #fff;
+  padding: 6px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: none;
+}
+#all-jobs-table tbody tr:hover .close-btn {
+  display: flex;
+}
+.swal-delete-job .swal-button--confirm {
+  background-color: #de4e4e;
+}
+.swal-delete-job .swal-button--confirm:hover {
+  background-color: #c94a4a;
 }
