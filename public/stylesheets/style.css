@@ -93,3 +93,70 @@ header {
   width: 500px;
   margin: auto;
 }
+#all-jobs-table a {
+  color: inherit;
+}
+.pref-1 {
+  background-color: #ffd7008c !important;
+}
+.pref-2 {
+  background-color: #00be0091 !important;
+}
+.pref-3 {
+  background-color: #006dff7a !important;
+}
+.pref-4 {
+  background-color: #d7d6d58c !important;
+}
+#all-content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+aside {
+  border-right: solid 1px #ababab;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+}
+aside div.user-info {
+  margin-bottom: 48px;
+  padding: 8px 12px;
+}
+aside div.user-info h1 {
+  margin: 0 0 4px;
+  font-size: 32px;
+  letter-spacing: 0.5px;
+}
+aside div.user-info h2 {
+  margin: 0;
+  color: grey;
+  font-size: 20px;
+  letter-spacing: 0.3px;
+}
+.nav-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  height: 40px;
+  background: #ababab;
+  cursor: pointer;
+  border: solid transparent;
+  border-width: 8px 6px;
+}
+.nav-option:hover {
+  background-color: #cecece;
+  border-left-color: #000;
+}
+.nav-option.active {
+  border-left-color: #000;
+}
+.main-section {
+  display: none;
+  width: 100%;
+}
+.main-section.active {
+  display: block;
+}

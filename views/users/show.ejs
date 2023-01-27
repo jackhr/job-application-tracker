@@ -3,124 +3,119 @@
 <%- include('../partials/head') %>
 <body>
   <%- include('../partials/header') %>
-  <h1>Name: <%= user.name %> </h1>
-  <h1>Email: <%= user.email %> </h1>
-  <table>
-    <thead>
-      <tr>
-        <th>companyName</th>
-        <th>title</th>
-        <th>location</th>
-        <th>Application Link</th>
-        <th>remote</th>
-        <th>dateFound</th>
-        <th>dateApplied</th>
-        <th>response</th>
-        <th>preferance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% jobs.forEach(job => { %>
-        <tr>
-          <td><%= job.companyName %></td>
-          <td><%= job.title %></td>
-          <td><%= job.location %></td>
-          <td><%= job.link %></td>
-          <td><%= job.remote %></td>
-          <td><%= job.dateFound %></td>
-          <td><%= job.dateApplied %></td>
-          <td><%= job.response %></td>
-          <td><%= job.preferance %></td>
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
-  <form action="/jobs/" method="POST" id="add-job-form">
-    <div class="input-container company">
-      <label>Company:</label>
-      <input id="company" type="text" name="companyName">
+  <div id="all-content">
+    <aside>
+      <div class="user-info">
+        <h1><%= user.name %></h1>
+        <h2><%= user.email %></h2>
+      </div>
+      <div class="nav-option active" data-selector="all-jobs">View Jobs</div>
+      <div class="nav-option" data-selector="add-jobs">Add Jobs</div>
+    </aside>
+    <div class="main-section all-jobs active">
+      <table id="all-jobs-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Job Title</th>
+            <th>Location</th>
+            <th>Application Link</th>
+            <th>Remote</th>
+            <th>Date Found</th>
+            <th>Date Applied</th>
+            <th>Employer Response</th>
+            <th>Your Preference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% jobs.forEach(job => { %>
+            <% const UTCFoundTS = job.dateFound.getTime() + (job.dateFound.getTimezoneOffset() * 60*1000); %>
+            <% const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000); %>
+            <% job.dateFound = new Date(UTCFoundTS); %>
+            <% job.dateApplied = new Date(UTCAppliedTS); %>
+            <tr class="pref-<%= job.preferance %>">
+              <td><%= job.companyName %></td>
+              <td><%= job.title %></td>
+              <td><%= job.location %></td>
+              <td><a target="_blank" href="<%= job.link %>"><%= job.link %></a></td>
+              <td><%= job.remote %></td>
+              <td><%= job.dateFound.toDateString() %></td>
+              <td><%= job.dateApplied.toDateString() %></td>
+              <td><%= job.response ? 'Yes' : 'No' %></td>
+              <td><%= job.preferance %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
     </div>
-    <div class="input-container title">
-      <label>Title:</label>
-      <input id="title" type="text" name="title">
+    <div class="main-section add-jobs">
+      <form id="add-job-form" action="/jobs/" method="POST">
+        <div class="input-container company">
+          <label>Company:</label>
+          <input id="company" type="text" name="companyName">
+        </div>
+        <div class="input-container title">
+          <label>Title:</label>
+          <input id="title" type="text" name="title">
+        </div>
+        <div class="input-container location">
+          <label>Location:</label>
+          <input id="location" type="text" name="location">
+        </div>
+        <div class="input-container link">
+          <label>Link:</label>
+          <input id="link" type="text" name="link">
+        </div>
+        <div class="input-container remote">
+          <label>Remote:</label>
+          <select name="remote" id="remote">
+            <option selected value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="On-site">On-site</option>
+          </select>
+        </div>
+        <div class="input-container datef">
+          <label>Date Found:</label>
+          <input id="datef" type="date" name="dateFound">
+        </div>
+        <div class="input-container datea">
+          <label>Date Applied:</label>
+          <input id="datea" type="date" name="dateApplied">
+        </div>
+        <div class="input-container response">
+          <label>Response:</label>
+          <select name="response" id="response">
+            <option selected value="0">NO</option>
+            <option value="1">YES</option>
+          </select>
+        </div>
+        <div class="input-container preference">
+          <label>Preference:</label>
+          <select name="preference" id="preference">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option selected value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <button type="submit">Create Job</button>
+      </form>
     </div>
-    <div class="input-container location">
-      <label>Location:</label>
-      <input id="location" type="text" name="location">
-    </div>
-    <div class="input-container link">
-      <label>Link:</label>
-      <input id="link" type="text" name="link">
-    </div>
-    <div class="input-container remote">
-      <label>Remote:</label>
-      <select name="remote" id="remote">
-        <option selected value="Remote">Remote</option>
-        <option value="Hybrid">Hybrid</option>
-        <option value="On-site">On-site</option>
-      </select>
-    </div>
-    <div class="input-container datef">
-      <label>Date Found:</label>
-      <input id="datef" type="date" name="dateFound">
-    </div>
-    <div class="input-container datea">
-      <label>Date Applied:</label>
-      <input id="datea" type="date" name="dateApplied">
-    </div>
-    <div class="input-container response">
-      <label>Response:</label>
-      <select name="response" id="response">
-        <option selected value="0">NO</option>
-        <option value="1">YES</option>
-      </select>
-    </div>
-    <div class="input-container preference">
-      <label>Preference:</label>
-      <select name="preference" id="preference">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option selected value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-    </div>
-    <button type="submit">Create Job</button>
-  </form>
+  </div>
 </body>
 
 <script>
 
-  async function handleCreateJob(evt) {
-    evt.preventDefault();
-    console.log(evt.target)
+  $(document).ready( function () {
+    $('#all-jobs-table').DataTable();
+  });
 
-    const data = {
-      companyName: $('#company').val(),
-      title: $('#title').val(),
-      location: $('#location').val(),
-      link: $('#link').val(),
-      remote: $('#remote').val(),
-      dateFound: $('#datef').val(),
-      dateApplied: $('#datea').val(),
-      response: $('#response').val(),
-      preference: $('#preference').val(),
-    };
-
-    const response = await fetch('/jobs/', {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      credentials: 'same-origin', // include, *same-origin, omit
-      headers: {
-        'Content-Type': 'application/json'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
-    });
-
-    const res = await response.json();
-
-    console.log(res);
-  }
+  $('.nav-option').on('click', function() {
+    $('.nav-option, .main-section').removeClass('active');
+    $(this).addClass('active');
+    $(`.main-section.${$(this).data('selector')}`).addClass('active');
+  });
   
 </script>
 
