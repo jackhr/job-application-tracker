@@ -2,18 +2,36 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const jobSchema = Schema({
-  dateFound: Date,
-  dateApplied: Date,
   companyName: String,
   jobTitle: String,
   location: String,
-  remote: String,
-  applied: Boolean,
-  response: Boolean,
   link: String,
+  
+  remote: {
+    type: String,
+    enum: ['Remote', 'Hybrid', 'On-site'],
+    default: 'Remote'
+  },
+  dateFound: {
+    type: Date,
+    default: Date.now
+  },
+  dateApplied: {
+    type: Date,
+    default: Date.now
+  },
+  applied: {
+    type: Boolean,
+    default: False
+  },
+  response: {
+    type: Boolean,
+    default: False
+  },
   preferance: {
     type: Number,
-    enum: [1, 2, 3, 4, 5]
+    enum: [1, 2, 3, 4, 5],
+    default: 3
   },
   user: {
     type: Schema.Types.ObjectId,
