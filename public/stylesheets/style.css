@@ -4,6 +4,8 @@
   box-sizing: border-box;
 }
 body {
+  display: flex;
+  flex-direction: column;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -11,6 +13,7 @@ body {
   -webkit-font-smoothing : antialiased;
   -moz-osx-font-smoothing: grayscale;
   height                 : 100vh;
+  overflow: hidden;
 }
 a, a:focus, a:active, a:hover {
   text-decoration: none;
@@ -114,7 +117,7 @@ header {
   height: 100%;
 }
 aside {
-  border-right: solid 1px #ababab;
+  box-shadow: 0 0 16px #00000042;
   min-width: 200px;
   display: flex;
   flex-direction: column;
@@ -153,9 +156,17 @@ aside div.user-info h2 {
 .nav-option.active {
   border-left-color: #000;
 }
+#main-section-container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
 .main-section {
   display: none;
-  width: 100%;
+  width: max-content;
+  height: fit-content;
+  padding: 24px;
+  margin: auto;
 }
 .main-section.active {
   display: block;
