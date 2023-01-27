@@ -6,7 +6,6 @@ const jobSchema = Schema({
   jobTitle: String,
   location: String,
   link: String,
-  
   remote: {
     type: String,
     enum: ['Remote', 'Hybrid', 'On-site'],
@@ -22,11 +21,11 @@ const jobSchema = Schema({
   },
   applied: {
     type: Boolean,
-    default: False
+    default: false
   },
   response: {
     type: Boolean,
-    default: False
+    default: false
   },
   preferance: {
     type: Number,
