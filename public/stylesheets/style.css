@@ -174,8 +174,7 @@ aside div.user-info h2 {
 .main-section.active {
   display: block;
 }
-.delete-btn,
-.edit-btn {
+.delete-btn {
   position: absolute;
   right: 10px;
   top: 8px;
@@ -187,11 +186,7 @@ aside div.user-info h2 {
   height: 20px;
   display: none;
 }
-.edit-btn {
-  right: 38px;
-}
-#all-jobs-table tbody tr:hover .delete-btn,
-#all-jobs-table tbody tr:hover .edit-btn {
+#all-jobs-table tbody tr:hover .delete-btn {
   display: flex;
 }
 .swal-delete-job .swal-button--confirm {

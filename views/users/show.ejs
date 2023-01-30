@@ -89,9 +89,6 @@
                     <option <%= job.preference == '3' ? 'selected' : '' %> value="3">3</option>
                     <option <%= job.preference == '4' ? 'selected' : '' %> value="4">4</option>
                   </select>
-                  <div class="edit-btn">
-                    <img src="/images/edit.png" alt="Close button">
-                  </div>
                   <form class="delete-btn" action="/jobs/<%= job._id %>?_method=DELETE" method="POST">
                     <img src="/images/close-black.svg" alt="Close button">
                   </form>
@@ -290,10 +287,6 @@
   $('.job-text.preference').on('input', () => console.log('iygutc'));
 
   // $(document).on('click', evt => console.log(evt.target));
-
-  $('.edit-btn').on('click', function() {
-    $('#edit-job-modal-btn').click();
-  });
 
 </script>
 
