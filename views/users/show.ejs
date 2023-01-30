@@ -23,8 +23,11 @@
               <th>Location</th>
               <th>Application Link</th>
               <th>Remote</th>
-              <th>Date Found</th>
+              <th>Salary</th>
+              <th>Notes</th>
               <th>Date Applied</th>
+              <th>Application Status</th>
+              <th>Contact</th>
               <th>Employer Response</th>
               <th>Your Preference</th>
             </tr>
@@ -32,9 +35,7 @@
           <tbody>
             <% var defaultNameCounter = 1; %>
             <% jobs.forEach(job => { %>
-              <% const UTCFoundTS = job.dateFound.getTime() + (job.dateFound.getTimezoneOffset() * 60*1000); %>
               <% const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000); %>
-              <% job.dateFound = new Date(UTCFoundTS); %>
               <% job.dateApplied = new Date(UTCAppliedTS); %>
               <% if (job.companyName === 'My New Company') { %>
               <% job.companyName += ' ' + defaultNameCounter; %>
@@ -43,47 +44,77 @@
               <tr id="job-<%= job._id %>" class="pref-<%= job.preference %>" data-job-id="<%= job._id %>">
                 <td class="company">
                   <span class="job-text hide"><%= job.companyName %></span>
-                  <input name="companyName" class="job-input" type="text" value="<%= job.companyName %>">
+                  <input name="companyName" data-old-val="<%= job.companyName %>" class="job-input" type="text" value="<%= job.companyName %>">
                 </td>
                 <td>
                   <span class="job-text hide"><%= job.title %></span>
-                  <input name="title" class="job-input" type="text" value="<%= job.title %>">
+                  <input name="title" data-old-val="<%= job.title %>" class="job-input" type="text" value="<%= job.title %>">
                 </td>
                 <td>
                   <span class="job-text hide"><%= job.location %></span>
-                  <input name="location" class="job-input" type="text" value="<%= job.location %>">
+                  <input name="location" data-old-val="<%= job.location %>" class="job-input" type="text" value="<%= job.location %>">
                 </td>
                 <td>
                   <span class="job-text hide"><%= job.link %></span>
-                  <input name="link" class="job-input" type="text" value="<%= job.link %>">
+                  <input name="link" data-old-val="<%= job.link %>" class="job-input" type="text" value="<%= job.link %>">
                   <!-- <a target="_blank" href="<%= job.link %>"><%= job.link %></a> -->
                 </td>
                 <td>
                   <span class="job-text"><%= job.remote %></span>
-                  <select class="job-select remote hide" name="remote">
+                  <select data-old-val="<%= job.remote %>" class="job-select remote hide" name="remote">
                     <option <%= job.remote === 'Remote' ? 'selected' : '' %> value="Remote">Remote</option>
                     <option <%= job.remote === 'Hybrid' ? 'selected' : '' %> value="Hybrid">Hybrid</option>
                     <option <%= job.remote === 'On-Site' ? 'selected' : '' %> value="On-Site">On-Site</option>
                   </select>
                 </td>
                 <td>
-                  <span class="job-text"><%= job.dateFound.toDateString() %></span>
-                  <input class="job-date dateFound hide" type="date" name="dateFound">
+                  <span class="job-text"><%= job.salary %></span>
+                  <input data-old-val="<%= job.salary %>" class="job-input salary hide" type="text" name="salary" value="<%= job.salary %>">
+                </td>
+                <td>
+                  <span class="job-text"><%= job.notes %></span>
+                  <input data-old-val="<%= job.notes %>" class="job-input notes hide" type="text" name="notes" value="<%= job.notes %>">
                 </td>
                 <td>
                   <span class="job-text"><%= job.dateApplied.toDateString() %></span>
                   <input class="job-date dateApplied hide" type="date" name="dateApplied" value>
                 </td>
                 <td>
-                  <span class="job-text"><%= job.response ? 'Yes' : 'No' %></span>
-                  <select class="job-select response hide" name="response">
-                    <option <%= job.response ? 'selected' : '' %> value="1">Yes</option>
-                    <option <%= job.response ? '' : 'selected' %> value="0">No</option>
+                  <span class="job-text"><%= job.status %></span>
+                  <select data-old-val="<%= job.status %>" class="job-select status hide" name="status">
+                    <option <%= job.status === 'Not Started Yet' ? 'selected' : '' %> value="Not Started Yet">Not Started Yet</option>
+                    <option <%= job.status === 'In Progress' ? 'selected' : '' %> value="In Progress">In Progress</option>
+                    <option <%= job.status === 'Submitted' ? 'selected' : '' %> value="Submitted">Submitted</option>
+                  </select>
+                </td>
+                <td>
+                  <div class="contact-item-container">
+                    <label>Name:</label>
+                    <span class="job-text hide"><%= job.contact.name %></span>
+                    <input data-old-val="<%= job.contact.name %>" class="job-input contact name" type="text" name="name" value="<%= job.contact.name %>">
+                  </div>
+                  <div class="contact-item-container">
+                    <label>Email:</label>
+                    <span class="job-text hide"><%= job.contact.email %></span>
+                    <input data-old-val="<%= job.contact.email %>" class="job-input contact email" type="text" name="email" value="<%= job.contact.email %>">
+                  </div>
+                  <div class="contact-item-container">
+                    <label>Tel:</label>
+                    <span class="job-text hide"><%= job.contact.tel %></span>
+                    <input data-old-val="<%= job.contact.tel %>" class="job-input contact tel" type="text" name="tel" value="<%= job.contact.tel %>">
+                  </div>
+                </td>
+                <td>
+                  <span class="job-text"><%= job.response %></span>
+                  <select data-old-val="<%= job.response %>" class="job-select response hide" name="response">
+                    <option <%= job.response === 'No Response' ? 'selected' : '' %> value="No Response">No Response</option>
+                    <option <%= job.response === 'Interviewing' ? 'selected' : '' %> value="Interviewing">Interviewing</option>
+                    <option <%= job.response === 'Declined' ? 'selected' : '' %> value="Declined">Declined</option>
                   </select>
                 </td>
                 <td style="position: relative;">
                   <span class="job-text"><%= job.preference %></span>
-                  <select class="job-select preference hide" name="preference">
+                  <select data-old-val="<%= job.preference %>" class="job-select preference hide" name="preference">
                     <option <%= job.preference == '1' ? 'selected' : '' %> value="1">1</option>
                     <option <%= job.preference == '2' ? 'selected' : '' %> value="2">2</option>
                     <option <%= job.preference == '3' ? 'selected' : '' %> value="3">3</option>
@@ -125,10 +156,6 @@
               <option value="On-site">On-site</option>
             </select>
           </div>
-          <div class="input-container datef">
-            <label>Date Found:</label>
-            <input id="datef" type="date" name="dateFound">
-          </div>
           <div class="input-container datea">
             <label>Date Applied:</label>
             <input id="datea" type="date" name="dateApplied">
@@ -136,8 +163,9 @@
           <div class="input-container response">
             <label>Response:</label>
             <select name="response" id="response">
-              <option selected value="0">NO</option>
-              <option value="1">YES</option>
+              <option selected value="No Response">No Response</option>
+              <option value="Interviewing">Interviewing</option>
+              <option value="Declined">Declined</option>
             </select>
           </div>
           <div class="input-container preference">
@@ -149,6 +177,19 @@
               <option value="4">4</option>
               <option value="5">5</option>
             </select>
+          </div>
+          <h1>Contact:</h1>
+          <div class="input-container name">
+            <label>Name:</label>
+            <input id="name" type="text" name="name">
+          </div>
+          <div class="input-container email">
+            <label>Email:</label>
+            <input id="email" type="text" name="email">
+          </div>
+          <div class="input-container tel">
+            <label>Phone Number:</label>
+            <input id="tel" type="text" name="tel">
           </div>
           <button type="submit">Create Job</button>
         </form>
@@ -162,25 +203,16 @@
   let myTable = $('#all-jobs-table').DataTable();
   const jobsObj = JSON.parse(`<%- JSON.stringify(jobs); %>`)
   .reduce((acc, job) => {
-    job.dateFound = new Date(job.dateFound);
     job.dateApplied = new Date(job.dateApplied);
     
-    const UTCFoundTS = job.dateFound.getTime() + (job.dateFound.getTimezoneOffset() * 60*1000);
     const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000);
-    job.dateFound = new Date(UTCFoundTS);
     job.dateApplied = new Date(UTCAppliedTS);
 
-    let foundMonth = job.dateFound.getMonth()+1;
-    if (foundMonth < 10) foundMonth = '0'+foundMonth;
-    let foundDay = job.dateFound.getDate();
-    if (foundDay < 10) foundDay = '0'+foundDay;
-
-    let appliedMonth = job.dateFound.getMonth()+1;
+    let appliedMonth = job.dateApplied.getMonth()+1;
     if (appliedMonth < 10) appliedMonth = '0'+appliedMonth;
     let appliedDay = job.dateApplied.getDate();
     if (appliedDay < 10) appliedDay = '0'+appliedDay;
 
-    job.dateFoundVal = `${job.dateFound.getFullYear()}-${foundMonth}-${foundDay}`;
     job.dateAppliedVal = `${job.dateApplied.getFullYear()}-${appliedMonth}-${appliedDay}`;
 
     acc[job._id] = job;
@@ -189,13 +221,8 @@
 
   function initInputs() {
     for (let id in jobsObj) {
-      const foundInput = $(`tr[data-job-id="${id}"] .job-date.dateFound`);
       const appliedInput = $(`tr[data-job-id="${id}"] .job-date.dateApplied`);
-
-      foundInput.val(jobsObj[id].dateFoundVal);
       appliedInput.val(jobsObj[id].dateAppliedVal);
-      
-      console.log(foundInput, foundInput.val(), appliedInput, appliedInput.val());
     }
   }
 
@@ -268,9 +295,6 @@
         $(this).parents('tr')
         .removeClass('pref-1 pref-2 pref-3 pref-4')
         .addClass(`pref-${$(this).val()}`);
-      } else if ($(this).hasClass('response')) {
-        const realResponse = Number($(this).val()) ? 'Yes' : 'No';
-        renderTextEl.text(realResponse);
       }
     }
   });
@@ -285,12 +309,16 @@
 
     const jobID = $(this).parents('tr').data('job-id');
     const jobField = this.name;
+    let url = "/jobs/"+jobID;
+    if ($(this).hasClass('contact')) {
+      url = "/contacts/"+jobsObj[jobID].contact._id;
+    }
 
     $(this).data('old-val', newVal);
 
     $.ajax({
       type:"PUT",
-      url: "/jobs/"+jobID,
+      url,
       data: {
         [jobField]: newVal
       },

@@ -4,7 +4,10 @@ const Schema = mongoose.Schema;
 const jobSchema = Schema({
   title: String,
   location: String,
-  link: String,
+  link: {
+    type: String,
+    default: 'https://www.my_new_job.com'
+  },
   companyName: {
     type: String,
     default: 'My New Company'
@@ -14,22 +17,36 @@ const jobSchema = Schema({
     enum: ['Remote', 'Hybrid', 'On-site'],
     default: 'Remote'
   },
-  dateFound: {
-    type: Date,
-    default: new Date().setHours(0, 0, 0)
-  },
   dateApplied: {
     type: Date,
     default: new Date().setHours(0, 0, 0)
   },
   response: {
-    type: Boolean,
-    default: false
+    type: String,
+    enum: ['No Response', 'Interviewing', 'Declined'],
+    default: ''
   },
   preference: {
     type: Number,
     enum: [1, 2, 3, 4, 5],
     default: 3
+  },
+  salary: {
+    type: Number,
+    default: 0,
+  },
+  notes: {
+    type: String,
+    default: ''
+  },
+  status: {
+    type: String,
+    enum: ['Not Started Yet', 'In Progress', 'Submitted'],
+    default: 'Not Started Yet'
+  },
+  contact: {
+    type: Schema.Types.ObjectId,
+    ref: 'Contact'
   },
   user: {
     type: Schema.Types.ObjectId,

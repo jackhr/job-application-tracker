@@ -177,7 +177,7 @@ aside div.user-info h2 {
 .delete-btn {
   position: absolute;
   right: 10px;
-  top: 8px;
+  top: calc(50% - 10px);
   cursor: pointer;
   background: #fff;
   padding: 4px;
@@ -204,4 +204,11 @@ aside div.user-info h2 {
 }
 .job-input:focus {
   background-color: #fff;
+}
+.contact-item-container {
+  display: flex;
+}
+.contact-item-container label {
+  font-weight: bold;
+  margin-right: 6px;
 }

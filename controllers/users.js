@@ -16,7 +16,7 @@ async function show(req, res) {
   const payload = JSON.parse(atob(token.split('.')[1]));
   const userId = payload.user._id;
   if (userId !== req.params.id) return redirect('/users/'+userId);
-  const jobs = await Job.find({user: req.params.id}).populate('user').exec();
+  const jobs = await Job.find({user: req.params.id}).populate(['user', 'contact']).exec()
   return res.render('users/show', {
     jobs,
     user: req.user
