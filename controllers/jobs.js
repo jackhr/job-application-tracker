@@ -43,6 +43,13 @@ async function create(req, res) {
 function deleteOne(req, res) {
   Job.findByIdAndDelete(req.params.id, function(err, job) {
     if (err) console.log(err);
+    if (req.xhr) {
+      if (err) return res.json(err);
+      return res.json({
+        status: 200,
+        message: `Job: ${job.title}, successfully deleted`
+      });
+    }
     res.redirect(`/users/${job.user}`);
   })
 }

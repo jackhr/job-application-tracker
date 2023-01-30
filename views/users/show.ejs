@@ -40,7 +40,7 @@
               <% job.companyName += ' ' + defaultNameCounter; %>
               <% defaultNameCounter++; %>
               <% } %>
-              <tr class="pref-<%= job.preference %>" data-job-id="<%= job._id %>">
+              <tr id="job-<%= job._id %>" class="pref-<%= job.preference %>" data-job-id="<%= job._id %>">
                 <td class="company">
                   <span class="job-text hide"><%= job.companyName %></span>
                   <input name="companyName" class="job-input" type="text" value="<%= job.companyName %>">
@@ -81,7 +81,7 @@
                     <option <%= job.response ? '' : 'selected' %> value="0">No</option>
                   </select>
                 </td>
-                <td>
+                <td style="position: relative;">
                   <span class="job-text"><%= job.preference %></span>
                   <select class="job-select preference hide" name="preference">
                     <option <%= job.preference == '1' ? 'selected' : '' %> value="1">1</option>
@@ -89,9 +89,9 @@
                     <option <%= job.preference == '3' ? 'selected' : '' %> value="3">3</option>
                     <option <%= job.preference == '4' ? 'selected' : '' %> value="4">4</option>
                   </select>
-                  <form class="delete-btn" action="/jobs/<%= job._id %>?_method=DELETE" method="POST">
+                  <div class="delete-btn">
                     <img src="/images/close-black.svg" alt="Close button">
-                  </form>
+                  </div>
                 </td>
               </tr>
             <% }) %>
@@ -177,7 +177,7 @@
 
     let appliedMonth = job.dateFound.getMonth()+1;
     if (appliedMonth < 10) appliedMonth = '0'+appliedMonth;
-    let appliedDay = job.dateFound.getDate();
+    let appliedDay = job.dateApplied.getDate();
     if (appliedDay < 10) appliedDay = '0'+appliedDay;
 
     job.dateFoundVal = `${job.dateFound.getFullYear()}-${foundMonth}-${foundDay}`;
@@ -210,8 +210,8 @@
   });
 
   $('.delete-btn').on('click', function() {
-    let company = $(this).parents('tr').find('td.company').text();
-    const deleteJobForm = this;
+    const jobID = $(this).parents('tr').data('job-id');
+    const company = $(this).parents('tr').find('td.company').text();
 
     swal({
       icon: 'warning',
@@ -220,7 +220,29 @@
       buttons: ["GO BACK", "Yes, Delete"],
       className: 'swal-delete-job'
     }).then(deleteJob => {
-      if (deleteJob) deleteJobForm.submit();
+      if (deleteJob) {
+        $.ajax({
+          type: "POST",
+          url: `/jobs/${jobID}?_method=DELETE`,
+          data: {},
+          success: res => {
+          console.log(res);
+            if (res.loggedOut) return window.location = '/';
+            if (res.status == 200) {
+              $('#all-jobs-table')
+                .dataTable()
+                .api()
+                .rows($(`#job-${jobID}`))
+                .remove()
+                .draw(false);
+            }
+          },
+          error: function() {
+            console.log(arguments);
+            console.log(thisEl);
+          }
+        });
+      }
     });
   });
 
