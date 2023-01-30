@@ -174,19 +174,24 @@ aside div.user-info h2 {
 .main-section.active {
   display: block;
 }
-.close-btn {
+.delete-btn,
+.edit-btn {
   position: absolute;
   right: 10px;
   top: 8px;
   cursor: pointer;
   background: #fff;
-  padding: 6px;
+  padding: 4px;
   border-radius: 50%;
   width: 20px;
   height: 20px;
   display: none;
 }
-#all-jobs-table tbody tr:hover .close-btn {
+.edit-btn {
+  right: 38px;
+}
+#all-jobs-table tbody tr:hover .delete-btn,
+#all-jobs-table tbody tr:hover .edit-btn {
   display: flex;
 }
 .swal-delete-job .swal-button--confirm {
@@ -194,4 +199,11 @@ aside div.user-info h2 {
 }
 .swal-delete-job .swal-button--confirm:hover {
   background-color: #c94a4a;
+}
+.job-input {
+  background: transparent;
+  border: none;
+}
+.job-input:focus {
+  background-color: #fff;
 }

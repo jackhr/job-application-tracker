@@ -30,23 +30,69 @@
             </tr>
           </thead>
           <tbody>
+            <% var defaultNameCounter = 1; %>
             <% jobs.forEach(job => { %>
               <% const UTCFoundTS = job.dateFound.getTime() + (job.dateFound.getTimezoneOffset() * 60*1000); %>
               <% const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000); %>
               <% job.dateFound = new Date(UTCFoundTS); %>
               <% job.dateApplied = new Date(UTCAppliedTS); %>
-              <tr class="pref-<%= job.preference %>" data-id="<%= job._id %>">
-                <td class="company"><%= job.companyName %></td>
-                <td><%= job.title %></td>
-                <td><%= job.location %></td>
-                <td><a target="_blank" href="<%= job.link %>"><%= job.link %></a></td>
-                <td><%= job.remote %></td>
-                <td><%= job.dateFound.toDateString() %></td>
-                <td><%= job.dateApplied.toDateString() %></td>
-                <td><%= job.response ? 'Yes' : 'No' %></td>
+              <% if (job.companyName === 'My New Company') { %>
+              <% job.companyName += ' ' + defaultNameCounter; %>
+              <% defaultNameCounter++; %>
+              <% } %>
+              <tr class="pref-<%= job.preference %>" data-job-id="<%= job._id %>">
+                <td class="company">
+                  <span class="job-text hide"><%= job.companyName %></span>
+                  <input name="companyName" class="job-input" type="text" value="<%= job.companyName %>">
+                </td>
                 <td>
-                  <span><%= job.preference %></span>
-                  <form class="close-btn" action="/jobs/<%= job._id %>?_method=DELETE" method="POST">
+                  <span class="job-text hide"><%= job.title %></span>
+                  <input name="title" class="job-input" type="text" value="<%= job.title %>">
+                </td>
+                <td>
+                  <span class="job-text hide"><%= job.location %></span>
+                  <input name="location" class="job-input" type="text" value="<%= job.location %>">
+                </td>
+                <td>
+                  <span class="job-text hide"><%= job.link %></span>
+                  <input name="link" class="job-input" type="text" value="<%= job.link %>">
+                  <!-- <a target="_blank" href="<%= job.link %>"><%= job.link %></a> -->
+                </td>
+                <td>
+                  <span class="job-text"><%= job.remote %></span>
+                  <select class="job-select remote hide" name="remote">
+                    <option <%= job.remote === 'Remote' ? 'selected' : '' %> value="Remote">Remote</option>
+                    <option <%= job.remote === 'Hybrid' ? 'selected' : '' %> value="Hybrid">Hybrid</option>
+                    <option <%= job.remote === 'On-Site' ? 'selected' : '' %> value="On-Site">On-Site</option>
+                  </select>
+                </td>
+                <td>
+                  <span class="job-text"><%= job.dateFound.toDateString() %></span>
+                  <input class="job-date dateFound hide" type="date" name="dateFound">
+                </td>
+                <td>
+                  <span class="job-text"><%= job.dateApplied.toDateString() %></span>
+                  <input class="job-date dateApplied hide" type="date" name="dateApplied" value>
+                </td>
+                <td>
+                  <span class="job-text"><%= job.response ? 'Yes' : 'No' %></span>
+                  <select class="job-select response hide" name="response">
+                    <option <%= job.response ? 'selected' : '' %> value="1">Yes</option>
+                    <option <%= job.response ? '' : 'selected' %> value="0">No</option>
+                  </select>
+                </td>
+                <td>
+                  <span class="job-text"><%= job.preference %></span>
+                  <select class="job-select preference hide" name="preference">
+                    <option <%= job.preference == '1' ? 'selected' : '' %> value="1">1</option>
+                    <option <%= job.preference == '2' ? 'selected' : '' %> value="2">2</option>
+                    <option <%= job.preference == '3' ? 'selected' : '' %> value="3">3</option>
+                    <option <%= job.preference == '4' ? 'selected' : '' %> value="4">4</option>
+                  </select>
+                  <div class="edit-btn">
+                    <img src="/images/edit.png" alt="Close button">
+                  </div>
+                  <form class="delete-btn" action="/jobs/<%= job._id %>?_method=DELETE" method="POST">
                     <img src="/images/close-black.svg" alt="Close button">
                   </form>
                 </td>
@@ -116,8 +162,48 @@
 
 <script>
 
-  $(document).ready( function () {
-    $('#all-jobs-table').DataTable();
+  let myTable = $('#all-jobs-table').DataTable();
+  const jobsObj = JSON.parse(`<%- JSON.stringify(jobs); %>`)
+  .reduce((acc, job) => {
+    job.dateFound = new Date(job.dateFound);
+    job.dateApplied = new Date(job.dateApplied);
+    
+    const UTCFoundTS = job.dateFound.getTime() + (job.dateFound.getTimezoneOffset() * 60*1000);
+    const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000);
+    job.dateFound = new Date(UTCFoundTS);
+    job.dateApplied = new Date(UTCAppliedTS);
+
+    let foundMonth = job.dateFound.getMonth()+1;
+    if (foundMonth < 10) foundMonth = '0'+foundMonth;
+    let foundDay = job.dateFound.getDate();
+    if (foundDay < 10) foundDay = '0'+foundDay;
+
+    let appliedMonth = job.dateFound.getMonth()+1;
+    if (appliedMonth < 10) appliedMonth = '0'+appliedMonth;
+    let appliedDay = job.dateFound.getDate();
+    if (appliedDay < 10) appliedDay = '0'+appliedDay;
+
+    job.dateFoundVal = `${job.dateFound.getFullYear()}-${foundMonth}-${foundDay}`;
+    job.dateAppliedVal = `${job.dateApplied.getFullYear()}-${appliedMonth}-${appliedDay}`;
+
+    acc[job._id] = job;
+    return acc;
+  }, {});
+
+  function initInputs() {
+    for (let id in jobsObj) {
+      const foundInput = $(`tr[data-job-id="${id}"] .job-date.dateFound`);
+      const appliedInput = $(`tr[data-job-id="${id}"] .job-date.dateApplied`);
+
+      foundInput.val(jobsObj[id].dateFoundVal);
+      appliedInput.val(jobsObj[id].dateAppliedVal);
+      
+      console.log(foundInput, foundInput.val(), appliedInput, appliedInput.val());
+    }
+  }
+
+  $(document).ready(() => {
+    initInputs();
   });
 
   $('.nav-option:not(.logout)').on('click', function() {
@@ -126,8 +212,7 @@
     $(`.main-section.${$(this).data('selector')}`).addClass('active');
   });
 
-  $('.close-btn').on('click', function() {
-
+  $('.delete-btn').on('click', function() {
     let company = $(this).parents('tr').find('td.company').text();
     const deleteJobForm = this;
 
@@ -139,10 +224,77 @@
       className: 'swal-delete-job'
     }).then(deleteJob => {
       if (deleteJob) deleteJobForm.submit();
-    })
+    });
+  });
+
+  $('.job-text').on('click', function() {
+    const jobDateInput = $(this).siblings('.job-date');
+    const jobSelect = $(this).siblings('.job-select');
+
+    $([jobSelect, jobDateInput, this]).toggleClass('hide');
+
+    if (jobSelect) jobSelect.focus();
+    if (jobDateInput) jobDateInput.focus();
+    
+  });
+
+  $('.job-date, .job-select').on('change', function() {
+    const renderTextEl = $(this).siblings('.job-text')
+    if ($(this).hasClass('job-date')) {
+      const newDateStr = new Date(` ${$(this).val()} `).toDateString();
+      renderTextEl.text(newDateStr);
+    } else {
+      renderTextEl.text($(this).val());
+      if ($(this).hasClass('preference')) {
+        $(this).parents('tr')
+        .removeClass('pref-1 pref-2 pref-3 pref-4')
+        .addClass(`pref-${$(this).val()}`);
+      } else if ($(this).hasClass('response')) {
+        const realResponse = Number($(this).val()) ? 'Yes' : 'No';
+        renderTextEl.text(realResponse);
+      }
+    }
+  });
+
+  $('.job-date, .job-select, .job-input').on('blur', function() {
+
+    if (!$(this).hasClass('job-input')) $(this).siblings('.job-text').trigger('click');
+
+    const thisEl = this;
+    const newVal = $(this).val();
+    if (newVal == $(this).data('old-val')) return;
+
+    const jobID = $(this).parents('tr').data('job-id');
+    const jobField = this.name;
+
+    $(this).data('old-val', newVal);
+
+    $.ajax({
+      type:"PUT",
+      url: "/jobs/"+jobID,
+      data: {
+        [jobField]: newVal
+      },
+      success: res => {
+        console.log(res);
+        if (res.loggedOut) window.location = '/';
+      },
+      error: function() {
+        console.log(arguments);
+        console.log(thisEl);
+      }
+    });
     
   })
-  
+
+  $('.job-text.preference').on('input', () => console.log('iygutc'));
+
+  // $(document).on('click', evt => console.log(evt.target));
+
+  $('.edit-btn').on('click', function() {
+    $('#edit-job-modal-btn').click();
+  });
+
 </script>
 
 </html>

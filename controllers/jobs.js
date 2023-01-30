@@ -2,8 +2,22 @@ const Job = require('../models/job');
 
 module.exports = {
   create,
-  delete: deleteOne
+  update,
+  delete: deleteOne,
 };
+
+async function update(req, res) {
+
+  const job = await Job.findById(req.params.id);
+
+  for (jobField in req.body) {
+    const newVal = req.body[jobField];
+    if (newVal != job[jobField]) job[jobField] = newVal;
+  }
+
+  await job.save();
+  res.json(job);
+}
 
 async function create(req, res) {
   
@@ -12,6 +26,7 @@ async function create(req, res) {
   req.body.dateFound = new Date(req.body.dateFound);
   req.body.dateApplied = new Date(req.body.dateApplied);
 
+  if (!req.body.companyName) delete(req.body.companyName);
   if (isNaN(req.body.dateFound)) delete req.body.dateFound;
   if (isNaN(req.body.dateApplied)) delete req.body.dateApplied;
 

@@ -2,10 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const jobSchema = Schema({
-  companyName: String,
   title: String,
   location: String,
   link: String,
+  companyName: {
+    type: String,
+    default: 'My New Company'
+  },
   remote: {
     type: String,
     enum: ['Remote', 'Hybrid', 'On-site'],
@@ -13,11 +16,11 @@ const jobSchema = Schema({
   },
   dateFound: {
     type: Date,
-    default: Date.now
+    default: new Date().setHours(0, 0, 0)
   },
   dateApplied: {
     type: Date,
-    default: Date.now
+    default: new Date().setHours(0, 0, 0)
   },
   response: {
     type: Boolean,
