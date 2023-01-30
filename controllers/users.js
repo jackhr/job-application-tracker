@@ -61,8 +61,8 @@ function createJWT(user) {
     // data payload
     { user },
     process.env.SECRET,
-    // expires in 15 minutes
-    { expiresIn: (60*15) }
+    // expires in 1 hour
+    { expiresIn: ('1h') }
   );
 }
 
