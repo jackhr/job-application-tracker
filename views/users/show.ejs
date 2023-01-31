@@ -9,8 +9,7 @@
         <h1><%= user.name %></h1>
         <h2><%= user.email %></h2>
       </div>
-      <div class="nav-option active" data-selector="all-jobs">View Jobs</div>
-      <div class="nav-option" data-selector="add-jobs">Add Jobs</div>
+      <div id="add-job-btn" class="nav-option">Add New Job</div>
       <a href="/users/logout" class="nav-option logout" data-selector="add-jobs">Logout</a>
     </aside>
     <div id="main-section-container">
@@ -204,18 +203,7 @@
   let myTable = $('#all-jobs-table').DataTable();
   const jobsObj = JSON.parse(`<%- JSON.stringify(jobs); %>`)
   .reduce((acc, job) => {
-    job.dateApplied = new Date(job.dateApplied);
-    
-    const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000);
-    job.dateApplied = new Date(UTCAppliedTS);
-
-    let appliedMonth = job.dateApplied.getMonth()+1;
-    if (appliedMonth < 10) appliedMonth = '0'+appliedMonth;
-    let appliedDay = job.dateApplied.getDate();
-    if (appliedDay < 10) appliedDay = '0'+appliedDay;
-
-    job.dateAppliedVal = `${job.dateApplied.getFullYear()}-${appliedMonth}-${appliedDay}`;
-
+    job = formatDateFields(job);
     acc[job._id] = job;
     return acc;
   }, {});
@@ -227,121 +215,157 @@
     }
   }
 
+  function formatDateFields(job) {
+    job.dateApplied = new Date(job.dateApplied);
+    
+    const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000);
+    job.dateApplied = new Date(UTCAppliedTS);
+
+    let appliedMonth = job.dateApplied.getMonth()+1;
+    if (appliedMonth < 10) appliedMonth = '0'+appliedMonth;
+    let appliedDay = job.dateApplied.getDate();
+    if (appliedDay < 10) appliedDay = '0'+appliedDay;
+
+    job.dateAppliedVal = `${job.dateApplied.getFullYear()}-${appliedMonth}-${appliedDay}`;
+    return job;
+  }
+
   $(document).ready(() => {
     initInputs();
+    initEvents();
   });
 
-  $('.nav-option:not(.logout)').on('click', function() {
-    $('.nav-option, .main-section').removeClass('active');
-    $(this).addClass('active');
-    $(`.main-section.${$(this).data('selector')}`).addClass('active');
-  });
-
-  $('.delete-btn').on('click', function() {
-    const jobID = $(this).parents('tr').data('job-id');
-    const company = $(this).parents('tr').find('td.company').text();
-
-    swal({
-      icon: 'warning',
-      title: 'Delete Job Application',
-      text: `Are you sure you would like to delete your application for ${company}`,
-      buttons: ["GO BACK", "Yes, Delete"],
-      className: 'swal-delete-job'
-    }).then(deleteJob => {
-      if (deleteJob) {
-        $.ajax({
-          type: "POST",
-          url: `/jobs/${jobID}?_method=DELETE`,
-          data: {},
-          success: res => {
-          console.log(res);
-            if (res.loggedOut) return window.location = '/';
-            if (res.status == 200) {
-              $('#all-jobs-table')
-                .dataTable()
-                .api()
-                .rows($(`#job-${jobID}`))
-                .remove()
-                .draw(false);
+  function initEvents() {
+    $('.delete-btn').off('click').on('click', function() {
+      const jobID = $(this).parents('tr').data('job-id');
+      const company = $(this).parents('tr').find('td.company').text();
+  
+      swal({
+        icon: 'warning',
+        title: 'Delete Job Application',
+        text: `Are you sure you would like to delete your application for ${company}`,
+        buttons: ["GO BACK", "Yes, Delete"],
+        className: 'swal-delete-job'
+      }).then(deleteJob => {
+        if (deleteJob) {
+          $.ajax({
+            type: "POST",
+            url: `/jobs/${jobID}?_method=DELETE`,
+            data: {},
+            success: res => {
+            console.log(res);
+              if (res.loggedOut) return window.location = '/';
+              if (res.status == 200) {
+                $('#all-jobs-table')
+                  .dataTable()
+                  .api()
+                  .rows($(`#job-${jobID}`))
+                  .remove()
+                  .draw(false);
+              }
+            },
+            error: function() {
+              console.log(arguments);
+              console.log(thisEl);
             }
-          },
-          error: function() {
-            console.log(arguments);
-            console.log(thisEl);
-          }
-        });
+          });
+        }
+      });
+    });
+  
+    $('.job-text').off('click').on('click', function() {
+      const jobDateInput = $(this).siblings('.job-date');
+      const jobSelect = $(this).siblings('.job-select');
+  
+      $([jobSelect, jobDateInput, this]).toggleClass('hide');
+  
+      if (jobSelect) jobSelect.focus();
+      if (jobDateInput) jobDateInput.focus();
+      
+    });
+  
+    $('.job-date, .job-select').off('change').on('change', function() {
+      const renderTextEl = $(this).siblings('.job-text')
+      if ($(this).hasClass('job-date')) {
+        const newDateStr = new Date(` ${$(this).val()} `).toDateString();
+        renderTextEl.text(newDateStr);
+      } else {
+        renderTextEl.text($(this).val());
+        if ($(this).hasClass('preference')) {
+          $(this).parents('tr')
+          .removeClass('pref-1 pref-2 pref-3 pref-4')
+          .addClass(`pref-${$(this).val()}`);
+        }
       }
     });
-  });
-
-  $('.job-text').on('click', function() {
-    const jobDateInput = $(this).siblings('.job-date');
-    const jobSelect = $(this).siblings('.job-select');
-
-    $([jobSelect, jobDateInput, this]).toggleClass('hide');
-
-    if (jobSelect) jobSelect.focus();
-    if (jobDateInput) jobDateInput.focus();
-    
-  });
-
-  $('.job-date, .job-select').on('change', function() {
-    const renderTextEl = $(this).siblings('.job-text')
-    if ($(this).hasClass('job-date')) {
-      const newDateStr = new Date(` ${$(this).val()} `).toDateString();
-      renderTextEl.text(newDateStr);
-    } else {
-      renderTextEl.text($(this).val());
-      if ($(this).hasClass('preference')) {
-        $(this).parents('tr')
-        .removeClass('pref-1 pref-2 pref-3 pref-4')
-        .addClass(`pref-${$(this).val()}`);
+  
+    $('.job-date, .job-select, .job-input').off('blur').on('blur', function() {
+  
+      if (!$(this).hasClass('job-input')) $(this).siblings('.job-text').trigger('click');
+  
+      const thisEl = this;
+      const newVal = $(this).val();
+      if (newVal == $(this).data('old-val')) return;
+  
+      const jobID = $(this).parents('tr').data('job-id');
+      const jobField = this.name;
+      let url = "/jobs/"+jobID;
+      if ($(this).hasClass('contact')) {
+        url = "/contacts/"+jobsObj[jobID].contact._id;
       }
-    }
-  });
-
-  $('.job-date, .job-select, .job-input').on('blur', function() {
-
-    if (!$(this).hasClass('job-input')) $(this).siblings('.job-text').trigger('click');
-
-    const thisEl = this;
-    const newVal = $(this).val();
-    if (newVal == $(this).data('old-val')) return;
-
-    const jobID = $(this).parents('tr').data('job-id');
-    const jobField = this.name;
-    let url = "/jobs/"+jobID;
-    if ($(this).hasClass('contact')) {
-      url = "/contacts/"+jobsObj[jobID].contact._id;
-    }
-
-    $(this).data('old-val', newVal);
-
-    $.ajax({
-      type:"PUT",
-      url,
-      data: {
-        [jobField]: newVal
-      },
-      success: res => {
-        console.log(res);
-        if (res.loggedOut) window.location = '/';
-      },
-      error: function() {
-        console.log(arguments);
-        console.log(thisEl);
-      }
+  
+      $(this).data('old-val', newVal);
+  
+      $.ajax({
+        type:"PUT",
+        url,
+        data: {
+          [jobField]: newVal
+        },
+        success: res => {
+          console.log(res);
+          if (res.loggedOut) window.location = '/';
+        },
+        error: function() {
+          console.log(arguments);
+          console.log(thisEl);
+        }
+      });
+      
     });
-    
-  })
+  
+    $('#add-job-btn').off('click').on('click', function() {
+  
+      $.ajax({
+        type: "POST",
+        url: "/jobs/",
+        data: {},
+        success: job => {
+          job = formatDateFields(job);
+  
+          const newRow = $(`<tr id="job-${job._id}" class="pref-${job.preference}" data-job-id="${job._id}"><td class="company"><span class="job-text hide">${job.companyName}</span><input name="companyName" data-old-val="${job.companyName}" class="job-input" type="text" value="${job.companyName}"></td><td><span class="job-text hide">${job.title}</span><input name="title" data-old-val="${job.title}" class="job-input" type="text" value="${job.title}"></td><td><span class="job-text hide">${job.location}</span><input name="location" data-old-val="${job.location}" class="job-input" type="text" value="${job.location}"></td><td><span class="job-text hide">${job.link}</span><input name="link" data-old-val="${job.link}" class="job-input" type="text" value="${job.link}"><!-- <a target="_blank" href="${job.link}">${job.link}</a> --></td><td><span class="job-text">${job.remote}</span><select data-old-val="${job.remote}" class="job-select remote hide" name="remote"><option ${job.remote === 'Remote' ? 'selected' : ''} value="Remote">Remote</option><option ${job.remote === 'Hybrid' ? 'selected' : ''} value="Hybrid">Hybrid</option><option ${job.remote === 'On-Site' ? 'selected' : ''} value="On-Site">On-Site</option></select></td><td><span class="job-text hide">${job.salary}</span><span>$</span><input data-old-val="${job.salary}" class="job-input salary" type="text" name="salary" value="${job.salary}"></td><td><span class="job-text hide">${job.notes}</span><input data-old-val="${job.notes}" class="job-input notes" type="text" name="notes" value="${job.notes}"></td><td><span class="job-text">${job.dateApplied.toDateString()}</span><input class="job-date dateApplied hide" type="date" name="dateApplied" value></td><td><span class="job-text">${job.status}</span><select data-old-val="${job.status}" class="job-select status hide" name="status"><option ${job.status === 'Not Started Yet' ? 'selected' : ''} value="Not Started Yet">Not Started Yet</option><option ${job.status === 'In Progress' ? 'selected' : ''} value="In Progress">In Progress</option><option ${job.status === 'Submitted' ? 'selected' : ''} value="Submitted">Submitted</option></select></td><td><div class="contact-item-container"><label>Name:</label><span class="job-text hide">${job.contact.name}</span><input data-old-val="${job.contact.name}" class="job-input contact name" type="text" name="name" value="${job.contact.name}"></div><div class="contact-item-container"><label>Email:</label><span class="job-text hide">${job.contact.email}</span><input data-old-val="${job.contact.email}" class="job-input contact email" type="text" name="email" value="${job.contact.email}"></div><div class="contact-item-container"><label>Tel:</label><span class="job-text hide">${job.contact.tel}</span><input data-old-val="${job.contact.tel}" class="job-input contact tel" type="text" name="tel" value="${job.contact.tel}"></div></td><td><span class="job-text">${job.response}</span><select data-old-val="${job.response}" class="job-select response hide" name="response"><option ${job.response === 'No Response' ? 'selected' : ''} value="No Response">No Response</option><option ${job.response === 'Interviewing' ? 'selected' : ''} value="Interviewing">Interviewing</option><option ${job.response === 'Declined' ? 'selected' : ''} value="Declined">Declined</option></select></td><td style="position: relative;"><span class="job-text">${job.preference}</span><select data-old-val="${job.preference}" class="job-select preference hide" name="preference"><option ${job.preference == '1' ? 'selected' : ''} value="1">1</option><option ${job.preference == '2' ? 'selected' : ''} value="2">2</option><option ${job.preference == '3' ? 'selected' : ''} value="3">3</option><option ${job.preference == '4' ? 'selected' : ''} value="4">4</option></select><div class="delete-btn"><img src="/images/close-black.svg" alt="Close button"></div></td></tr>`);
+  
+          console.log(newRow);
+          
+          myTable.row.add(newRow[0]).draw(false);
 
-  $('.job-text.preference').on('input', () => console.log('iygutc'));
+          initEvents();
+          
+        },
+        error: function() {
+          console.log(arguments);
+        }
+      })
+      
+    })
+  
+    $('.job-input.salary').off('keydown').on('keydown', function(evt) {
+      const keyCode = evt.originalEvent.data;
+      const notValid = ![8,37,38,39,40,48,49,50,51,52,53,54,55,56,57].includes(keyCode);
+      if (notValid) evt.preventDefault();
+    });
+  }
 
-  $('.job-input.salary').on('keydown', function(evt) {
-    const keyCode = evt.originalEvent.data;
-    const notValid = ![8,37,38,39,40,48,49,50,51,52,53,54,55,56,57].includes(keyCode);
-    if (notValid) evt.preventDefault();
-  });
 
   // $(document).on('click', evt => console.log(evt.target));
 

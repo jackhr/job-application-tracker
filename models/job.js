@@ -2,8 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const jobSchema = Schema({
-  title: String,
-  location: String,
+  title: {
+    type: String,
+    default: ''
+  },
+  location: {
+    type: String,
+    default: ''
+  },
   link: {
     type: String,
     default: 'https://www.my_new_job.com'
@@ -24,7 +30,7 @@ const jobSchema = Schema({
   response: {
     type: String,
     enum: ['No Response', 'Interviewing', 'Declined'],
-    default: ''
+    default: 'No Response'
   },
   preference: {
     type: Number,

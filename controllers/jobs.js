@@ -21,45 +21,16 @@ async function update(req, res) {
 }
 
 async function create(req, res) {
-  
-  req.body.preference = Number(req.body.preference);
-  req.body.dateApplied = new Date(req.body.dateApplied);
 
-  if (isNaN(req.body.dateFound)) delete req.body.dateFound;
-  if (isNaN(req.body.dateApplied)) delete req.body.dateApplied;
-  if (!req.body.companyName) delete(req.body.companyName);
-  if (!req.body.name) delete req.body.name;
-  if (!req.body.email) delete req.body.email;
-  if (!req.body.tel) delete req.body.tel;
+  const contact = await Contact.create({});
+  const job = await Job.create({
+    contact: contact._id,
+    user: req.user._id
+  });
 
-  // console.log(req.user);
+  job.contact = contact;
 
-  if (true) {
-
-    const contact = await Contact.create({
-      name: req.body.name,
-      email: req.body.email,
-      tel: req.body.tel,
-    });
-
-    delete req.body.name;
-    delete req.body.email;
-    delete req.body.tel;
-
-    req.body.contact = contact._id;
-
-    console.log(req.body);
-
-    console.log(contact);
-    
-    await Job.create({
-      ...req.body,
-      user: req.user._id
-    });
-  }
-  
-  
-  res.redirect('/users/'+req.user._id);
+  res.json(job);
 }
 
 function deleteOne(req, res) {
