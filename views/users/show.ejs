@@ -198,20 +198,20 @@
           <h1>Settings</h1>
           <div id="settings-container">
             <div class="preference-wrapper">
-              <label for="">View notes in the main table?</label>
-              <div data-preference="showNotes" class="toggle <%= preferences.showNotes ? 'on' : '' %>">
+              <label>View notes in the main table?</label>
+              <div data-preference="showNotes" data-col-idx="7" class="toggle <%= preferences.showNotes ? 'on' : '' %>">
                 <div class="circle"></div>
               </div>
             </div>
             <div class="preference-wrapper">
-              <label for="">View cover letter in the main table?</label>
-              <div data-preference="showCoverLetter" class="toggle <%= preferences.showCoverLetter ? 'on' : '' %>">
+              <label>View cover letter in the main table?</label>
+              <div data-preference="showCoverLetter" data-col-idx="12" class="toggle <%= preferences.showCoverLetter ? 'on' : '' %>">
                 <div class="circle"></div>
               </div>
             </div>
             <div class="preference-wrapper">
-              <label for="">View job link in the main table?</label>
-              <div data-preference="showJobLink" class="toggle <%= preferences.showJobLink ? 'on' : '' %>">
+              <label>View job link in the main table?</label>
+              <div data-preference="showJobLink" data-col-idx="4" class="toggle <%= preferences.showJobLink ? 'on' : '' %>">
                 <div class="circle"></div>
               </div>
             </div>
@@ -224,13 +224,20 @@
 
 <script>
 
-  let myTable = $('#all-jobs-table').DataTable();
   const jobsObj = JSON.parse(`<%- JSON.stringify(jobs); %>`)
-  .reduce((acc, job) => {
-    job = formatDateFields(job);
-    acc[job._id] = job;
-    return acc;
-  }, {});
+    .reduce((acc, job) => {
+      job = formatDateFields(job);
+      acc[job._id] = job;
+      return acc;
+    }, {});
+
+  let myTable = $('#all-jobs-table').DataTable({
+    "columnDefs": [
+      { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLink) %>'), "targets": 4 },
+      { "visible": JSON.parse('<%= JSON.stringify(preferences.showNotes) %>'), "targets": 7 },
+      // { "visible": JSON.parse('<%= // JSON.stringify(preferences.showCoverLetter) %>'), "targets": 12 },
+    ]
+  });
 
   function initInputs() {
     for (let id in jobsObj) {
@@ -421,6 +428,7 @@
         if (res.error) return handleSwalError(res.error);
 
         toggle.toggleClass('on');
+        myTable.column(toggle.data('col-idx')).visible(res[preference]).draw()
       },
       error: function() {
         console.log(arguments);
