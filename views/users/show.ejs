@@ -68,12 +68,13 @@
                   </select>
                 </td>
                 <td>
-                  <span class="job-text"><%= job.salary %></span>
-                  <input data-old-val="<%= job.salary %>" class="job-input salary hide" type="text" name="salary" value="<%= job.salary %>">
+                  <span class="job-text hide"><%= job.salary %></span>
+                  <span>$</span>
+                  <input data-old-val="<%= job.salary %>" class="job-input salary" type="text" name="salary" value="<%= job.salary %>">
                 </td>
                 <td>
-                  <span class="job-text"><%= job.notes %></span>
-                  <input data-old-val="<%= job.notes %>" class="job-input notes hide" type="text" name="notes" value="<%= job.notes %>">
+                  <span class="job-text hide"><%= job.notes %></span>
+                  <input data-old-val="<%= job.notes %>" class="job-input notes" type="text" name="notes" value="<%= job.notes %>">
                 </td>
                 <td>
                   <span class="job-text"><%= job.dateApplied.toDateString() %></span>
@@ -335,6 +336,12 @@
   })
 
   $('.job-text.preference').on('input', () => console.log('iygutc'));
+
+  $('.job-input.salary').on('keydown', function(evt) {
+    const keyCode = evt.originalEvent.data;
+    const notValid = ![8,37,38,39,40,48,49,50,51,52,53,54,55,56,57].includes(keyCode);
+    if (notValid) evt.preventDefault();
+  });
 
   // $(document).on('click', evt => console.log(evt.target));
 
