@@ -16,7 +16,10 @@ async function show(req, res) {
   const payload = JSON.parse(atob(token.split('.')[1]));
   const userId = payload.user._id;
   if (userId !== req.params.id) return redirect('/users/'+userId);
-  const jobs = await Job.find({user: req.params.id}).populate(['user', 'contact']).exec()
+
+  console.log(req.user);
+  
+  const jobs = await Job.find({user: req.params.id}).populate('contact').exec()
   return res.render('users/show', {
     jobs,
     user: req.user
@@ -32,12 +35,14 @@ function getAll(req, res) {
 }
 
 async function create(req, res) {
-  const user = new User(req.body);
-  user.save(function(err) {
+  try {
+    const user = await User.create({...req.body});
     const token = createJWT(user);
-    if (err) console.log(err);
-    res.cookie('token', token, { httpOnly: true }).redirect('/users/'+user._id);
-  });
+    res.cookie('token', token, { httpOnly: true })
+    res.redirect(307, `/users/${user._id}/preferences`);
+  } catch(error) {
+    res.redirect('/?invalid_creds=true')
+  }
 }
 
 async function login(req, res) {

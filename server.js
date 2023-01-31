@@ -12,6 +12,7 @@ require('dotenv').config();
 require('./config/database');
 
 var indexRouter = require('./routes/index');
+var preferencesRouter = require('./routes/preferences');
 var usersRouter = require('./routes/users');
 var jobsRouter = require('./routes/jobs');
 var contactsRouter = require('./routes/contacts');
@@ -34,6 +35,7 @@ app.use(methodOverride('_method'));
 app.use(require('./config/checkToken'));
 
 app.use('/', indexRouter);
+app.use('/', preferencesRouter);
 app.use('/users', usersRouter);
 app.use('/jobs', jobsRouter);
 app.use('/contacts', contactsRouter);

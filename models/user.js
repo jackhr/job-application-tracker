@@ -26,6 +26,10 @@ const userSchema = new Schema({
   applicationCount: {
     type: Number,
     default: 0
+  },
+  preferences: {
+    type: Schema.Types.ObjectId,
+    ref: 'Preferences'
   }
 }, {
   timestamps: true,
