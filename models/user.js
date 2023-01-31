@@ -22,6 +22,10 @@ const userSchema = new Schema({
     trim: true,
     minLength: 5,
     required: true
+  },
+  applicationCount: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true,
