@@ -2,37 +2,25 @@ const User = require('../models/user');
 const Preferences = require('../models/preferences');
 
 module.exports = {
-  create,
   update,
   delete: deleteOne
 };
 
-async function create(req, res) {
-
-  const preferences = await Preferences.create({});
-  const user = await User.findById(req.user._id);
-
-  user.preferences = preferences._id;
-  await user.save();
-
-  res.redirect('/users/'+user._id);
-
-}
-
 async function update(req, res) {
   
-  const user = await User.findById(req.user._id).populate('preferences').exec();
-  const preferences = {
-    ...user.preferences,
-    ...req.body
-  };
+  try {
+    const user = await User.findById(req.user._id).populate('preferences').exec();
+    user.preferences[req.body.preference] = !user.preferences[req.body.preference];
+    await user.preferences.save();
 
-  await preferences.save();
+    res.json(user.preferences);
+  } catch(error) {
+    res.json({
+      status: 500,
+      error: error.message
+    });
+  }
 
-  if (req.xhr) return res.json(preferences);
-
-  res.redirect(`/users/${req.user._id}`);
-  
 }
 
 async function deleteOne(req, res) {

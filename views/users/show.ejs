@@ -10,7 +10,8 @@
         <h2><%= user.email %></h2>
       </div>
       <div id="add-job-btn" class="nav-option">Add New Job</div>
-      <a href="/users/logout" class="nav-option logout" data-selector="add-jobs">Logout</a>
+      <div id="settings-btn" class="nav-option">Settings</div>
+      <a href="/users/logout" class="nav-option logout">Logout</a>
     </aside>
     <div id="main-section-container">
       <div class="main-section all-jobs active">
@@ -117,7 +118,7 @@
                     <option <%= job.preference == '4' ? 'selected' : '' %> value="4">4</option>
                   </select>
                   <div class="delete-btn">
-                    <img src="/images/close-black.svg" alt="Close button">
+                    <img src="/images/close-black.svg" alt="Delete button">
                   </div>
                 </td>
               </tr>
@@ -191,6 +192,32 @@
           <button type="submit">Create Job</button>
         </form>
       </div>
+      <div class="main-section settings">
+        <div id="settings-main">
+          <img class="close-btn" src="/images/close-black.svg" alt="Close button">
+          <h1>Settings</h1>
+          <div id="settings-container">
+            <div class="preference-wrapper">
+              <label for="">View notes in the main table?</label>
+              <div data-preference="showNotes" class="toggle <%= preferences.showNotes ? 'on' : '' %>">
+                <div class="circle"></div>
+              </div>
+            </div>
+            <div class="preference-wrapper">
+              <label for="">View cover letter in the main table?</label>
+              <div data-preference="showCoverLetter" class="toggle <%= preferences.showCoverLetter ? 'on' : '' %>">
+                <div class="circle"></div>
+              </div>
+            </div>
+            <div class="preference-wrapper">
+              <label for="">View job link in the main table?</label>
+              <div data-preference="showJobLink" class="toggle <%= preferences.showJobLink ? 'on' : '' %>">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </body>
@@ -211,6 +238,8 @@
       appliedInput.val(jobsObj[id].dateAppliedVal);
     }
   }
+
+  $('#settings-btn').on('click', () => $('.main-section.settings').addClass('viewing') );
 
   function formatDateFields(job) {
     job.dateApplied = new Date(job.dateApplied);
@@ -239,7 +268,7 @@
   }
 
   function initEvents() {
-    $('.delete-btn').off('click').on('click', function() {
+    $('#all-jobs-table tbody tr .delete-btn').off('click').on('click', function() {
       const jobID = $(this).parents('tr').data('job-id');
       const company = $(this).parents('tr').find('td.company .job-input').val();
   
@@ -349,13 +378,7 @@
         data: {},
         success: job => {
 
-          if (job.error) {
-            return swal({
-              icon: 'error',
-              title: 'Error',
-              text: job.error
-            });
-          }
+          if (job.error) handleSwalError(job.error);
           
           job = formatDateFields(job);
   
@@ -377,6 +400,39 @@
       const keyCode = evt.originalEvent.data;
       const notValid = ![8,37,38,39,40,48,49,50,51,52,53,54,55,56,57].includes(keyCode);
       if (notValid) evt.preventDefault();
+    });
+  }
+
+  $('.main-section.settings .close-btn').on('click', () => $('.main-section.settings').removeClass('viewing'))
+  
+  $('.preference-wrapper .toggle').on('click', function() {
+    const toggle = $(this);
+    const preference = toggle.data('preference');
+
+    console.log(preference);
+
+    $.ajax({
+      type: "PUT",
+      url: '/users/<%= user._id %>/preferences',
+      data: {
+        preference
+      },
+      success: res => {
+        if (res.error) return handleSwalError(res.error);
+
+        toggle.toggleClass('on');
+      },
+      error: function() {
+        console.log(arguments);
+      }
+    })
+  });
+
+  function handleSwalError(error) {
+    swal({
+      icon: 'error',
+      title: 'Error',
+      text: error
     });
   }
 

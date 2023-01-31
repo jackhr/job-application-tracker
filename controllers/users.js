@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Job = require('../models/job');
+const Preferences = require('../models/preferences');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -16,12 +17,11 @@ async function show(req, res) {
   const payload = JSON.parse(atob(token.split('.')[1]));
   const userId = payload.user._id;
   if (userId !== req.params.id) return redirect('/users/'+userId);
-
-  console.log(req.user);
-  
-  const jobs = await Job.find({user: req.params.id}).populate('contact').exec()
+  const jobs = await Job.find({user: req.params.id}).populate(['contact']).exec()
+  const preferences = await Preferences.findById(req.user.preferences);
   return res.render('users/show', {
     jobs,
+    preferences,
     user: req.user
   });
 }
@@ -36,17 +36,21 @@ function getAll(req, res) {
 
 async function create(req, res) {
   try {
-    const user = await User.create({...req.body});
+    const preferences = await Preferences.create({});
+    const user = await User.create({
+      ...req.body,
+      preferences: preferences._id
+    });
     const token = createJWT(user);
     res.cookie('token', token, { httpOnly: true })
-    res.redirect(307, `/users/${user._id}/preferences`);
+    res.redirect(`/users/${user._id}`);
   } catch(error) {
     res.redirect('/?invalid_creds=true')
   }
 }
 
 async function login(req, res) {
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({ email: req.body.email }).populate('preferences').exec();
   if (!user) return res.redirect('/?invalid_creds=true');
   const match = await bcrypt.compare(req.body.password, user.password);
   if (!match) return res.redirect('/?invalid_creds=true');
