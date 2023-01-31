@@ -114,6 +114,27 @@ header {
 .pref-4 {
   background-color: #d7d6d58c !important;
 }
+.status-row.Not.Started.Yet {
+  background-color: #d7d6d5;
+}
+.status-row.In.Progress {
+  background-color: #319eeac9;
+}
+.status-row.Submitted {
+  background-color: #23dc3dc9;
+}
+.response-row.No.Response {
+  background-color: #d7d6d5;
+}
+.response-row.Interviewing {
+  background-color: #319eeac9;
+}
+.response-row.Offer.Made {
+  background-color: #23dc3dc9;
+}
+.response-row.Declined {
+  background-color: #da4707;
+}
 #all-content {
   display: flex;
   width: 100%;
