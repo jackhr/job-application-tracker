@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const jobSchema = Schema({
   title: {
     type: String,
-    default: ''
+    default: 'My New Role'
   },
   location: {
     type: String,
-    default: ''
+    default: 'A good place'
   },
   link: {
     type: String,
@@ -29,7 +29,7 @@ const jobSchema = Schema({
   },
   response: {
     type: String,
-    enum: ['No Response', 'Interviewing', 'Declined'],
+    enum: ['No Response', 'Interviewing', 'Offer Made', 'Declined'],
     default: 'No Response'
   },
   preference: {
@@ -43,7 +43,7 @@ const jobSchema = Schema({
   },
   notes: {
     type: String,
-    default: ''
+    default: 'I think this job is...'
   },
   status: {
     type: String,
