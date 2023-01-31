@@ -45,6 +45,10 @@ const jobSchema = Schema({
     type: String,
     default: 'I think this job is...'
   },
+  coverLetter: {
+    type: String,
+    default: 'Link_to_my_cover_letter'
+  },
   status: {
     type: String,
     enum: ['Not Started Yet', 'In Progress', 'Submitted'],
