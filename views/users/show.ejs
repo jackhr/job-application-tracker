@@ -56,7 +56,7 @@
               <tr id="job-<%= job._id %>" class="pref-<%= job.preference %>" data-job-id="<%= job._id %>">
                 <td class="company">
                   <span class="job-text hide"><%= job.companyName %></span>
-                  <input name="companyName" data-old-val="<%= job.companyName %>" class="job-input" type="text" value="<%= job.companyName %>">
+                  <input name="companyName" data-old-val="<%= job.companyName %>" class="job-input companyName" type="text" value="<%= job.companyName %>">
                 </td>
                 <td>
                   <span class="job-text"><%= job.dateApplied.toDateString() %></span>
@@ -611,6 +611,23 @@
   })
 
   $('.nav-option').on('click', () => $('#nav').removeClass('open'));
+
+  $(window).on('resize', () => {
+
+    if ($(this).width() <= 768) {
+      if (this.currCompanyWidth !== '100px') adjustCompanyWidths('100px');
+    } else {
+      if (this.currCompanyWidth !== '170px') adjustCompanyWidths('170px');
+    }
+
+  });
+
+  function adjustCompanyWidths(val) {
+    $('#all-jobs-table tbody tr td:first-child').css('width', val);
+    $('#all-jobs-table tbody tr td:first-child input').css('width', val);
+    this.currCompanyWidth = val;
+    myTable.columns.adjust();
+  }
 
 </script>
 

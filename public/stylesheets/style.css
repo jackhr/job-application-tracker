@@ -348,6 +348,9 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
 .job-input.salary {
   margin-left: 10px;
 }
+.job-input.companyName {
+  width: 170px;
+}
 #job-link-preview {
   position: absolute;
   width: max-content;
@@ -498,6 +501,9 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
   form .input-container select {
     margin-left: 24px;
     width: 250px;
+  }
+  .job-input.companyName {
+    width: 100px;
   }
   
 }
