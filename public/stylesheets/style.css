@@ -32,6 +32,7 @@ a, a:focus, a:active, a:hover {
 }
 #intro-container h1 {
   margin: 0 0 32px;
+  text-align: center;
 }
 #main-img {
   max-width: 250px;
@@ -166,23 +167,25 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
   width: 100%;
   height: 100%;
 }
-aside {
+#nav {
   box-shadow: 0 0 16px #00000042;
   min-width: 200px;
   display: flex;
   flex-direction: column;
   width: max-content;
+  z-index: 20;
+  background: #fff;
 }
-aside div.user-info {
+#nav div.user-info {
   margin-bottom: 48px;
   padding: 8px 12px;
 }
-aside div.user-info h1 {
+#nav div.user-info h1 {
   margin: 0 0 4px;
   font-size: 32px;
   letter-spacing: 0.5px;
 }
-aside div.user-info h2 {
+#nav div.user-info h2 {
   margin: 0;
   color: grey;
   font-size: 20px;
@@ -394,4 +397,107 @@ aside div.user-info h2 {
   width: 20px;
   height: auto;
   cursor: pointer;
+}
+#hamburger-icon {
+  display: none;
+  position: absolute;
+  height: 40px;
+  width: auto;
+  right: 8px;
+  top: 8px;
+  cursor: pointer;
+}
+
+
+@media (max-width: 991px) { 
+  
+  #all-content {
+    flex-direction: column;
+  }
+  #nav {
+    flex-direction: row;
+    width: 100%;
+    height: 90px;
+    align-items: center;
+  }
+  #nav div.user-info {
+    margin: 0 auto 8px 0;
+  }
+  #nav-options-container {
+    display: flex;
+    height: 100%;
+  }
+  .nav-option {
+    height: 100%;
+  }
+  .nav-option:hover {
+    background-color: #cecece;
+    border-left-color: transparent;
+    border-bottom-color: #000;
+  }
+  .nav-option.active {
+    border-left-color: transparent;
+    border-bottom-color: #000;
+  }
+  .main-section {
+    padding: 16px;
+  }
+  .dataTables_scrollBody {
+    max-height: calc(100vh - 260px) !important;
+  }
+}
+
+@media (max-width: 768px) {
+
+  #nav {
+    flex-direction: column;
+    height: 58px;
+    overflow: hidden;
+    transition: height ease-in-out 0.4s;
+    position: absolute;
+  }
+  #nav.open {
+    height: 100%;
+  }
+  #nav div.user-info {
+    margin-bottom: 0;
+  }
+  #nav div.user-info h2 {
+    display: none;
+  }
+  #nav-options-container {
+    flex-direction: column;
+    height: fit-content;
+    margin: auto;
+  }
+  .nav-option {
+    height: 75px;
+    width: 300px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+  }
+  .nav-option:hover ,
+  .nav-option.active {
+    border-color: transparent;
+  }
+  #hamburger-icon {
+    display: block;
+  }
+  #main-section-container {
+    margin-top: 58px;
+  }
+
+  #intro-container {
+    padding: 8px;
+  }
+  #intro-container h1 {
+    font-size: 26px;
+    text-align: center;
+  }
+  form .input-container input,
+  form .input-container select {
+    margin-left: 24px;
+    width: 250px;
+  }
+  
 }
