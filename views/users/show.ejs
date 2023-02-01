@@ -74,7 +74,7 @@
                 </td>
                 <td>
                   <span class="job-text hide"><%= job.notes %></span>
-                  <input data-old-val="<%= job.notes %>" class="job-input notes" type="text" name="notes" value="<%= job.notes %>">
+                  <div contenteditable="" class="job-input notes" data-old-val="<%= job.notes %>" name="notes"><%= job.notes %></div>
                 </td>
                 <td class="status-row <%= job.status %>">
                   <span class="job-text"><%= job.status %></span>
@@ -341,19 +341,20 @@
     });
   
     $('.job-date, .job-select, .job-input').off('blur').on('blur', function() {
+
+      const thisEl = this;
+      const newVal = $(this).hasClass('notes') ? $(this).text() : $(this).val();
   
       if ($(this).hasClass('job-input')) {
-        $(this).siblings('.job-text').text($(this).val());
+        $(this).siblings('.job-text').text(newVal);
       } else {
         $(this).siblings('.job-text').trigger('click');
       }
-  
-      const thisEl = this;
-      const newVal = $(this).val();
+
       if (newVal == $(this).data('old-val')) return;
   
       const jobID = $(this).parents('tr').data('job-id');
-      const jobField = this.name;
+      const jobField = $(this).attr('name');
       let url = "/jobs/"+jobID;
       if ($(this).hasClass('contact')) {
         url = "/contacts/"+jobsObj[jobID].contact._id;

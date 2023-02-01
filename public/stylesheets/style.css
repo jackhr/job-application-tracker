@@ -303,3 +303,11 @@ aside div.user-info h2 {
   right: 24px;
   cursor: pointer;
 }
+.status-row .job-text {
+  cursor: pointer;
+}
+.job-input.notes {
+  padding: 6px;
+  width: max-content;
+  max-width: 300px;
+}
