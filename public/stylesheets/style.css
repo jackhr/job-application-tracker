@@ -383,4 +383,5 @@ aside div.user-info h2 {
 #job-link-preview .header .options img {
   width: 20px;
   height: auto;
+  cursor: pointer;
 }
