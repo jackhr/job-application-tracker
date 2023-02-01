@@ -14,6 +14,14 @@ const preferencesSchema = Schema({
     type: Boolean,
     default: true
   },
+  showJobLocation: {
+    type: Boolean,
+    default: true
+  },
+  showContact: {
+    type: Boolean,
+    default: true
+  },
 }, {
   timestamps: true
 });
