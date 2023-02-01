@@ -7,6 +7,8 @@ router.post('/', ensureLoggedIn, jobsCtrl.create);
 
 router.delete('/:id', ensureLoggedIn, jobsCtrl.delete);
 
+router.put('/getLinkMetaData', ensureLoggedIn, jobsCtrl.getLinkMetaData);
+
 router.put('/:id', ensureLoggedIn, jobsCtrl.update);
 
 module.exports = router;

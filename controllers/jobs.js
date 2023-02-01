@@ -2,7 +2,11 @@ const Job = require('../models/job');
 const Contact = require('../models/contact');
 const User = require('../models/user');
 
+const metaDataParser = require('page-metadata-parser');
+const domino = require('domino');
+
 module.exports = {
+  getLinkMetaData,
   create,
   update,
   delete: deleteOne,
@@ -59,4 +63,30 @@ async function deleteOne(req, res) {
       if (req.xhr) return res.json(err);
     }
   }
+}
+
+async function getLinkMetaData(req, res) {
+
+  console.log(req.body);
+  const url = req.body.link;
+  let metadata = {};
+
+  try {
+    const response = await fetch(url, {mode: 'no-cors'});
+    if (response.ok) {
+      const html = await response.text();
+      const doc = domino.createWindow(html).document;
+      metadata = metaDataParser.getMetadata(doc, url);
+    } else {
+      metadata.error = 'Cors error';
+    }
+  } catch (error) {
+    metadata.error = error;
+  }
+
+  metadata.icon ||= '/images/global.svg';
+  metadata.hostName = new URL(url).hostname;
+  console.log(metadata);
+
+  res.json(metadata);
 }
