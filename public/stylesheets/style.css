@@ -143,6 +143,16 @@ header {
 .response-row.Declined {
   background-color: #da4707;
 }
+
+#all-jobs-table.hide-colors .response-row,
+#all-jobs-table.hide-colors .status-row,
+#all-jobs-table.hide-colors .pref-1,
+#all-jobs-table.hide-colors .pref-2,
+#all-jobs-table.hide-colors .pref-3,
+#all-jobs-table.hide-colors .pref-4
+{
+  background-color: #ececec !important;
+}
 table.dataTable tbody tr>.dtfc-fixed-left {
   background-color: inherit !important;
   box-shadow: 5px 10px 10px 0px rgb(0 0 0 / 20%);

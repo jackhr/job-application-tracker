@@ -22,6 +22,10 @@ const preferencesSchema = Schema({
     type: Boolean,
     default: true
   },
+  showColors: {
+    type: Boolean,
+    default: true
+  },
 }, {
   timestamps: true
 });

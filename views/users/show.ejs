@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <table id="all-jobs-table">
+        <table id="all-jobs-table" class="<%= preferences.showColors ? '' : 'hide-colors' %>">
           <thead>
             <tr>
               <th>Company</th>
@@ -245,6 +245,12 @@
                 <div class="circle"></div>
               </div>
             </div>
+            <div class="preference-wrapper">
+              <label>Display colors?</label>
+              <div data-preference="showColors" class="toggle <%= preferences.showColors ? 'on' : '' %>">
+                <div class="circle"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -262,7 +268,15 @@
     }, {});
 
   let myTable = $('#all-jobs-table').removeAttr('width').DataTable({
-    "columnDefs": [
+    dom: 'BfrtiplF',
+    buttons: [
+      'copy',
+      'csv',
+      'excel',
+      'pdf',
+      'print'
+    ],
+    columnDefs: [
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLocation) %>'), "targets": 3 },
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLink) %>'), "targets": 4 },
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showNotes) %>'), "targets": 7 },
@@ -515,8 +529,12 @@
       success: res => {
         if (res.error) return handleSwalError(res.error);
 
-        toggle.toggleClass('on');
-        myTable.column(toggle.data('col-idx')).visible(res[preference]).columns.adjust().draw()
+        toggle.toggleClass('on', res[preference]);
+        $('#all-jobs-table').toggleClass('hide-colors', !res.showColors);
+        
+        if (toggle.data('col-idx')) {
+          myTable.column(toggle.data('col-idx')).visible(res[preference]).columns.adjust().draw();
+        }
       },
       error: function() {
         console.log(arguments);
