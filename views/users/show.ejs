@@ -17,7 +17,7 @@
       <img id="hamburger-icon" src="/images/hamburger.webp" alt="Hamburger menu icon">
     </div>
     <div id="main-section-container">
-      <div class="main-section all-jobs active">
+      <div class="main-section all-jobs active <%= user.onMobile ? 'onMobile' : '' %>">
         <div id="job-link-preview">
           <div class="header">
             <img class="favicon">
@@ -270,15 +270,18 @@
       return acc;
     }, {});
 
+  const dtOptions = {};
+  
+  try {
+    dtOptions.buttons = JSON.parse(`<%- (user.onMobile ? "[]" : '["copy","csv","excel","pdf","print"]') %>`);
+    dtOptions.dom = 'BfrtiplF';
+  } catch (error) {
+    console.log(error);
+    dtOptions.dom = 'frtiplF';
+  }
+
   let myTable = $('#all-jobs-table').removeAttr('width').DataTable({
-    dom: 'BfrtiplF',
-    buttons: [
-      'copy',
-      'csv',
-      'excel',
-      'pdf',
-      'print'
-    ],
+    ...dtOptions,
     columnDefs: [
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLocation) %>'), "targets": 3 },
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLink) %>'), "targets": 4 },

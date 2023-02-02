@@ -505,5 +505,8 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
   .job-input.companyName {
     width: 100px;
   }
+  .main-section.all-jobs.onMobile .dataTables_scrollBody {
+    max-height: calc(100vh - 350px) !important;
+  }
   
 }

@@ -3,6 +3,7 @@ const Job = require('../models/job');
 const Preferences = require('../models/preferences');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const MobileDetect = require('mobile-detect');
 
 module.exports = {
   show,
@@ -36,11 +37,13 @@ function getAll(req, res) {
 
 async function create(req, res) {
   try {
+    md = new MobileDetect(req.headers['user-agent']);
     const preferences = await Preferences.create({});
     const user = await User.create({
       ...req.body,
       preferences: preferences._id
     });
+    user.onMobile = !!md.phone();
     const token = createJWT(user);
     res.cookie('token', token, { httpOnly: true })
     res.redirect(`/users/${user._id}`);
