@@ -35,7 +35,7 @@ It's all in the name! Use this Job Application Tracker to help yourself keep tra
 
 ## Getting Started:
 
-- Just browse to the app [HERE!](https://job-application-tracker.herokuapp.com/)
+- Just browse to the app [HERE!](https://job-application-tracker.herokuapp.com/) (It may take a few seconds to get up and running).
 - Sign up.
 - Get tracking!
 
