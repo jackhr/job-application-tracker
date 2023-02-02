@@ -23,7 +23,8 @@ async function show(req, res) {
   return res.render('users/show', {
     jobs,
     preferences,
-    user: req.user
+    user: req.user,
+    onMobile: req.cookies.onMobile
   });
 }
 
@@ -37,15 +38,16 @@ function getAll(req, res) {
 
 async function create(req, res) {
   try {
-    md = new MobileDetect(req.headers['user-agent']);
     const preferences = await Preferences.create({});
     const user = await User.create({
       ...req.body,
       preferences: preferences._id
     });
-    user.onMobile = !!md.phone();
-    const token = createJWT(user);
-    res.cookie('token', token, { httpOnly: true })
+    const md = new MobileDetect(req.headers['user-agent']);
+    createCookies(res, {
+      token: createJWT(user),
+      onMobile: Number(!!md.phone())
+    });
     res.redirect(`/users/${user._id}`);
   } catch(error) {
     res.redirect('/?invalid_creds=true')
@@ -57,12 +59,17 @@ async function login(req, res) {
   if (!user) return res.redirect('/?invalid_creds=true');
   const match = await bcrypt.compare(req.body.password, user.password);
   if (!match) return res.redirect('/?invalid_creds=true');
-  const token = createJWT(user);
-  res.cookie('token', token, { httpOnly: true }).redirect('/users/'+user._id);
+  const md = new MobileDetect(req.headers['user-agent']);
+  createCookies(res, {
+    token: createJWT(user),
+    onMobile: Number(!!md.phone())
+  });
+  res.redirect('/users/'+user._id);
 }
 
 function logout(req, res) {
   res.clearCookie('token');
+  res.clearCookie('onMobile');
   res.redirect('/');
 }
 
@@ -78,3 +85,9 @@ function createJWT(user) {
   );
 }
 
+function createCookies(res, cookiesObj) {
+  for (let cookieName in cookiesObj) {
+    const cookieVal = cookiesObj[cookieName];
+    res.cookie(cookieName, cookieVal, { httpOnly: true });
+  }
+}

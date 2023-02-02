@@ -271,9 +271,9 @@
     }, {});
 
   const dtOptions = {};
-  
+
   try {
-    dtOptions.buttons = JSON.parse(`<%- (user.onMobile ? "[]" : '["copy","csv","excel","pdf","print"]') %>`);
+    dtOptions.buttons = JSON.parse(`<%- (Number(onMobile) ? '[]' : '["copy","csv","excel","pdf","print"]') %>`);
     dtOptions.dom = 'BfrtiplF';
   } catch (error) {
     console.log(error);
@@ -295,18 +295,6 @@
     paging:         false,
     fixedColumns:   true
   });
-
-//   $(document).ready(function() {
-//     var table = $('#example').removeAttr('width').DataTable( {
-//         scrollY:        "300px",
-//         scrollX:        true,
-//         scrollCollapse: true,
-//         paging:         false,
-//         columnDefs: [
-//             { width: 200, targets: 0 }
-//         ],
-//     } );
-// } );
 
   function initInputs() {
     for (let id in jobsObj) {
@@ -451,7 +439,6 @@
       const keyCode = evt.originalEvent.keyCode;
       const validCodes = [8,37,38,39,40,48,49,50,51,52,53,54,55,56,57];
       const notValid = !validCodes.includes(keyCode);
-      console.log(keyCode, notValid, validCodes);
       if (notValid) evt.preventDefault();
     });
 
