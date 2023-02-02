@@ -31,7 +31,7 @@
             </div>
           </div>
         </div>
-        <table id="all-jobs-table" class="<%= preferences.showColors ? '' : 'hide-colors' %>">
+        <table id="all-jobs-table" class="<%= preferences.showColors ? '' : 'hide-colors' %> <%= user.onMobile ? 'onMobile' : '' %>">
           <thead>
             <tr>
               <th>Company</th>
