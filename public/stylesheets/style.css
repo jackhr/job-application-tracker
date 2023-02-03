@@ -170,9 +170,10 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
 #nav {
   box-shadow: 0 0 16px #00000042;
   min-width: 200px;
+  width: max-content;
+  max-width: 250px;
   display: flex;
   flex-direction: column;
-  width: max-content;
   z-index: 20;
   background: #fff;
 }
@@ -187,9 +188,14 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
 }
 #nav div.user-info h2 {
   margin: 0;
-  color: grey;
-  font-size: 20px;
+  color: #808080;
+  font-size: 14px;
   letter-spacing: 0.3px;
+}
+#nav div.user-info * {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .nav-option {
   display: flex;
