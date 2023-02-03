@@ -46,5 +46,6 @@ It's all in the name! Use this Job Application Tracker to help yourself keep tra
 - [x] Create MVP application
 - [x] General authentication
 - [ ] Add more settings to give a more comforting UX
+- [ ] Convert Job retrieval to ajax request rather than on page load with ejs
 - [ ] Option to recover password (incase you forget...)
 - [ ] Improve styling (CSS never ends!)
