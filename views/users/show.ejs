@@ -357,7 +357,6 @@
                   .api()
                   .rows($(`#job-${jobID}`))
                   .remove()
-                  .adjust()
                   .draw(false);
               }
             },
@@ -593,7 +592,7 @@
           </tr>
         `);
 
-        jobsTable.row.add(newRow[0]).adjust().draw(false);
+        jobsTable.row.add(newRow[0]).draw(false);
 
         initEvents();
         
