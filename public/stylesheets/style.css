@@ -1,3 +1,11 @@
+:root {
+  --yellow: #f6e16f;
+  --green: #3ad73a;
+  --grey: #d7d6d5;
+  --red: #da4707;
+  --blue: #319eea;
+  --blue_light: #73afff;
+}
 *,
 *:before,
 *:after {
@@ -108,41 +116,37 @@ header {
   position: relative;
 }
 .pref-1 {
-  /* background-color: #ffd7008c !important; */
-  background-color: #f6e16f !important;
+  background-color: var(--yellow) !important;
 }
 .pref-2 {
-  /* background-color: #00be0091 !important; */
-  background-color: #3ad73a !important;
+  background-color: var(--green) !important;
 }
 .pref-3 {
-  /* background-color: #006dff7a !important; */
-  background-color: #73afff !important;
+  background-color: var(--blue_light) !important;
 }
 .pref-4 {
-  /* background-color: #d7d6d58c !important; */
-  background-color: #d7d6d5 !important;
+  background-color: var(--grey) !important;
 }
 .status-row.Not.Started.Yet {
-  background-color: #d7d6d5;
+  background-color: var(--grey);
 }
 .status-row.In.Progress {
-  background-color: #319eeac9;
+  background-color: var(--blue);
 }
 .status-row.Submitted {
-  background-color: #23dc3dc9;
+  background-color: var(--green);
 }
 .response-row.No.Response {
-  background-color: #d7d6d5;
+  background-color: var(--grey);
 }
 .response-row.Interviewing {
-  background-color: #319eeac9;
+  background-color: var(--blue);
 }
 .response-row.Offer.Made {
-  background-color: #23dc3dc9;
+  background-color: var(--green);
 }
 .response-row.Declined {
-  background-color: #da4707;
+  background-color: var(--red);
 }
 
 #all-jobs-table.hide-colors .response-row,
