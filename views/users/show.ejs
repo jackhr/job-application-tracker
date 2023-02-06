@@ -20,10 +20,12 @@
       <div class="main-section all-jobs active <%= user.onMobile ? 'onMobile' : '' %>">
         <div id="job-link-preview">
           <div class="header">
-            <img class="favicon">
-            <div class="title">
-              <h1></h1>
-              <span></span>
+            <div class="info">
+              <img class="favicon">
+              <div class="title">
+                <h1></h1>
+                <span></span>
+              </div>
             </div>
             <div class="options">
               <img class="edit" src="/images/edit.svg" alt="edit option" title="edit">
@@ -263,25 +265,26 @@
 
 <script>
 
-  const jobsObj = JSON.parse(`<%- JSON.stringify(jobs); %>`)
+  const state = {
+    jobs: JSON.parse(`<%- JSON.stringify(jobs); %>`)
     .reduce((acc, job) => {
       job = formatDateFields(job);
       acc[job._id] = job;
       return acc;
-    }, {});
-
-  const dtOptions = {};
-
-  try {
-    dtOptions.buttons = JSON.parse(`<%- (Number(onMobile) ? '[]' : '["copy","csv","excel","pdf","print"]') %>`);
-    dtOptions.dom = 'BfrtiplF';
-  } catch (error) {
-    console.log(error);
-    dtOptions.dom = 'frtiplF';
+    }, {}),
+    dtOptions: {}
   }
 
-  const jobsTable = $('#all-jobs-table').removeAttr('width').DataTable({
-    ...dtOptions,
+  try {
+    state.dtOptions.buttons = JSON.parse(`<%- (Number(onMobile) ? '[]' : '["copy","csv","excel","pdf","print"]') %>`);
+    state.dtOptions.dom = 'BfrtiplF';
+  } catch (error) {
+    console.log(error);
+    state.dtOptions.dom = 'frtiplF';
+  }
+
+  state.jobsTable = $('#all-jobs-table').removeAttr('width').DataTable({
+    ...state.dtOptions,
     columnDefs: [
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLocation) %>'), "targets": 3 },
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLink) %>'), "targets": 4 },
@@ -298,9 +301,9 @@
   });
 
   function initInputs() {
-    for (let id in jobsObj) {
+    for (let id in state.jobs) {
       const appliedInput = $(`tr[data-job-id="${id}"] .job-date.dateApplied`);
-      appliedInput.val(jobsObj[id].dateAppliedVal);
+      appliedInput.val(state.jobs[id].dateAppliedVal);
     }
   }
 
@@ -411,7 +414,7 @@
       const jobField = $(this).attr('name');
       let url = "/jobs/"+jobID;
       if ($(this).hasClass('contact')) {
-        url = "/contacts/"+jobsObj[jobID].contact._id;
+        url = "/contacts/"+state.jobs[jobID].contact._id;
       }
   
       if ($(this).hasClass('status')) setCellBackgroundColor(this, 'status', newVal);
@@ -437,6 +440,8 @@
       
     });
   
+    $('.job-input').off('focus').on('focus', function() { this.select() });
+    
     $('.job-input.salary').off('keydown').on('keydown', function(evt) {
       const keyCode = evt.originalEvent.keyCode;
       const validCodes = [8,37,38,39,40,48,49,50,51,52,53,54,55,56,57];
@@ -444,44 +449,60 @@
       if (notValid) evt.preventDefault();
     });
 
-    $('.job-link-cell').hover(
-      async function() {
-        const thisJobID = $(this).parents('tr').data('job-id');
+    $('.job-link-cell').off('mouseover').off('mouseout').hover(
+      function() {
+        const jobLinkCell = this;
+        clearInterval(state.beginPreviewInterval);
+        clearInterval(state.endPreviewInterval);
+        state.beginPreviewInterval = setInterval(async () => {
 
-        $(this).addClass('hovering');
-        $('#job-link-preview').data('row-id', `#job-${thisJobID}`);
-
-        if ($('#job-link-preview').data('last-job-id') !== thisJobID) {
-          await getJobLinkMetaData(thisJobID);
-          $('#job-link-preview').data('last-job-id', thisJobID);
-        } else if ($('#job-link-preview').hasClass('hovering')) return;
-        
-        const cellPos = this.getBoundingClientRect();
-        const PreviewPos = $('#job-link-preview')[0].getBoundingClientRect();
-        let left = (cellPos.x + cellPos.width/2) - (PreviewPos.width/2);
-        if ((left + PreviewPos.width) > $(window).width() - 48) {
-          // Let's check to make sure right side is still withing viewport
-          left = $(window).width() - PreviewPos.width - 48;
-        }
-        left += 'px'
-        const top = cellPos.bottom - 24 + 'px';
-        $('#job-link-preview')
-          .addClass('viewing')
-          .css({
-            top,
-            left,
-          });
+          const thisJobID = $(jobLinkCell).parents('tr').data('job-id');
+  
+          $('#job-link-preview').data('row-id', `#job-${thisJobID}`);
+  
+          if ($('#job-link-preview').data('last-job-id') !== thisJobID) {
+            await getJobLinkMetaData(thisJobID);
+            $('#job-link-preview').data('last-job-id', thisJobID);
+          }
+          
+          const cellPos = jobLinkCell.getBoundingClientRect();
+          const PreviewPos = $('#job-link-preview')[0].getBoundingClientRect();
+          let left = (cellPos.x + cellPos.width/2) - (PreviewPos.width/2);
+          if ((left + PreviewPos.width) > $(window).width() - 48) {
+            // Let's check to make sure right side is still withing viewport
+            left = $(window).width() - PreviewPos.width - 48;
+          }
+          left += 'px'
+          const top = cellPos.bottom - 24 + 'px';
+          $('#job-link-preview')
+            .addClass('viewing')
+            .css({
+              top,
+              left,
+            });
+        }, 1000);
       },
       function() {
-        $(this).removeClass('hovering')
-        setTimeout(() => {
-          if (!$('#job-link-preview').hasClass('hovering')) {
-            $('#job-link-preview').removeClass('viewing');
-          }
-        }, 500);
+        clearInterval(state.beginPreviewInterval);
+        clearInterval(state.endPreviewInterval);
+        state.endPreviewInterval = setInterval(() => {
+          $('#job-link-preview').removeClass('viewing');
+        }, 1000);
       }
-    )
+    );
+
   }
+  $('#job-link-preview').hover(
+    function() {
+      clearInterval(state.beginPreviewInterval);
+      clearInterval(state.endPreviewInterval);
+    },
+    function() {
+      state.endPreviewInterval = setInterval(() => {
+        $('#job-link-preview').removeClass('viewing');
+      }, 1000);
+    }
+  )
 
   $('.main-section.settings .close-btn').on('click', () => $('.main-section.settings').removeClass('viewing'))
   
@@ -502,7 +523,7 @@
         $('#all-jobs-table').toggleClass('hide-colors', !res.showColors);
         
         if (toggle.data('col-idx')) {
-          jobsTable.column(toggle.data('col-idx')).visible(res[preference]).columns.adjust().draw();
+          state.jobsTable.column(toggle.data('col-idx')).visible(res[preference]).columns.adjust().draw();
         }
       },
       error: function() {
@@ -523,7 +544,7 @@
 
     const link = $(`#job-${jobID}`).find('.job-input.link').val();
     
-    $.ajax({
+    await $.ajax({
       type: "PUT",
       url: `/jobs/getLinkMetaData/`,
       data: {
@@ -533,10 +554,11 @@
       success: res => {
 
         $('#job-link-preview').toggleClass('bad-fetch', !!res.error);
-        $('#job-link-preview .header img.favicon').attr('src', res.icon);
-        $('#job-link-preview .title h1').text(!!res.error ? '' : res.title);
-        $('#job-link-preview .title span').text(res.hostName);
-        
+        $('#job-link-preview .info').data('link', link);
+        $('#job-link-preview .info img.favicon').attr('src', res.icon);
+        $('#job-link-preview .info .title h1').text(!!res.error ? '' : res.title);
+        $('#job-link-preview .info .title span').text(res.hostName);
+
         if (res.loggedOut) window.location = '/';
       },
       error: () => console.log(arguments)
@@ -544,34 +566,28 @@
 
   }
 
-  $('#job-link-preview').hover(
-    function() {
-      $(this).addClass('hovering');
-    },
-    function() {
-      const preivewEl = this;
-      setTimeout(() => {
-        const rowSelector = $('#job-link-preview').data('row-id');
-        const linkCell = $(rowSelector).find('.job-link-cell');
-        if (!linkCell.hasClass('hovering')) {
-          $(preivewEl).removeClass('viewing hovering')
-        }
-      }, 300);
-    }
-  );
-
   $('#job-link-preview .header img.favicon').on('error', function() {
     $(this).attr('src', '/images/global.svg');
   });
 
   $('#job-link-preview .header .options img').on('click', async function() {
-    $('#job-link-preview, .job-link-cell').removeClass('hovering viewing');
     const linkEl = $($('#job-link-preview').data('rowId')).find('.job-input.link');
     if ($(this).hasClass('edit')) linkEl.focus();
     else {
       const text = $($('#job-link-preview').data('rowId')).find('.job-input.link').val();
       const result = await navigator.clipboard.writeText(text);
+      $('#job-link-preview, .job-link-cell').removeClass('viewing');
+      swal({
+        title: 'Succes!',
+        icon: 'success',
+        text: 'Link copied to clipboard.'
+      })
     }
+  });
+
+  $('#job-link-preview .info').on('click', function() {
+    const link = $(this).data('link');
+    window.open(link, '_blank');
   });
 
   $('#hamburger-icon').on('click', () => $('#nav').toggleClass('open'))
@@ -594,7 +610,7 @@
           </tr>
         `);
 
-        jobsTable.row.add(newRow[0]).draw(false);
+        state.jobsTable.row.add(newRow[0]).draw(false);
 
         initEvents();
         
@@ -622,7 +638,7 @@
     $('#all-jobs-table tbody tr td:first-child').css('width', val);
     $('#all-jobs-table tbody tr td:first-child input').css('width', val);
     this.currCompanyWidth = val;
-    jobsTable.columns.adjust();
+    state.jobsTable.columns.adjust();
   }
 
 </script>

@@ -370,10 +370,14 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
   pointer-events: none;
   border-radius: 4px;
   box-shadow: 0 0 15px 0 rgb(0 0 0 / 20%);
-  padding: 12px 4px;
+  padding: 12px 4px 12px 10px;
 }
 #job-link-preview .header {
   display: flex;
+}
+#job-link-preview .info {
+  display: flex;
+  cursor: pointer;
 }
 #job-link-preview .header img {
   width: 30px;
