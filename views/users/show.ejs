@@ -380,7 +380,8 @@
     $('.job-date, .job-select').off('change').on('change', function() {
       const renderTextEl = $(this).siblings('.job-text')
       if ($(this).hasClass('job-date')) {
-        const newDateStr = new Date(` ${$(this).val()} `).toDateString();
+        const dateValsArr = $(this).val().split('-');
+        const newDateStr = new Date(dateValsArr[0], dateValsArr[1]-1, dateValsArr[2]).toDateString();
         renderTextEl.text(newDateStr);
       } else {
         renderTextEl.text($(this).val());
