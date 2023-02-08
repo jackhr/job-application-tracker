@@ -563,11 +563,8 @@ button.dt-button {
   .job-input.companyName {
     width: 100px;
   }
-  .main-section.all-jobs:not(.onMobile) .dataTables_scrollBody {
+  .main-section.all-jobs .dataTables_scrollBody {
     max-height: calc(100vh - 225px) !important;
-  }
-  .main-section.all-jobs.onMobile .dataTables_scrollBody {
-    max-height: calc(100vh - 350px) !important;
   }
   
 }
@@ -578,6 +575,9 @@ button.dt-button {
   }
   .dataTables_wrapper .dataTables_filter {
     margin: .5em 0 12px;
+  }
+  .main-section.all-jobs.onMobile .dataTables_wrapper .dataTables_filter {
+    margin-top: 0 !important;
   }
   .dataTables_wrapper .dataTables_info {
     padding-left: 0;

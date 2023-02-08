@@ -17,7 +17,7 @@
       <img id="hamburger-icon" src="/images/hamburger.webp" alt="Hamburger menu icon">
     </div>
     <div id="main-section-container">
-      <div class="main-section all-jobs active <%= user.onMobile ? 'onMobile' : '' %>">
+      <div class="main-section all-jobs active <%= onMobile ? 'onMobile' : '' %>">
         <div id="job-link-preview">
           <div class="header">
             <div class="info">
@@ -523,7 +523,12 @@
         $('#all-jobs-table').toggleClass('hide-colors', !res.showColors);
         
         if (toggle.data('col-idx')) {
-          state.jobsTable.column(toggle.data('col-idx')).visible(res[preference]).columns.adjust().draw();
+          state.jobsTable
+            .column(toggle.data('col-idx'))
+            .visible(res[preference])
+            .columns
+            .adjust()
+            .draw();
         }
       },
       error: function() {
