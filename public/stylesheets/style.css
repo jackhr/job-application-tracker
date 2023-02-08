@@ -1,7 +1,8 @@
 :root {
   --yellow: #f6e16f;
   --green: #3ad73a;
-  --grey: #d7d6d5;
+  --grey: #ddd;
+  --grey_light: #ececec;
   --red: #da4707;
   --blue: #319eea;
   --blue_light: #73afff;
@@ -115,6 +116,10 @@ header {
 #all-jobs-table tbody tr {
   position: relative;
 }
+.date-applied-cell span {
+  display: block;
+  min-width: max-content;
+}
 .pref-1 {
   background-color: var(--yellow) !important;
 }
@@ -127,36 +132,45 @@ header {
 .pref-4 {
   background-color: var(--grey) !important;
 }
-.status-row.Not.Started.Yet {
+.status-cell.Not.Started.Yet {
   background-color: var(--grey);
 }
-.status-row.In.Progress {
+.status-cell.In.Progress {
   background-color: var(--blue);
 }
-.status-row.Submitted {
+.status-cell.Submitted {
   background-color: var(--green);
 }
-.response-row.No.Response {
+.response-cell.No.Response {
   background-color: var(--grey);
 }
-.response-row.Interviewing {
+.response-cell.Interviewing {
   background-color: var(--blue);
 }
-.response-row.Offer.Made {
+.response-cell.Offer.Made {
   background-color: var(--green);
 }
-.response-row.Declined {
+.response-cell.Declined {
   background-color: var(--red);
 }
 
-#all-jobs-table.hide-colors .response-row,
-#all-jobs-table.hide-colors .status-row,
-#all-jobs-table.hide-colors .pref-1,
-#all-jobs-table.hide-colors .pref-2,
-#all-jobs-table.hide-colors .pref-3,
-#all-jobs-table.hide-colors .pref-4
+#all-jobs-table.hide-colors .odd .response-cell,
+#all-jobs-table.hide-colors .odd .status-cell,
+#all-jobs-table.hide-colors .odd.pref-1,
+#all-jobs-table.hide-colors .odd.pref-2,
+#all-jobs-table.hide-colors .odd.pref-3,
+#all-jobs-table.hide-colors .odd.pref-4
 {
-  background-color: #ececec !important;
+  background-color: var(--grey_light) !important;
+}
+#all-jobs-table.hide-colors .even .response-cell,
+#all-jobs-table.hide-colors .even .status-cell,
+#all-jobs-table.hide-colors .even.pref-1,
+#all-jobs-table.hide-colors .even.pref-2,
+#all-jobs-table.hide-colors .even.pref-3,
+#all-jobs-table.hide-colors .even.pref-4
+{
+  background-color: var(--grey) !important;
 }
 table.dataTable tbody tr>.dtfc-fixed-left {
   background-color: inherit !important;
@@ -348,7 +362,7 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
   right: 24px;
   cursor: pointer;
 }
-.status-row .job-text {
+.status-cell .job-text {
   cursor: pointer;
 }
 .job-input.notes {
@@ -425,6 +439,22 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
   top: 8px;
   cursor: pointer;
 }
+.dataTables_scrollHead {
+  border-top: 1px solid rgba(0, 0, 0, 0.3) !important;
+}
+.dataTables_scrollBody::-webkit-scrollbar {
+  display: none;
+}
+.dataTables_scrollBody {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.dt-buttons {
+  margin-bottom: 16px;
+}
+button.dt-button {
+  margin-bottom: 0 !important;
+}
 
 
 @media (max-width: 991px) { 
@@ -461,8 +491,20 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
   .main-section {
     padding: 16px;
   }
+  .main-section.all-jobs {
+    padding: 16px 0;
+  }
   .dataTables_scrollBody {
     max-height: calc(100vh - 260px) !important;
+  }
+  div.dt-buttons {
+    margin-left: 16px;
+  }
+  .dataTables_wrapper .dataTables_filter {
+    margin-right: 16px;
+  }
+  .dataTables_wrapper .dataTables_info {
+    padding-left: 0.755em;
   }
 }
 
@@ -521,8 +563,27 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
   .job-input.companyName {
     width: 100px;
   }
+  .main-section.all-jobs:not(.onMobile) .dataTables_scrollBody {
+    max-height: calc(100vh - 225px) !important;
+  }
   .main-section.all-jobs.onMobile .dataTables_scrollBody {
     max-height: calc(100vh - 350px) !important;
   }
   
+}
+
+@media screen and (max-width: 640px) {
+  div.dt-buttons {
+    margin-left: 0;
+  }
+  .dataTables_wrapper .dataTables_filter {
+    margin-right: 0;
+  }
+  .dataTables_wrapper .dataTables_info {
+    padding-left: 0;
+  }
+  .main-section.all-jobs:not(.onMobile) .dataTables_scrollBody {
+    max-height: calc(100vh - 260px) !important;
+  }
+
 }
