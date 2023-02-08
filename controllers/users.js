@@ -24,7 +24,7 @@ async function show(req, res) {
     jobs,
     preferences,
     user: req.user,
-    onMobile: req.cookies.onMobile
+    onMobile: Number(req.cookies.onMobile)
   });
 }
 
