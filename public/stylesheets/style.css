@@ -574,10 +574,10 @@ button.dt-button {
 
 @media screen and (max-width: 640px) {
   div.dt-buttons {
-    margin-left: 0;
+    margin: 0;
   }
   .dataTables_wrapper .dataTables_filter {
-    margin-right: 0;
+    margin: .5em 0 12px;
   }
   .dataTables_wrapper .dataTables_info {
     padding-left: 0;
