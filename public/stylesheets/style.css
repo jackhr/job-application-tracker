@@ -86,7 +86,7 @@ form button {
   text-decoration: underline;
 }
 .hide {
-  display: none;
+  display: none !important;
 }
 .toggle-pass {
   width: 25px;
@@ -115,10 +115,15 @@ header {
 }
 #all-jobs-table tbody tr {
   position: relative;
+  height: 54px;
 }
-.date-applied-cell span {
+.no-break-cell span {
   display: block;
   min-width: max-content;
+}
+.status-cell,
+.response-cell {
+  min-width: 150px;
 }
 .pref-1 {
   background-color: var(--yellow) !important;
@@ -174,10 +179,11 @@ header {
 }
 table.dataTable tbody tr>.dtfc-fixed-left {
   background-color: inherit !important;
-  box-shadow: 5px 10px 10px 0px rgb(0 0 0 / 20%);
-  /* box-shadow: 0 0 13px 4px rgb(0 0 0 / 10%); */
 }
-table.dataTable tbody tr:first-child>.dtfc-fixed-left {
+table.dataTable tbody tr>.dtfc-fixed-left.cast-shadow {
+  box-shadow: 5px 10px 10px 0px rgb(0 0 0 / 20%);
+}
+table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   box-shadow: 5px 2px 10px 0px rgb(0 0 0 / 20%);
 }
 #all-content {
@@ -445,6 +451,9 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
 .dataTables_scrollBody::-webkit-scrollbar {
   display: none;
 }
+.dataTables_scrollHeadInner {
+  padding-right: 0 !important;
+}
 .dataTables_scrollBody {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -455,6 +464,13 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left {
 button.dt-button {
   margin-bottom: 0 !important;
 }
+.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody,
+.dataTables_wrapper .dataTables_scroll div.dataTables_scrollHead {
+  width: max-content !important;
+  max-width: 100% !important;
+  margin: auto !important;
+}
+
 
 
 @media (max-width: 991px) { 

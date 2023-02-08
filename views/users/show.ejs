@@ -60,7 +60,7 @@
                   <span class="job-text hide"><%= job.companyName %></span>
                   <input name="companyName" data-old-val="<%= job.companyName %>" class="job-input companyName" type="text" value="<%= job.companyName %>">
                 </td>
-                <td class="date-applied-cell">
+                <td class="no-break-cell">
                   <span class="job-text"><%= job.dateApplied.toDateString() %></span>
                   <input class="job-date dateApplied hide" type="date" name="dateApplied" value>
                 </td>
@@ -94,7 +94,7 @@
                   <span class="job-text hide"><%= job.notes %></span>
                   <div contenteditable="" class="job-input notes" data-old-val="<%= job.notes %>" name="notes"><%= job.notes %></div>
                 </td>
-                <td class="status-cell <%= job.status %>">
+                <td class="no-break-cell status-cell <%= job.status %>">
                   <span class="job-text"><%= job.status %></span>
                   <select data-old-val="<%= job.status %>" class="job-select hide status" name="status">
                     <option <%= job.status === 'Not Started Yet' ? 'selected' : '' %> value="Not Started Yet">Not Started Yet</option>
@@ -119,7 +119,7 @@
                     <input data-old-val="<%= job.contact.tel %>" class="job-input contact tel" type="text" name="tel" value="<%= job.contact.tel %>">
                   </div>
                 </td>
-                <td class="response-cell <%= job.response %>">
+                <td class="no-break-cell response-cell <%= job.response %>">
                   <span class="job-text"><%= job.response %></span>
                   <select data-old-val="<%= job.response %>" class="job-select response hide" name="response">
                     <option <%= job.response === 'No Response' ? 'selected' : '' %> value="No Response">No Response</option>
@@ -327,6 +327,18 @@
   $(document).ready(() => {
     initInputs();
     initEvents();
+
+    const tableWrapper = $('.dataTables_scrollBody')[0];
+
+    const tableWrapperObserver = new ResizeObserver((entries) => {
+      const table = $('#all-jobs-table');
+      const tableWrapperWidth = entries[0].contentRect.width;
+      const tableWidth = table.prop('clientWidth');
+      const showBoxShadow = tableWrapperWidth < tableWidth;
+      table.find('tbody tr>.dtfc-fixed-left').toggleClass('cast-shadow', showBoxShadow);
+    });
+
+    tableWrapperObserver.observe(tableWrapper);
   });
 
   function setCellBackgroundColor(selectEl, className, newVal) {
