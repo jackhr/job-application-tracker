@@ -342,7 +342,7 @@
   });
 
   function setCellBackgroundColor(selectEl, className, newVal) {
-    $(selectEl).parents(`.${className}-row`)
+    $(selectEl).parents(`.${className}-cell`)
     .removeClass($(selectEl).data('old-val'))
     .addClass(newVal);
   }
