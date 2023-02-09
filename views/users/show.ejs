@@ -411,28 +411,28 @@
   
     $('.job-date, .job-select, .job-input').off('blur').on('blur', function() {
 
-      const thisEl = this;
-      const newVal = $(this).hasClass('notes') ? $(this).text() : $(this).val();
+      const thisEl = $(this);
+      const newVal = thisEl.hasClass('notes') ? thisEl.text() : thisEl.val();
   
-      if ($(this).hasClass('job-input')) {
-        $(this).siblings('.job-text').text(newVal);
+      if (thisEl.hasClass('job-input')) {
+        thisEl.siblings('.job-text').text(newVal);
       } else {
-        $(this).siblings('.job-text').trigger('click');
+        thisEl.siblings('.job-text').trigger('click');
       }
 
-      if (newVal == $(this).data('old-val')) return;
+      if (newVal == thisEl.data('old-val')) return;
   
-      const jobID = $(this).parents('tr').data('job-id');
-      const jobField = $(this).attr('name');
+      const jobID = thisEl.parents('tr').data('job-id');
+      const jobField = thisEl.attr('name');
       let url = "/jobs/"+jobID;
-      if ($(this).hasClass('contact')) {
+      if (thisEl.hasClass('contact')) {
         url = "/contacts/"+state.jobs[jobID].contact._id;
       }
   
-      if ($(this).hasClass('status')) setCellBackgroundColor(this, 'status', newVal);
-      if ($(this).hasClass('response')) setCellBackgroundColor(this, 'response', newVal);
+      if (thisEl.hasClass('status')) setCellBackgroundColor(this, 'status', newVal);
+      if (thisEl.hasClass('response')) setCellBackgroundColor(this, 'response', newVal);
       
-      $(this).data('old-val', newVal);
+      thisEl.data('old-val', newVal);
   
       $.ajax({
         type:"PUT",
@@ -440,13 +440,15 @@
         data: {
           [jobField]: newVal
         },
-        success: res => {
-          console.log(res);
-          if (res.loggedOut) window.location = '/';
+        success: async res => {
+          if (res.loggedOut) return window.location = '/';
+          if (thisEl.hasClass('link')) {
+            const thisJobID = $('#job-link-preview').data('last-job-id');
+            await handleViewingLinkPreview(thisJobID, null, true);
+          }
         },
         error: function() {
           console.log(arguments);
-          console.log(thisEl);
         }
       });
       
@@ -464,53 +466,66 @@
     $('.job-link-cell').off('mouseover').off('mouseout').hover(
       function() {
         const jobLinkCell = this;
-        clearInterval(state.beginPreviewInterval);
-        clearInterval(state.endPreviewInterval);
-        state.beginPreviewInterval = setInterval(async () => {
+        clearTimeout(state.beginPreviewTimeout);
+        clearTimeout(state.endPreviewTimeout);
+        state.beginPreviewTimeout = setTimeout(async () => {
 
           const thisJobID = $(jobLinkCell).parents('tr').data('job-id');
-  
-          $('#job-link-preview').data('row-id', `#job-${thisJobID}`);
-  
-          if ($('#job-link-preview').data('last-job-id') !== thisJobID) {
-            await getJobLinkMetaData(thisJobID);
-            $('#job-link-preview').data('last-job-id', thisJobID);
-          }
+
+          console.log(thisJobID);
           
-          const cellPos = jobLinkCell.getBoundingClientRect();
-          const PreviewPos = $('#job-link-preview')[0].getBoundingClientRect();
-          let left = (cellPos.x + cellPos.width/2) - (PreviewPos.width/2);
-          if ((left + PreviewPos.width) > $(window).width() - 48) {
-            // Let's check to make sure right side is still withing viewport
-            left = $(window).width() - PreviewPos.width - 48;
-          }
-          left += 'px'
-          const top = cellPos.bottom - 24 + 'px';
-          $('#job-link-preview')
-            .addClass('viewing')
-            .css({
-              top,
-              left,
-            });
+          await handleViewingLinkPreview(thisJobID, jobLinkCell);
+          
         }, 1000);
       },
       function() {
-        clearInterval(state.beginPreviewInterval);
-        clearInterval(state.endPreviewInterval);
-        state.endPreviewInterval = setInterval(() => {
+        clearTimeout(state.beginPreviewTimeout);
+        clearTimeout(state.endPreviewTimeout);
+        state.endPreviewTimeout = setTimeout(() => {
           $('#job-link-preview').removeClass('viewing');
         }, 1000);
       }
     );
 
   }
+
+  async function handleViewingLinkPreview(jobID, jobLinkCell, getMetaData) {
+
+    if (!jobLinkCell) {
+      jobLinkCell = $(`#job-${jobID}`).find('.job-link-cell')[0];
+    }
+    
+    $('#job-link-preview').data('row-id', `#job-${jobID}`);
+  
+    if (($('#job-link-preview').data('last-job-id') !== jobID) || getMetaData) {
+      await getJobLinkMetaData(jobID);
+      $('#job-link-preview').data('last-job-id', jobID);
+    }
+    
+    const cellPos = jobLinkCell.getBoundingClientRect();
+    const PreviewPos = $('#job-link-preview')[0].getBoundingClientRect();
+    let left = (cellPos.x + cellPos.width/2) - (PreviewPos.width/2);
+    if ((left + PreviewPos.width) > $(window).width() - 48) {
+      // Let's check to make sure right side is still withing viewport
+      left = $(window).width() - PreviewPos.width - 48;
+    }
+    left += 'px'
+    const top = cellPos.bottom - 24 + 'px';
+    $('#job-link-preview')
+      .addClass('viewing')
+      .css({
+        top,
+        left,
+      });
+  }
+  
   $('#job-link-preview').hover(
     function() {
-      clearInterval(state.beginPreviewInterval);
-      clearInterval(state.endPreviewInterval);
+      clearTimeout(state.beginPreviewTimeout);
+      clearTimeout(state.endPreviewTimeout);
     },
     function() {
-      state.endPreviewInterval = setInterval(() => {
+      state.endPreviewTimeout = setTimeout(() => {
         $('#job-link-preview').removeClass('viewing');
       }, 1000);
     }
@@ -560,6 +575,9 @@
   async function getJobLinkMetaData(jobID) {
 
     const link = $(`#job-${jobID}`).find('.job-input.link').val();
+
+    console.log(jobID);
+    console.log(link);
     
     await $.ajax({
       type: "PUT",
@@ -569,6 +587,8 @@
         jobID
       },
       success: res => {
+
+        console.log(res);
 
         $('#job-link-preview').toggleClass('bad-fetch', !!res.error);
         $('#job-link-preview .info').data('link', link);
@@ -621,10 +641,10 @@
         
         job = formatDateFields(job);
 
+        const companyClassName = $('.cast-shadow').length ? 'cast-shadow' : '';
+
         const newRow = $(`
-          <tr id="job-${job._id}" class="pref-${job.preference}" data-job-id="${job._id}"><td class="company dtfc-fixed-left sorting_1"><span class="job-text hide">${job.companyName}</span><input name="companyName" data-old-val="${job.companyName}" class="job-input" type="text" value="${job.companyName}"></td><td class="date-applied-cell"><span class="job-text">${job.dateApplied.toDateString()}</span><input class="job-date dateApplied hide" type="date" name="dateApplied" value></td><td><span class="job-text hide">${job.title}</span><input name="title" data-old-val="${job.title}" class="job-input" type="text" value="${job.title}"></td><td><span class="job-text hide">${job.location}</span><input name="location" data-old-val="${job.location}" class="job-input" type="text" value="${job.location}"></td><td class="job-link-cell" data-need-metadata="true"><span class="job-text hide">${job.link}</span><input name="link" data-old-val="${job.link}" class="job-input" type="text" value="${job.link}"><!-- <a target="_blank" href="${job.link}">${job.link}</a> --></td><td><span class="job-text">${job.remote}</span><select data-old-val="${job.remote}" class="job-select remote hide" name="remote"><option ${job.remote === 'Remote' ? 'selected' : ''} value="Remote">Remote</option><option ${job.remote === 'Hybrid' ? 'selected' : ''} value="Hybrid">Hybrid</option><option ${job.remote === 'On-Site' ? 'selected' : ''} value="On-Site">On-Site</option></select></td><td><span class="job-text hide">${job.salary}</span><span style="position: absolute;">$</span><input data-old-val="${job.salary}" class="job-input salary" type="text" name="salary" value="${job.salary}"></td><td><span class="job-text hide">${job.notes}</span><div contenteditable="" class="job-input notes" data-old-val="${job.notes}" name="notes">${job.notes}</div></td><td class="status-cell ${job.status}"><span class="job-text">${job.status}</span><select data-old-val="${job.status}" class="job-select status hide" name="status"><option ${job.status === 'Not Started Yet' ? 'selected' : ''} value="Not Started Yet">Not Started Yet</option><option ${job.status === 'In Progress' ? 'selected' : ''} value="In Progress">In Progress</option><option ${job.status === 'Submitted' ? 'selected' : ''} value="Submitted">Submitted</option></select></td><td><div class="contact-item-container"><label>Name:</label><span class="job-text hide">${job.contact.name}</span><input data-old-val="${job.contact.name}" class="job-input contact name" type="text" name="name" value="${job.contact.name}"></div><div class="contact-item-container"><label>Email:</label><span class="job-text hide">${job.contact.email}</span><input data-old-val="${job.contact.email}" class="job-input contact email" type="text" name="email" value="${job.contact.email}"></div><div class="contact-item-container"><label>Tel:</label><span class="job-text hide">${job.contact.tel}</span><input data-old-val="${job.contact.tel}" class="job-input contact tel" type="text" name="tel" value="${job.contact.tel}"></div></td><td class="response-cell ${job.response}"><span class="job-text">${job.response}</span><select data-old-val="${job.response}" class="job-select response hide" name="response"><option ${job.response === 'No Response' ? 'selected' : ''} value="No Response">No Response</option><option ${job.response === 'Interviewing' ? 'selected' : ''} value="Interviewing">Interviewing</option><option ${job.response === 'Offer Made' ? 'selected' : ''} value="Offer Made">Offer Made</option><option ${job.response === 'Declined' ? 'selected' : ''} value="Declined">Declined</option></select></td><td><span class="job-text hide">${job.coverLetter}</span><input data-old-val="${job.coverLetter}" class="job-input coverLetter" type="text" name="coverLetter" value="${job.coverLetter}"></td>
-            <td style="position: relative;"><span class="job-text">${job.preference}</span><select data-old-val="${job.preference}" class="job-select preference hide" name="preference"><option ${job.preference == '1' ? 'selected' : ''} value="1">1</option><option ${job.preference == '2' ? 'selected' : ''} value="2">2</option><option ${job.preference == '3' ? 'selected' : ''} value="3">3</option><option ${job.preference == '4' ? 'selected' : ''} value="4">4</option></select><div class="delete-btn"><img src="/images/close-black.svg" alt="Close button"></div></td>
-          </tr>
+          <tr id="job-${job._id}" class="pref-${job.preference}" data-job-id="${job._id}"><td class="company dtfc-fixed-left sorting_1 ${companyClassName}"><span class="job-text hide">${job.companyName}</span><input name="companyName" data-old-val="${job.companyName}" class="job-input" type="text" value="${job.companyName}"></td><td class="date-applied-cell"><span class="job-text">${job.dateApplied.toDateString()}</span><input class="job-date dateApplied hide" type="date" name="dateApplied" value></td><td><span class="job-text hide">${job.title}</span><input name="title" data-old-val="${job.title}" class="job-input" type="text" value="${job.title}"></td><td><span class="job-text hide">${job.location}</span><input name="location" data-old-val="${job.location}" class="job-input" type="text" value="${job.location}"></td><td class="job-link-cell" data-need-metadata="true"><span class="job-text hide">${job.link}</span><input name="link" data-old-val="${job.link}" class="job-input link" type="text" value="${job.link}"></td><td><span class="job-text">${job.remote}</span><select data-old-val="${job.remote}" class="job-select remote hide" name="remote"><option ${job.remote === 'Remote' ? 'selected' : ''} value="Remote">Remote</option><option ${job.remote === 'Hybrid' ? 'selected' : ''} value="Hybrid">Hybrid</option><option ${job.remote === 'On-Site' ? 'selected' : ''} value="On-Site">On-Site</option></select></td><td><span class="job-text hide">${job.salary}</span><span style="position: absolute;">$</span><input data-old-val="${job.salary}" class="job-input salary" type="text" name="salary" value="${job.salary}"></td><td><span class="job-text hide">${job.notes}</span><div contenteditable="" class="job-input notes" data-old-val="${job.notes}" name="notes">${job.notes}</div></td><td class="status-cell ${job.status}"><span class="job-text">${job.status}</span><select data-old-val="${job.status}" class="job-select status hide" name="status"><option ${job.status === 'Not Started Yet' ? 'selected' : ''} value="Not Started Yet">Not Started Yet</option><option ${job.status === 'In Progress' ? 'selected' : ''} value="In Progress">In Progress</option><option ${job.status === 'Submitted' ? 'selected' : ''} value="Submitted">Submitted</option></select></td><td><div class="contact-item-container"><label>Name:</label><span class="job-text hide">${job.contact.name}</span><input data-old-val="${job.contact.name}" class="job-input contact name" type="text" name="name" value="${job.contact.name}"></div><div class="contact-item-container"><label>Email:</label><span class="job-text hide">${job.contact.email}</span><input data-old-val="${job.contact.email}" class="job-input contact email" type="text" name="email" value="${job.contact.email}"></div><div class="contact-item-container"><label>Tel:</label><span class="job-text hide">${job.contact.tel}</span><input data-old-val="${job.contact.tel}" class="job-input contact tel" type="text" name="tel" value="${job.contact.tel}"></div></td><td class="response-cell ${job.response}"><span class="job-text">${job.response}</span><select data-old-val="${job.response}" class="job-select response hide" name="response"><option ${job.response === 'No Response' ? 'selected' : ''} value="No Response">No Response</option><option ${job.response === 'Interviewing' ? 'selected' : ''} value="Interviewing">Interviewing</option><option ${job.response === 'Offer Made' ? 'selected' : ''} value="Offer Made">Offer Made</option><option ${job.response === 'Declined' ? 'selected' : ''} value="Declined">Declined</option></select></td><td><span class="job-text hide">${job.coverLetter}</span><input data-old-val="${job.coverLetter}" class="job-input coverLetter" type="text" name="coverLetter" value="${job.coverLetter}"></td><td style="position: relative;"><span class="job-text">${job.preference}</span><select data-old-val="${job.preference}" class="job-select preference hide" name="preference"><option ${job.preference == '1' ? 'selected' : ''} value="1">1</option><option ${job.preference == '2' ? 'selected' : ''} value="2">2</option><option ${job.preference == '3' ? 'selected' : ''} value="3">3</option><option ${job.preference == '4' ? 'selected' : ''} value="4">4</option></select><div class="delete-btn"><img src="/images/close-black.svg" alt="Close button"></div></td></tr>
         `);
 
         state.jobsTable.row.add(newRow[0]).draw(false);

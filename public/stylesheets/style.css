@@ -125,6 +125,10 @@ header {
 .response-cell {
   min-width: 150px;
 }
+.status-cell .job-text,
+.response-cell .job-text {
+  cursor: pointer;
+}
 .pref-1 {
   background-color: var(--yellow) !important;
 }
@@ -366,9 +370,6 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
 #settings-main .close-btn {
   position: absolute;
   right: 24px;
-  cursor: pointer;
-}
-.status-cell .job-text {
   cursor: pointer;
 }
 .job-input.notes {
