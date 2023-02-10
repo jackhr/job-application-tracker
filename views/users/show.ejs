@@ -339,6 +339,15 @@
     });
 
     tableWrapperObserver.observe(tableWrapper);
+
+    $('.dataTables_scrollBody').on('scroll', function() {
+      if (!$('#job-link-preview').hasClass('viewing')) return;
+      
+      $('#job-link-preview').removeClass('viewing');
+      clearTimeout(state.beginPreviewTimeout);
+      clearTimeout(state.endPreviewTimeout);
+    });
+    
   });
 
   function setCellBackgroundColor(selectEl, className, newVal) {
@@ -365,7 +374,6 @@
             url: `/jobs/${jobID}?_method=DELETE`,
             data: {},
             success: res => {
-              console.log(res);
               if (res.loggedOut) return window.location = '/';
               if (res.status == 200) {
                 $('#all-jobs-table')
@@ -444,7 +452,7 @@
           if (res.loggedOut) return window.location = '/';
           if (thisEl.hasClass('link')) {
             const thisJobID = $('#job-link-preview').data('last-job-id');
-            await handleViewingLinkPreview(thisJobID, null, true);
+            await handleViewingLinkPreview(thisJobID, true);
           }
         },
         error: function() {
@@ -469,13 +477,8 @@
         clearTimeout(state.beginPreviewTimeout);
         clearTimeout(state.endPreviewTimeout);
         state.beginPreviewTimeout = setTimeout(async () => {
-
           const thisJobID = $(jobLinkCell).parents('tr').data('job-id');
-
-          console.log(thisJobID);
-          
-          await handleViewingLinkPreview(thisJobID, jobLinkCell);
-          
+          await handleViewingLinkPreview(thisJobID);
         }, 1000);
       },
       function() {
@@ -489,34 +492,48 @@
 
   }
 
-  async function handleViewingLinkPreview(jobID, jobLinkCell, getMetaData) {
+  async function handleViewingLinkPreview(jobID, getMetaData) {
 
-    if (!jobLinkCell) {
-      jobLinkCell = $(`#job-${jobID}`).find('.job-link-cell')[0];
-    }
-    
     $('#job-link-preview').data('row-id', `#job-${jobID}`);
-  
+    
     if (($('#job-link-preview').data('last-job-id') !== jobID) || getMetaData) {
       await getJobLinkMetaData(jobID);
       $('#job-link-preview').data('last-job-id', jobID);
     }
     
-    const cellPos = jobLinkCell.getBoundingClientRect();
-    const PreviewPos = $('#job-link-preview')[0].getBoundingClientRect();
-    let left = (cellPos.x + cellPos.width/2) - (PreviewPos.width/2);
-    if ((left + PreviewPos.width) > $(window).width() - 48) {
-      // Let's check to make sure right side is still withing viewport
-      left = $(window).width() - PreviewPos.width - 48;
-    }
-    left += 'px'
-    const top = cellPos.bottom - 24 + 'px';
-    $('#job-link-preview')
-      .addClass('viewing')
-      .css({
-        top,
-        left,
+    const jobLinkTextEl = $(`#job-${jobID}`).find('.job-link-cell .job-input')[0];
+    const cellPos = jobLinkTextEl.getBoundingClientRect();
+    const previewHeight = Number($('#job-link-preview').css('height').slice(0, -2));
+    const previewWidth = Number($('#job-link-preview').css('width').slice(0, -2));
+    let left = (cellPos.x + cellPos.width/2) - (previewWidth/2);
+    let top = cellPos.bottom + 8;
+
+    const previewIsBeyondRight = (left + previewWidth) > $(window).width() - 48;
+    const previewIsBeyondBottom = (top + previewHeight) > $(window).height() - 48;
+    const previewIsBeyondLeft = left < 48;
+
+    if (previewIsBeyondRight) left = $(window).width() - previewWidth - 48;
+    if (previewIsBeyondBottom) top = cellPos.top - previewHeight - 8;
+    if (previewIsBeyondLeft) left = 48;
+    
+    $('#job-link-preview img.favicon')
+      .off('load')
+      .on('load', evt => positionJobPreview(top, left))
+      .off('error')
+      .on('error', function() {
+        $(this).attr('src', '/images/global.svg')
+        positionJobPreview(top, left);
       });
+
+      $('#job-link-preview')[0].getBoundingClientRect();
+      
+  }
+
+  function positionJobPreview(top, left) {
+    $('#job-link-preview').addClass('viewing').css({
+      top,
+      left,
+    });
   }
   
   $('#job-link-preview').hover(
@@ -573,12 +590,7 @@
   }
 
   async function getJobLinkMetaData(jobID) {
-
     const link = $(`#job-${jobID}`).find('.job-input.link').val();
-
-    console.log(jobID);
-    console.log(link);
-    
     await $.ajax({
       type: "PUT",
       url: `/jobs/getLinkMetaData/`,
@@ -587,8 +599,6 @@
         jobID
       },
       success: res => {
-
-        console.log(res);
 
         $('#job-link-preview').toggleClass('bad-fetch', !!res.error);
         $('#job-link-preview .info').data('link', link);
@@ -602,10 +612,6 @@
     });
 
   }
-
-  $('#job-link-preview .header img.favicon').on('error', function() {
-    $(this).attr('src', '/images/global.svg');
-  });
 
   $('#job-link-preview .header .options img').on('click', async function() {
     const linkEl = $($('#job-link-preview').data('rowId')).find('.job-input.link');

@@ -385,8 +385,7 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
 }
 #job-link-preview {
   position: absolute;
-  width: max-content;
-  min-width: 200px;
+  min-width: 300px;
   max-width: 300px;
   height: fit-content;
   background: #fff;
@@ -403,6 +402,7 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
 #job-link-preview .info {
   display: flex;
   cursor: pointer;
+  margin-right: auto;
 }
 #job-link-preview .header img {
   width: 30px;
