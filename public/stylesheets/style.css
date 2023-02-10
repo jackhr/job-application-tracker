@@ -446,8 +446,9 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   top: 8px;
   cursor: pointer;
 }
-.dataTables_scrollHead {
-  border-top: 1px solid rgba(0, 0, 0, 0.3) !important;
+.dataTables_wrapper .dataTables_scroll {
+  border: 1px solid rgba(0, 0, 0, 0.3) !important;
+  border-bottom: none !important;
 }
 .dataTables_scrollBody::-webkit-scrollbar {
   display: none;
@@ -522,6 +523,10 @@ button.dt-button {
   }
   .dataTables_wrapper .dataTables_info {
     padding-left: 0.755em;
+  }
+  .dataTables_wrapper .dataTables_scroll {
+    border-left: none !important;
+    border-right: none !important;
   }
 }
 
