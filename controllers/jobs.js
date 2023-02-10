@@ -67,26 +67,35 @@ async function deleteOne(req, res) {
 
 async function getLinkMetaData(req, res) {
 
-  console.log(req.body);
   const url = req.body.link;
   let metadata = {};
 
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), 10000);
+
   try {
-    const response = await fetch(url, {mode: 'no-cors'});
+    const response = await fetch(url, {
+      mode: 'no-cors',
+      signal: controller.signal
+    });
     if (response.ok) {
       const html = await response.text();
       const doc = domino.createWindow(html).document;
       metadata = metaDataParser.getMetadata(doc, url);
     } else {
-      metadata.error = 'Cors error';
+      metadata.error = 'Network response was not ok';
     }
   } catch (error) {
+    console.log('getLinkMetaData catch error:', error);
     metadata.error = error;
+    if (error.name === 'AbortError') {
+      metadata.error.customMessage = 'Fetch request was aborted';
+    } else {
+      metadata.error.customMessage = 'There was a problem with the fetch request';
+    }
   }
 
   metadata.icon ||= '/images/global.svg';
   metadata.hostName = new URL(url).hostname;
-  console.log(metadata);
-
   res.json(metadata);
 }

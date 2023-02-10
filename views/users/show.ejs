@@ -19,12 +19,13 @@
     <div id="main-section-container">
       <div class="main-section all-jobs active <%= onMobile ? 'onMobile' : '' %>">
         <div id="job-link-preview">
+          <div id="loader"></div>
           <div class="header">
             <div class="info">
-              <img class="favicon">
+              <img class="favicon" src="/images/global.svg">
               <div class="title">
-                <h1></h1>
-                <span></span>
+                <h1>My New Company</h1>
+                <span>www.my_new_job_link.com</span>
               </div>
             </div>
             <div class="options">
@@ -132,7 +133,7 @@
                   <span class="job-text hide"><%= job.coverLetter %></span>
                   <input data-old-val="<%= job.coverLetter %>" class="job-input coverLetter" type="text" name="coverLetter" value="<%= job.coverLetter %>">
                 </td>
-                <td style="position: relative;">
+                <td class="preference" style="position: relative;">
                   <span class="job-text"><%= job.preference %></span>
                   <select data-old-val="<%= job.preference %>" class="job-select preference hide" name="preference">
                     <option <%= job.preference == '1' ? 'selected' : '' %> value="1">1</option>
@@ -148,72 +149,6 @@
             <% }) %>
           </tbody>
         </table>
-      </div>
-      <div class="main-section add-jobs">
-        <h1>Track a Job!</h1>
-        <form id="add-job-form" action="/jobs/" method="POST">
-          <div class="input-container company">
-            <label>Company:</label>
-            <input id="company" type="text" name="companyName">
-          </div>
-          <div class="input-container title">
-            <label>Title:</label>
-            <input id="title" type="text" name="title">
-          </div>
-          <div class="input-container location">
-            <label>Location:</label>
-            <input id="location" type="text" name="location">
-          </div>
-          <div class="input-container link">
-            <label>Link:</label>
-            <input id="link" type="text" name="link">
-          </div>
-          <div class="input-container remote">
-            <label>Remote:</label>
-            <select name="remote" id="remote">
-              <option selected value="Remote">Remote</option>
-              <option value="Hybrid">Hybrid</option>
-              <option value="On-site">On-site</option>
-            </select>
-          </div>
-          <div class="input-container datea">
-            <label>Date Applied:</label>
-            <input id="datea" type="date" name="dateApplied">
-          </div>
-          <div class="input-container response">
-            <label>Response:</label>
-            <select name="response" id="response">
-              <option selected value="No Response">No Response</option>
-              <option value="Interviewing">Interviewing</option>
-              <option value="Offer Made">Offer Made</option>
-              <option value="Declined">Declined</option>
-            </select>
-          </div>
-          <div class="input-container preference">
-            <label>Preference:</label>
-            <select name="preference" id="preference">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option selected value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </div>
-          <h1>Contact:</h1>
-          <div class="input-container name">
-            <label>Name:</label>
-            <input id="name" type="text" name="name">
-          </div>
-          <div class="input-container email">
-            <label>Email:</label>
-            <input id="email" type="text" name="email">
-          </div>
-          <div class="input-container tel">
-            <label>Phone Number:</label>
-            <input id="tel" type="text" name="tel">
-          </div>
-          <button type="submit">Create Job</button>
-        </form>
       </div>
       <div class="main-section settings">
         <div id="settings-main">
@@ -452,7 +387,7 @@
           if (res.loggedOut) return window.location = '/';
           if (thisEl.hasClass('link')) {
             const thisJobID = $('#job-link-preview').data('last-job-id');
-            await handleViewingLinkPreview(thisJobID, true);
+            handleViewingLinkPreview(thisJobID, true);
           }
         },
         error: function() {
@@ -478,7 +413,7 @@
         clearTimeout(state.endPreviewTimeout);
         state.beginPreviewTimeout = setTimeout(async () => {
           const thisJobID = $(jobLinkCell).parents('tr').data('job-id');
-          await handleViewingLinkPreview(thisJobID);
+          handleViewingLinkPreview(thisJobID);
         }, 1000);
       },
       function() {
@@ -492,12 +427,16 @@
 
   }
 
-  async function handleViewingLinkPreview(jobID, getMetaData) {
+  function handleViewingLinkPreview(jobID, getMetaData) {
 
-    $('#job-link-preview').data('row-id', `#job-${jobID}`);
+    const rowID = `#job-${jobID}`;
+    $('#job-link-preview').data('row-id', rowID);
     
     if (($('#job-link-preview').data('last-job-id') !== jobID) || getMetaData) {
-      await getJobLinkMetaData(jobID);
+      $('#job-link-preview').addClass('viewing loading');
+      const preference = $(rowID).find('.preference .job-text').text();
+      $('#loader').removeClass().addClass(`pref-${preference}`);
+      getJobLinkMetaData(jobID);
       $('#job-link-preview').data('last-job-id', jobID);
     }
     
@@ -515,14 +454,19 @@
     if (previewIsBeyondRight) left = $(window).width() - previewWidth - 48;
     if (previewIsBeyondBottom) top = cellPos.top - previewHeight - 8;
     if (previewIsBeyondLeft) left = 48;
+
+    $('#job-link-preview').css({
+      top,
+      left,
+    });
     
     $('#job-link-preview img.favicon')
       .off('load')
-      .on('load', evt => positionJobPreview(top, left))
+      .on('load', evt => $('#job-link-preview').removeClass('loading'))
       .off('error')
       .on('error', function() {
-        $(this).attr('src', '/images/global.svg')
-        positionJobPreview(top, left);
+        $(this).attr('src', '/images/global.svg');
+        // $('#job-link-preview').removeClass('loading');
       });
 
       $('#job-link-preview')[0].getBoundingClientRect();
@@ -530,10 +474,7 @@
   }
 
   function positionJobPreview(top, left) {
-    $('#job-link-preview').addClass('viewing').css({
-      top,
-      left,
-    });
+    
   }
   
   $('#job-link-preview').hover(
@@ -589,9 +530,9 @@
     });
   }
 
-  async function getJobLinkMetaData(jobID) {
+  function getJobLinkMetaData(jobID) {
     const link = $(`#job-${jobID}`).find('.job-input.link').val();
-    await $.ajax({
+    $.ajax({
       type: "PUT",
       url: `/jobs/getLinkMetaData/`,
       data: {
