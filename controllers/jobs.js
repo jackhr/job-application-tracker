@@ -2,8 +2,13 @@ const Job = require('../models/job');
 const Contact = require('../models/contact');
 const User = require('../models/user');
 
+const DEFAULT_EXPIRATION = 60 * 60 * 24; // 1 day
+const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+
 const metaDataParser = require('page-metadata-parser');
 const domino = require('domino');
+const Redis = require('redis');
+const redisClient = Redis.createClient({ host: REDIS_HOST });
 
 module.exports = {
   getLinkMetaData,
@@ -68,34 +73,48 @@ async function deleteOne(req, res) {
 async function getLinkMetaData(req, res) {
 
   const url = req.body.link;
-  let metadata = {};
 
-  const controller = new AbortController();
-  setTimeout(() => controller.abort(), 10000);
-
-  try {
-    const response = await fetch(url, {
-      mode: 'no-cors',
-      signal: controller.signal
-    });
-    if (response.ok) {
-      const html = await response.text();
-      const doc = domino.createWindow(html).document;
-      metadata = metaDataParser.getMetadata(doc, url);
+  redisClient.get(url, async (error, urlData) => {
+    if (error) console.log(error);
+    if (urlData != null) {
+      // Send back cached data
+      res.json(JSON.parse(urlData));
     } else {
-      metadata.error = 'Network response was not ok';
-    }
-  } catch (error) {
-    console.log('getLinkMetaData catch error:', error);
-    metadata.error = error;
-    if (error.name === 'AbortError') {
-      metadata.error.customMessage = 'Fetch request was aborted';
-    } else {
-      metadata.error.customMessage = 'There was a problem with the fetch request';
-    }
-  }
+      // Get new data
+      let metadata = {};
+      
+      try {
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), 10000);
+        const response = await fetch(url, {
+          mode: 'no-cors',
+          signal: controller.signal
+        });
+        if (response.ok) {
+          const html = await response.text();
+          const doc = domino.createWindow(html).document;
+          metadata = metaDataParser.getMetadata(doc, url);
+        } else {
+          metadata.error = 'Network response was not ok';
+        }
+      } catch (error) {
+        console.log('getLinkMetaData catch error:', error);
+        metadata.error = error;
+        if (error.name === 'AbortError') {
+          metadata.error.customMessage = 'Fetch request was aborted';
+        } else {
+          metadata.error.customMessage = 'There was a problem with the fetch request';
+        }
+      }
+      
+      metadata.icon ||= '/images/global.svg';
+      metadata.hostName = new URL(url).hostname;
 
-  metadata.icon ||= '/images/global.svg';
-  metadata.hostName = new URL(url).hostname;
-  res.json(metadata);
+      res.json(metadata);
+      if (!metadata.error) {
+        // Cache response if no errors
+        redisClient.setex(url, DEFAULT_EXPIRATION, JSON.stringify(metadata));
+      }
+    }
+  });
 }

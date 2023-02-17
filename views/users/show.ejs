@@ -385,10 +385,7 @@
         },
         success: async res => {
           if (res.loggedOut) return window.location = '/';
-          if (thisEl.hasClass('link')) {
-            const thisJobID = $('#job-link-preview').data('last-job-id');
-            handleViewingLinkPreview(thisJobID, true);
-          }
+          if (thisEl.hasClass('link')) handleViewingLinkPreview(jobID);
         },
         error: function() {
           console.log(arguments);
@@ -427,18 +424,14 @@
 
   }
 
-  function handleViewingLinkPreview(jobID, getMetaData) {
+  function handleViewingLinkPreview(jobID) {
 
+    getJobLinkMetaData(jobID);
     const rowID = `#job-${jobID}`;
-    $('#job-link-preview').data('row-id', rowID);
     
-    if (($('#job-link-preview').data('last-job-id') !== jobID) || getMetaData) {
-      $('#job-link-preview').addClass('viewing loading');
-      const preference = $(rowID).find('.preference .job-text').text();
-      $('#loader').removeClass().addClass(`pref-${preference}`);
-      getJobLinkMetaData(jobID);
-      $('#job-link-preview').data('last-job-id', jobID);
-    }
+    $('#job-link-preview').addClass('viewing loading');
+    const preference = $(rowID).find('.preference .job-text').text();
+    $('#loader').removeClass().addClass(`pref-${preference}`);
     
     const jobLinkTextEl = $(`#job-${jobID}`).find('.job-link-cell .job-input')[0];
     const cellPos = jobLinkTextEl.getBoundingClientRect();
