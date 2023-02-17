@@ -3,15 +3,24 @@ const Contact = require('../models/contact');
 const User = require('../models/user');
 
 const DEFAULT_EXPIRATION = 60 * 60 * 24; // 1 day
-const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
-const REDIS_PORT = process.env.REDIS_PORT || '6379';
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+const REDIS_HOST = process.env.REDIS_HOST;
+const REDIS_PORT = process.env.REDIS_PORT;
 
 const metaDataParser = require('page-metadata-parser');
 const domino = require('domino');
 const Redis = require('redis');
+
 const redisClient = Redis.createClient({
-  host: REDIS_HOST,
-  port: REDIS_PORT
+  url: `redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`
+});
+
+redisClient.on('connect', () => {
+  console.log('Connected to Redis server');
+});
+
+redisClient.on('error', (err) => {
+  console.error('Redis error:', err);
 });
 
 module.exports = {
