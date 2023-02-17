@@ -4,11 +4,15 @@ const User = require('../models/user');
 
 const DEFAULT_EXPIRATION = 60 * 60 * 24; // 1 day
 const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+const REDIS_PORT = process.env.REDIS_PORT || '6379';
 
 const metaDataParser = require('page-metadata-parser');
 const domino = require('domino');
 const Redis = require('redis');
-const redisClient = Redis.createClient({ host: REDIS_HOST });
+const redisClient = Redis.createClient({
+  host: REDIS_HOST,
+  port: REDIS_PORT
+});
 
 module.exports = {
   getLinkMetaData,
