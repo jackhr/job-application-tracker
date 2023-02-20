@@ -20,7 +20,7 @@ const jobSchema = Schema({
   },
   remote: {
     type: String,
-    enum: ['Remote', 'Hybrid', 'On-site'],
+    enum: ['Remote', 'Hybrid', 'On-Site'],
     default: 'Remote'
   },
   dateApplied: {
@@ -48,6 +48,11 @@ const jobSchema = Schema({
   coverLetter: {
     type: String,
     default: 'Link_to_my_cover_letter'
+  },
+  type: {
+    type: String,
+    enum: ['Contract', 'Temporary', 'Temp-To-Hire', 'Full Time'],
+    default: 'Full Time'
   },
   status: {
     type: String,

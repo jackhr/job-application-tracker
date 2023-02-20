@@ -47,6 +47,7 @@
               <th>Notes</th>
               <th>Application Status</th>
               <th>Contact</th>
+              <th>Job Type</th>
               <th>Employer Response</th>
               <th>Cover Letter</th>
               <th>Your Preference</th>
@@ -119,6 +120,15 @@
                     <span class="job-text hide"><%= job.contact.tel %></span>
                     <input data-old-val="<%= job.contact.tel %>" class="job-input contact tel" type="text" name="tel" value="<%= job.contact.tel %>">
                   </div>
+                </td>
+                <td class="no-break-cell type-cell <%= job.type %>">
+                  <span class="job-text"><%= job.type %></span>
+                  <select data-old-val="<%= job.type %>" class="job-select type hide" name="type">
+                    <option <%= job.type === 'Full Time' ? 'selected' : '' %> value="Full Time">Full Time</option>
+                    <option <%= job.type === 'Contract' ? 'selected' : '' %> value="Contract">Contract</option>
+                    <option <%= job.type === 'Temporary' ? 'selected' : '' %> value="Temporary">Temporary</option>
+                    <option <%= job.type === 'Temp-To-Hire' ? 'selected' : '' %> value="Temp-To-Hire">Temp-To-Hire</option>
+                  </select>
                 </td>
                 <td class="no-break-cell response-cell <%= job.response %>">
                   <span class="job-text"><%= job.response %></span>
@@ -225,7 +235,7 @@
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLink) %>'), "targets": 4 },
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showNotes) %>'), "targets": 7 },
       { "visible": JSON.parse('<%= JSON.stringify(preferences.showContact) %>'), "targets": 9 },
-      { "visible": JSON.parse('<%= JSON.stringify(preferences.showCoverLetter) %>'), "targets": 11 },
+      { "visible": JSON.parse('<%= JSON.stringify(preferences.showCoverLetter) %>'), "targets": 12 },
     ],
     order: [[1, 'asc']],
     scrollY:        '80vh',
@@ -583,13 +593,13 @@
 
         const companyClassName = $('.cast-shadow').length ? 'cast-shadow' : '';
 
-        const newRow = $(`
-          <tr id="job-${job._id}" class="pref-${job.preference}" data-job-id="${job._id}"><td class="company dtfc-fixed-left sorting_1 ${companyClassName}"><span class="job-text hide">${job.companyName}</span><input name="companyName" data-old-val="${job.companyName}" class="job-input" type="text" value="${job.companyName}"></td><td class="date-applied-cell"><span class="job-text">${job.dateApplied.toDateString()}</span><input class="job-date dateApplied hide" type="date" name="dateApplied" value></td><td><span class="job-text hide">${job.title}</span><input name="title" data-old-val="${job.title}" class="job-input" type="text" value="${job.title}"></td><td><span class="job-text hide">${job.location}</span><input name="location" data-old-val="${job.location}" class="job-input" type="text" value="${job.location}"></td><td class="job-link-cell" data-need-metadata="true"><span class="job-text hide">${job.link}</span><input name="link" data-old-val="${job.link}" class="job-input link" type="text" value="${job.link}"></td><td><span class="job-text">${job.remote}</span><select data-old-val="${job.remote}" class="job-select remote hide" name="remote"><option ${job.remote === 'Remote' ? 'selected' : ''} value="Remote">Remote</option><option ${job.remote === 'Hybrid' ? 'selected' : ''} value="Hybrid">Hybrid</option><option ${job.remote === 'On-Site' ? 'selected' : ''} value="On-Site">On-Site</option></select></td><td><span class="job-text hide">${job.salary}</span><span style="position: absolute;">$</span><input data-old-val="${job.salary}" class="job-input salary" type="text" name="salary" value="${job.salary}"></td><td><span class="job-text hide">${job.notes}</span><div contenteditable="" class="job-input notes" data-old-val="${job.notes}" name="notes">${job.notes}</div></td><td class="status-cell ${job.status}"><span class="job-text">${job.status}</span><select data-old-val="${job.status}" class="job-select status hide" name="status"><option ${job.status === 'Not Started Yet' ? 'selected' : ''} value="Not Started Yet">Not Started Yet</option><option ${job.status === 'In Progress' ? 'selected' : ''} value="In Progress">In Progress</option><option ${job.status === 'Submitted' ? 'selected' : ''} value="Submitted">Submitted</option></select></td><td><div class="contact-item-container"><label>Name:</label><span class="job-text hide">${job.contact.name}</span><input data-old-val="${job.contact.name}" class="job-input contact name" type="text" name="name" value="${job.contact.name}"></div><div class="contact-item-container"><label>Email:</label><span class="job-text hide">${job.contact.email}</span><input data-old-val="${job.contact.email}" class="job-input contact email" type="text" name="email" value="${job.contact.email}"></div><div class="contact-item-container"><label>Tel:</label><span class="job-text hide">${job.contact.tel}</span><input data-old-val="${job.contact.tel}" class="job-input contact tel" type="text" name="tel" value="${job.contact.tel}"></div></td><td class="response-cell ${job.response}"><span class="job-text">${job.response}</span><select data-old-val="${job.response}" class="job-select response hide" name="response"><option ${job.response === 'No Response' ? 'selected' : ''} value="No Response">No Response</option><option ${job.response === 'Interviewing' ? 'selected' : ''} value="Interviewing">Interviewing</option><option ${job.response === 'Offer Made' ? 'selected' : ''} value="Offer Made">Offer Made</option><option ${job.response === 'Declined' ? 'selected' : ''} value="Declined">Declined</option></select></td><td><span class="job-text hide">${job.coverLetter}</span><input data-old-val="${job.coverLetter}" class="job-input coverLetter" type="text" name="coverLetter" value="${job.coverLetter}"></td><td style="position: relative;"><span class="job-text">${job.preference}</span><select data-old-val="${job.preference}" class="job-select preference hide" name="preference"><option ${job.preference == '1' ? 'selected' : ''} value="1">1</option><option ${job.preference == '2' ? 'selected' : ''} value="2">2</option><option ${job.preference == '3' ? 'selected' : ''} value="3">3</option><option ${job.preference == '4' ? 'selected' : ''} value="4">4</option></select><div class="delete-btn"><img src="/images/close-black.svg" alt="Close button"></div></td></tr>
-        `);
+        const newRow = $(`<tr id="job-${job._id}" class="pref-${job.preference}" data-job-id="${job._id}"><td class="company dtfc-fixed-left sorting_1 ${companyClassName}"><span class="job-text hide">${job.companyName}</span><input name="companyName" data-old-val="${job.companyName}" class="job-input" type="text" value="${job.companyName}"></td><td class="date-applied-cell"><span class="job-text">${job.dateApplied.toDateString()}</span><input class="job-date dateApplied hide" type="date" name="dateApplied" value></td><td><span class="job-text hide">${job.title}</span><input name="title" data-old-val="${job.title}" class="job-input" type="text" value="${job.title}"></td><td><span class="job-text hide">${job.location}</span><input name="location" data-old-val="${job.location}" class="job-input" type="text" value="${job.location}"></td><td class="job-link-cell" data-need-metadata="true"><span class="job-text hide">${job.link}</span><input name="link" data-old-val="${job.link}" class="job-input link" type="text" value="${job.link}"></td><td><span class="job-text">${job.remote}</span><select data-old-val="${job.remote}" class="job-select remote hide" name="remote"><option selected value="Remote">Remote</option><option value="Hybrid">Hybrid</option><option value="On-Site">On-Site</option></select></td><td><span class="job-text hide">${job.salary}</span><span style="position: absolute;">$</span><input data-old-val="${job.salary}" class="job-input salary" type="text" name="salary" value="${job.salary}"></td><td><span class="job-text hide">${job.notes}</span><div contenteditable="" class="job-input notes" data-old-val="${job.notes}" name="notes">${job.notes}</div></td><td class="status-cell ${job.status}"><span class="job-text">${job.status}</span><select data-old-val="${job.status}" class="job-select status hide" name="status"><option selected value="Not Started Yet">Not Started Yet</option><option value="In Progress">In Progress</option><option value="Submitted">Submitted</option></select></td><td><div class="contact-item-container"><label>Name:</label><span class="job-text hide">${job.contact.name}</span><input data-old-val="${job.contact.name}" class="job-input contact name" type="text" name="name" value="${job.contact.name}"></div><div class="contact-item-container"><label>Email:</label><span class="job-text hide">${job.contact.email}</span><input data-old-val="${job.contact.email}" class="job-input contact email" type="text" name="email" value="${job.contact.email}"></div><div class="contact-item-container"><label>Tel:</label><span class="job-text hide">${job.contact.tel}</span><input data-old-val="${job.contact.tel}" class="job-input contact tel" type="text" name="tel" value="${job.contact.tel}"></div></td><td class="no-break-cell type-cell ${job.type}"><span class="job-text">${job.type}</span><select data-old-val="${job.type}" class="job-select type hide" name="type"><option selected value="Full Time">Full Time</option><option value="Contract">Contract</option><option value="Temporary">Temporary</option><option value="Temp-To-Hire">Temp-To-Hire</option></select></td><td class="response-cell ${job.response}"><span class="job-text">${job.response}</span><select data-old-val="${job.response}" class="job-select response hide" name="response"><option selected value="No Response">No Response</option><option value="Interviewing">Interviewing</option><option value="Offer Made">Offer Made</option><option value="Declined">Declined</option></select></td><td><span class="job-text hide">${job.coverLetter}</span><input data-old-val="${job.coverLetter}" class="job-input coverLetter" type="text" name="coverLetter" value="${job.coverLetter}"></td><td style="position: relative;"><span class="job-text">${job.preference}</span><select data-old-val="${job.preference}" class="job-select preference hide" name="preference"><option value="1">1</option><option value="2">2</option><option selected value="3">3</option><option value="4">4</option></select><div class="delete-btn"><img src="/images/close-black.svg" alt="Close button"></div></td></tr>`);
 
         state.jobsTable.row.add(newRow[0]).draw(false);
 
         initEvents();
+
+        scrollToNewRow(`#job-${job._id}`);
         
       },
       error: function() {
@@ -597,7 +607,18 @@
       }
     })
     
-  })
+  });
+
+  function scrollToNewRow(selector) {
+    const row = $(selector)[0];
+    console.log(row);
+
+    $('.dataTables_scrollBody')[0].scrollBy({
+      top: (($(window).height()/2) + (row.getBoundingClientRect().y * -1)) * -1,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
 
   $('.nav-option').on('click', () => $('#nav').removeClass('open'));
 
