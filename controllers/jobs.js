@@ -124,7 +124,7 @@ async function getLinkMetaData(req, res) {
       metadata.hostName = new URL(url).hostname;
 
       res.json(metadata);
-      if (!metadata.error) {
+      if (!metadata.error || metadata.error.name === 'AbortError') {
         // Cache response if no errors
         redisClient.setex(url, DEFAULT_EXPIRATION, JSON.stringify(metadata));
       }
