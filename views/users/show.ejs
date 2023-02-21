@@ -210,67 +210,136 @@
 
 <script>
 
-  const state = {
-    jobs: JSON.parse(`<%- JSON.stringify(jobs); %>`)
-    .reduce((acc, job) => {
-      job = formatDateFields(job);
-      acc[job._id] = job;
-      return acc;
-    }, {}),
-    dtOptions: {}
-  }
+  const state = {};
 
-  try {
-    state.dtOptions.buttons = JSON.parse(`<%- (Number(onMobile) ? '[]' : '["copy","csv","excel","pdf","print"]') %>`);
-    state.dtOptions.dom = 'BfrtiplF';
-  } catch (error) {
-    console.log(error);
-    state.dtOptions.dom = 'frtiplF';
-  }
 
-  state.jobsTable = $('#all-jobs-table').removeAttr('width').DataTable({
-    ...state.dtOptions,
-    columnDefs: [
-      { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLocation) %>'), "targets": 3 },
-      { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLink) %>'), "targets": 4 },
-      { "visible": JSON.parse('<%= JSON.stringify(preferences.showNotes) %>'), "targets": 7 },
-      { "visible": JSON.parse('<%= JSON.stringify(preferences.showContact) %>'), "targets": 9 },
-      { "visible": JSON.parse('<%= JSON.stringify(preferences.showCoverLetter) %>'), "targets": 12 },
-    ],
-    order: [[1, 'asc']],
-    scrollY:        '80vh',
-    scrollX:        true,
-    scrollCollapse: true,
-    paging:         false,
-    fixedColumns:   true
+  /*-------------------- EVENT HANDLERS --------------------*/
+
+  $(document).ready(init);
+
+  $(window).on('resize', () => {
+
+    if ($(this).width() <= 768) {
+      if (state.currCompanyWidth !== '100px') adjustCompanyWidths('100px');
+    } else {
+      if (state.currCompanyWidth !== '170px') adjustCompanyWidths('170px');
+    }
+
+  });
+  
+  $('#settings-btn').on('click', () => $('.main-section.settings').addClass('viewing') );
+
+  $('#job-link-preview').hover(
+    function() {
+      clearTimeout(state.beginPreviewTimeout);
+      clearTimeout(state.endPreviewTimeout);
+    },
+    function() {
+      state.endPreviewTimeout = setTimeout(() => {
+        $('#job-link-preview').removeClass('viewing');
+      }, 1000);
+    }
+  )
+
+  $('.main-section.settings .close-btn').on('click', () => $('.main-section.settings').removeClass('viewing'))
+  
+  $('.preference-wrapper .toggle').on('click', function() {
+    const toggle = $(this);
+    const preference = toggle.data('preference');
+
+    $.ajax({
+      type: "PUT",
+      url: '/users/<%= user._id %>/preferences',
+      data: {
+        preference
+      },
+      success: res => {
+        if (res.error) return handleSwalError(res.error);
+
+        toggle.toggleClass('on', res[preference]);
+        $('#all-jobs-table').toggleClass('hide-colors', !res.showColors);
+        
+        if (toggle.data('col-idx')) {
+          state.jobsTable
+            .column(toggle.data('col-idx'))
+            .visible(res[preference])
+            .columns
+            .adjust()
+            .draw();
+        }
+      },
+      error: function() {
+        console.log(arguments);
+      }
+    })
   });
 
-  function initInputs() {
+  $('#job-link-preview .header .options img').on('click', async function() {
+
+    const linkEl = $($('#job-link-preview').data('rowID')).find('.job-input.link');
+
+    if ($(this).hasClass('edit')) linkEl.focus();
+    else {
+      const text = $($('#job-link-preview').data('rowID')).find('.job-input.link').val();
+      const result = await navigator.clipboard.writeText(text);
+      $('#job-link-preview, .job-link-cell').removeClass('viewing');
+      swal({
+        title: 'Succes!',
+        icon: 'success',
+        text: 'Link copied to clipboard.'
+      })
+    }
+  });
+
+  $('#job-link-preview .info').on('click', function() {
+    const link = $(this).data('link');
+    window.open(link, '_blank');
+  });
+
+  $('#hamburger-icon').on('click', () => $('#nav').toggleClass('open'))
+
+  $('#add-job-btn').off('click').on('click', handleAddJob);
+
+  $('.nav-option').on('click', () => $('#nav').removeClass('open'));
+
+
+  /*-------------------- HELPER FUNCTIONS --------------------*/
+  
+  function init() {
+    state.jobs = JSON.parse(`<%- JSON.stringify(jobs); %>`).reduce((acc, job) => acc[job._id] = formatDateFields(job), {});
+    state.dtOptions = {};
+    state.currCompanyWidth = null;
+  
+    try {
+      state.dtOptions.buttons = JSON.parse(`<%- (Number(onMobile) ? '[]' : '["copy","csv","excel","pdf","print"]') %>`);
+      state.dtOptions.dom = 'BfrtiplF';
+    } catch (error) {
+      console.log(error);
+      state.dtOptions.dom = 'frtiplF';
+    }
+  
+    state.jobsTable = $('#all-jobs-table').removeAttr('width').DataTable({
+      ...state.dtOptions,
+      columnDefs: [
+        { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLocation) %>'), "targets": 3 },
+        { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLink) %>'), "targets": 4 },
+        { "visible": JSON.parse('<%= JSON.stringify(preferences.showNotes) %>'), "targets": 7 },
+        { "visible": JSON.parse('<%= JSON.stringify(preferences.showContact) %>'), "targets": 9 },
+        { "visible": JSON.parse('<%= JSON.stringify(preferences.showCoverLetter) %>'), "targets": 12 },
+      ],
+      order: [[1, 'asc']],
+      scrollY:        '80vh',
+      scrollX:        true,
+      scrollCollapse: true,
+      paging:         false,
+      fixedColumns:   true
+    });
+
     for (let id in state.jobs) {
       const appliedInput = $(`tr[data-job-id="${id}"] .job-date.dateApplied`);
       appliedInput.val(state.jobs[id].dateAppliedVal);
     }
-  }
 
-  $('#settings-btn').on('click', () => $('.main-section.settings').addClass('viewing') );
-
-  function formatDateFields(job) {
-    job.dateApplied = new Date(job.dateApplied);
-    
-    const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000);
-    job.dateApplied = new Date(UTCAppliedTS);
-
-    let appliedMonth = job.dateApplied.getMonth()+1;
-    if (appliedMonth < 10) appliedMonth = '0'+appliedMonth;
-    let appliedDay = job.dateApplied.getDate();
-    if (appliedDay < 10) appliedDay = '0'+appliedDay;
-
-    job.dateAppliedVal = `${job.dateApplied.getFullYear()}-${appliedMonth}-${appliedDay}`;
-    return job;
-  }
-
-  $(document).ready(() => {
-    initInputs();
     initEvents();
 
     const tableWrapper = $('.dataTables_scrollBody')[0];
@@ -292,8 +361,22 @@
       clearTimeout(state.beginPreviewTimeout);
       clearTimeout(state.endPreviewTimeout);
     });
+  }
+
+  function formatDateFields(job) {
+    job.dateApplied = new Date(job.dateApplied);
     
-  });
+    const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000);
+    job.dateApplied = new Date(UTCAppliedTS);
+
+    let appliedMonth = job.dateApplied.getMonth()+1;
+    if (appliedMonth < 10) appliedMonth = '0'+appliedMonth;
+    let appliedDay = job.dateApplied.getDate();
+    if (appliedDay < 10) appliedDay = '0'+appliedDay;
+
+    job.dateAppliedVal = `${job.dateApplied.getFullYear()}-${appliedMonth}-${appliedDay}`;
+    return job;
+  }
 
   function setCellBackgroundColor(selectEl, className, newVal) {
     $(selectEl).parents(`.${className}-cell`)
@@ -302,6 +385,7 @@
   }
 
   function initEvents() {
+
     $('#all-jobs-table tbody tr .delete-btn').off('click').on('click', function() {
       const jobID = $(this).parents('tr').data('job-id');
       const company = $(this).parents('tr').find('td.company .job-input').val();
@@ -439,7 +523,7 @@
     getJobLinkMetaData(jobID);
     const rowID = `#job-${jobID}`;
     
-    $('#job-link-preview').addClass('viewing loading');
+    $('#job-link-preview').addClass('viewing loading').data('rowID', rowID);
     const preference = $(rowID).find('.preference .job-text').text();
     $('#loader').removeClass().addClass(`pref-${preference}`);
     
@@ -476,55 +560,6 @@
       
   }
 
-  function positionJobPreview(top, left) {
-    
-  }
-  
-  $('#job-link-preview').hover(
-    function() {
-      clearTimeout(state.beginPreviewTimeout);
-      clearTimeout(state.endPreviewTimeout);
-    },
-    function() {
-      state.endPreviewTimeout = setTimeout(() => {
-        $('#job-link-preview').removeClass('viewing');
-      }, 1000);
-    }
-  )
-
-  $('.main-section.settings .close-btn').on('click', () => $('.main-section.settings').removeClass('viewing'))
-  
-  $('.preference-wrapper .toggle').on('click', function() {
-    const toggle = $(this);
-    const preference = toggle.data('preference');
-
-    $.ajax({
-      type: "PUT",
-      url: '/users/<%= user._id %>/preferences',
-      data: {
-        preference
-      },
-      success: res => {
-        if (res.error) return handleSwalError(res.error);
-
-        toggle.toggleClass('on', res[preference]);
-        $('#all-jobs-table').toggleClass('hide-colors', !res.showColors);
-        
-        if (toggle.data('col-idx')) {
-          state.jobsTable
-            .column(toggle.data('col-idx'))
-            .visible(res[preference])
-            .columns
-            .adjust()
-            .draw();
-        }
-      },
-      error: function() {
-        console.log(arguments);
-      }
-    })
-  });
-
   function handleSwalError(error) {
     swal({
       icon: 'error',
@@ -557,29 +592,25 @@
 
   }
 
-  $('#job-link-preview .header .options img').on('click', async function() {
-    const linkEl = $($('#job-link-preview').data('rowId')).find('.job-input.link');
-    if ($(this).hasClass('edit')) linkEl.focus();
-    else {
-      const text = $($('#job-link-preview').data('rowId')).find('.job-input.link').val();
-      const result = await navigator.clipboard.writeText(text);
-      $('#job-link-preview, .job-link-cell').removeClass('viewing');
-      swal({
-        title: 'Succes!',
-        icon: 'success',
-        text: 'Link copied to clipboard.'
-      })
-    }
-  });
+  function scrollToNewRow(selector) {
+    const row = $(selector)[0];
+    console.log(row);
 
-  $('#job-link-preview .info').on('click', function() {
-    const link = $(this).data('link');
-    window.open(link, '_blank');
-  });
+    $('.dataTables_scrollBody')[0].scrollBy({
+      top: (($(window).height()/2) + (row.getBoundingClientRect().y * -1)) * -1,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
 
-  $('#hamburger-icon').on('click', () => $('#nav').toggleClass('open'))
+  function adjustCompanyWidths(val) {
+    $('#all-jobs-table tbody tr td:first-child').css('width', val);
+    $('#all-jobs-table tbody tr td:first-child input').css('width', val);
+    state.currCompanyWidth = val;
+    state.jobsTable.columns.adjust();
+  }
 
-  $('#add-job-btn').off('click').on('click', function() {
+  function handleAddJob() {
   
     $.ajax({
       type: "POST",
@@ -607,36 +638,6 @@
       }
     })
     
-  });
-
-  function scrollToNewRow(selector) {
-    const row = $(selector)[0];
-    console.log(row);
-
-    $('.dataTables_scrollBody')[0].scrollBy({
-      top: (($(window).height()/2) + (row.getBoundingClientRect().y * -1)) * -1,
-      left: 0,
-      behavior: 'smooth'
-    });
-  }
-
-  $('.nav-option').on('click', () => $('#nav').removeClass('open'));
-
-  $(window).on('resize', () => {
-
-    if ($(this).width() <= 768) {
-      if (this.currCompanyWidth !== '100px') adjustCompanyWidths('100px');
-    } else {
-      if (this.currCompanyWidth !== '170px') adjustCompanyWidths('170px');
-    }
-
-  });
-
-  function adjustCompanyWidths(val) {
-    $('#all-jobs-table tbody tr td:first-child').css('width', val);
-    $('#all-jobs-table tbody tr td:first-child input').css('width', val);
-    this.currCompanyWidth = val;
-    state.jobsTable.columns.adjust();
   }
 
 </script>
