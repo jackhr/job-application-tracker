@@ -42,6 +42,18 @@
     
   </script>
 <% } %>
+<% if (email_exists) { %>
+  <script>
+
+      swal({
+        title: 'Invalid Credentials',
+        icon: 'warning',
+        text: 'That email already exists. Please use another.'
+      });
+    
+  </script>
+<% } %>
+
 
 <script>
 

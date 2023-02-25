@@ -38,6 +38,8 @@ function getAll(req, res) {
 
 async function create(req, res) {
   try {
+    const existingUser = await User.find({'email': req.body.email});
+    if (existingUser.length) return res.redirect('/?email_exists=true');
     const preferences = await Preferences.create({});
     const user = await User.create({
       ...req.body,
@@ -50,6 +52,7 @@ async function create(req, res) {
     });
     res.redirect(`/users/${user._id}`);
   } catch(error) {
+    console.log(error);
     res.redirect('/?invalid_creds=true')
   }
 }

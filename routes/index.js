@@ -11,7 +11,8 @@ router.get('/', function(req, res, next) {
     }
   }
   res.render('index', {
-    invalid_creds: !!req.query.invalid_creds
+    invalid_creds: !!req.query.invalid_creds,
+    email_exists: !!req.query.email_exists
   });
   
 });
