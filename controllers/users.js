@@ -39,7 +39,10 @@ function getAll(req, res) {
 async function create(req, res) {
   try {
     const existingUser = await User.find({'email': req.body.email});
-    if (existingUser.length) return res.redirect('/?email_exists=true');
+    if (existingUser.length) {
+      req.session.emailExists = true;
+      return res.redirect('/');
+    }
     const preferences = await Preferences.create({});
     const user = await User.create({
       ...req.body,
@@ -53,15 +56,22 @@ async function create(req, res) {
     res.redirect(`/users/${user._id}`);
   } catch(error) {
     console.log(error);
-    res.redirect('/?invalid_creds=true')
+    req.session.invalidCreds = true;
+    res.redirect('/');
   }
 }
 
 async function login(req, res) {
   const user = await User.findOne({ email: req.body.email }).populate('preferences').exec();
-  if (!user) return res.redirect('/?invalid_creds=true');
+  if (!user) {
+    req.session.invalidCreds = true;
+    return res.redirect('/');
+  }
   const match = await bcrypt.compare(req.body.password, user.password);
-  if (!match) return res.redirect('/?invalid_creds=true');
+  if (!match) {
+    req.session.invalidCreds = true;
+    return res.redirect('/');
+  }
   const md = new MobileDetect(req.headers['user-agent']);
   createCookies(res, {
     token: createJWT(user),

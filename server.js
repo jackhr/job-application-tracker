@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var methodOverride = require('method-override');
+var session = require('express-session');
 
 // It's very important to require dotenv before any other module
 // that depends upon the properties added to process.env 
@@ -29,6 +30,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
+app.use(session({
+  secret: process.env.EXPRESS_SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
 
 // Middleware to verify token and assign user object to req.user
 // Be sure to mount before routes
