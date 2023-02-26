@@ -13,6 +13,9 @@ module.exports = {
 };
 
 async function show(req, res) {
+
+  
+  
   const token = req.cookies.token;
   const payload = JSON.parse(atob(token.split('.')[1]));
   const userId = payload.user._id;

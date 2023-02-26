@@ -6,6 +6,7 @@
   --red: #da4707;
   --blue: #319eea;
   --blue_light: #73afff;
+  --orange: #ffb630;
 }
 *,
 *:before,
@@ -129,16 +130,19 @@ header {
 .response-cell .job-text {
   cursor: pointer;
 }
-tr.interest-1 {
+tr.interest-Very_interested {
   background-color: var(--yellow) !important;
 }
-tr.interest-2 {
+tr.interest-Interested {
   background-color: var(--green) !important;
 }
-tr.interest-3 {
+tr.interest-Somewhat_interested {
   background-color: var(--blue_light) !important;
 }
-tr.interest-4 {
+tr.interest-Curious {
+  background-color: var(--orange) !important;
+}
+tr.interest-Mildly_interested {
   background-color: var(--grey) !important;
 }
 .status-cell.Not.Started.Yet {
@@ -165,19 +169,21 @@ tr.interest-4 {
 
 #all-jobs-table.hide-colors .odd .response-cell,
 #all-jobs-table.hide-colors .odd .status-cell,
-#all-jobs-table.hide-colors .odd.interest-1,
-#all-jobs-table.hide-colors .odd.interest-2,
-#all-jobs-table.hide-colors .odd.interest-3,
-#all-jobs-table.hide-colors .odd.interest-4
+#all-jobs-table.hide-colors .odd.interest-Very_interested,
+#all-jobs-table.hide-colors .odd.interest-Interested,
+#all-jobs-table.hide-colors .odd.interest-Somewhat_interested,
+#all-jobs-table.hide-colors .odd.interest-Curious,
+#all-jobs-table.hide-colors .odd.interest-Mildly_interested
 {
   background-color: var(--grey_light) !important;
 }
 #all-jobs-table.hide-colors .even .response-cell,
 #all-jobs-table.hide-colors .even .status-cell,
-#all-jobs-table.hide-colors .even.interest-1,
-#all-jobs-table.hide-colors .even.interest-2,
-#all-jobs-table.hide-colors .even.interest-3,
-#all-jobs-table.hide-colors .even.interest-4
+#all-jobs-table.hide-colors .even.interest-Very_interested,
+#all-jobs-table.hide-colors .even.interest-Interested,
+#all-jobs-table.hide-colors .even.interest-Somewhat_interested,
+#all-jobs-table.hide-colors .even.interest-Curious,
+#all-jobs-table.hide-colors .even.interest-Mildly_interested
 {
   background-color: var(--grey) !important;
 }
@@ -425,16 +431,19 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   margin: auto;
   display: none;
 }
-#loader.interest-1 {
-  border-top-color: var(--yellow);
-}
-#loader.interest-2 {
+#loader.interest-Very_interested {
   border-top-color: var(--green);
 }
-#loader.interest-3 {
+#loader.interest-Interested {
   border-top-color: var(--blue_light);
 }
-#loader.interest-4 {
+#loader.interest-Somewhat_interested {
+  border-top-color: var(--yellow);
+}
+#loader.interest-Curious {
+  border-top-color: var(--orange);
+}
+#loader.interest-Mildly_interested {
   border-top-color: var(--grey);
 }
 #job-link-preview.loading #loader {

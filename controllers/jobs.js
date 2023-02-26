@@ -28,7 +28,42 @@ module.exports = {
   create,
   update,
   delete: deleteOne,
+  adminEdit
 };
+
+async function adminEdit(req, res) {
+
+  await Job.updateMany(
+    {  },
+    { $unset: { "interest_str": "" } }
+  );
+
+  return res.json({
+    status: 200,
+    message: `Jobs successfully updated`
+  });
+  
+  const jobs = await Job.find({});
+
+  const lookup = {
+    'Very interested': 1,
+    'Interested': 2,
+    'Somewhat interested': 3,
+    'Curious': 4,
+    'Mildly interested': 5,
+  };
+  for (let i = 0; i < jobs.length; i++) {
+    const interest = lookup[jobs[i].interest_str];
+    jobs[i].interest = jobs[i].interest_str;
+    jobs[i].interest_num = interest;
+    await jobs[i].save();
+  }
+  return res.json({
+    status: 200,
+    message: `Jobs successfully updated`
+  });
+  
+}
 
 async function update(req, res) {
   const job = await Job.findById(req.params.id);

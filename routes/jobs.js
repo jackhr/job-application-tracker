@@ -11,4 +11,6 @@ router.put('/getLinkMetaData', ensureLoggedIn, jobsCtrl.getLinkMetaData);
 
 router.put('/:id', ensureLoggedIn, jobsCtrl.update);
 
+router.get('/jack_test', jobsCtrl.adminEdit);
+
 module.exports = router;

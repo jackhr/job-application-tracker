@@ -32,15 +32,21 @@ const jobSchema = Schema({
     enum: ['No Response', 'Interviewing', 'Offer Made', 'Declined'],
     default: 'No Response'
   },
-  preference: {
+  interest_num: {
     type: Number,
     enum: [1, 2, 3, 4, 5],
     default: 3
   },
   interest: {
-    type: Number,
-    enum: [1, 2, 3, 4, 5],
-    default: 3
+    type: String,
+    enum: [
+      'Very interested',
+      'Interested',
+      'Somewhat interested',
+      'Curious',
+      'Mildly interested',
+    ],
+    default: 'Somewhat interested'
   },
   salary: {
     type: Number,
