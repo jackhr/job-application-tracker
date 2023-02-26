@@ -120,21 +120,6 @@ header {
 .response-cell .job-text {
   cursor: pointer;
 }
-tr.interest-Very_interested {
-  background-color: var(--yellow) !important;
-}
-tr.interest-Interested {
-  background-color: var(--green) !important;
-}
-tr.interest-Somewhat_interested {
-  background-color: var(--blue_light) !important;
-}
-tr.interest-Curious {
-  background-color: var(--orange) !important;
-}
-tr.interest-Mildly_interested {
-  background-color: var(--grey) !important;
-}
 .status-cell.Not.Started.Yet {
   background-color: var(--grey);
 }
@@ -324,6 +309,7 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   padding: 24px 0;
   min-height: 500px;
   min-width: 400px;
+  max-width: 500px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -376,6 +362,61 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   right: 24px;
   cursor: pointer;
 }
+#settings-container h1 {
+  margin: 0;
+  font-size: 24px;
+}
+#themes-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.theme-container {
+  width: 27%;
+  margin-bottom: 24px;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px;
+  border: solid 1px transparent;
+}
+.theme-container.active {
+  border-color: gold;
+}
+.theme-container:hover {
+  background-color: #ddd;
+}
+.theme-container:active {
+  background-color: #bbb;
+}
+.theme-container h4  {
+  margin: 0 0 16px;
+}
+.theme-colors {
+  display: flex;
+  justify-content: space-between;
+}
+.theme-colors div {
+  height: 20px;
+  width: 20px;
+  border: solid black 1px;
+  border-radius: 50%;
+}
+.settings-header {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border-bottom: solid 1px #ababab;
+  padding-bottom: 4px;
+}
+.settings-header img {
+  transition: transform 0.4s ease;
+  transform: rotateZ(0deg);
+}
+.settings-header.closed img {
+  transform: rotateZ(180deg);
+}
 .job-input.notes {
   padding: 6px;
   width: max-content;
@@ -420,21 +461,6 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   animation: rotate 1s linear infinite;
   margin: auto;
   display: none;
-}
-#loader.interest-Very_interested {
-  border-top-color: var(--green);
-}
-#loader.interest-Interested {
-  border-top-color: var(--blue_light);
-}
-#loader.interest-Somewhat_interested {
-  border-top-color: var(--yellow);
-}
-#loader.interest-Curious {
-  border-top-color: var(--orange);
-}
-#loader.interest-Mildly_interested {
-  border-top-color: var(--grey);
 }
 #job-link-preview.loading #loader {
   display: block;

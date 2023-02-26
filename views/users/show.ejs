@@ -57,7 +57,7 @@
             <% jobs.forEach(job => { %>
               <% const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000); %>
               <% job.dateApplied = new Date(UTCAppliedTS); %>
-              <tr id="job-<%= job._id %>" class="interest-<%= job.interest.replaceAll(' ', '_') %>" data-job-id="<%= job._id %>">
+              <tr id="job-<%= job._id %>" class="interest-<%= job.interest.replaceAll(' ', '_') %> <%= preferences.theme %>" data-job-id="<%= job._id %>">
                 <td class="company">
                   <span class="job-text hide"><%= job.companyName %></span>
                   <input name="companyName" data-old-val="<%= job.companyName %>" class="job-input companyName" type="text" value="<%= job.companyName %>">
@@ -202,6 +202,132 @@
                 <div class="circle"></div>
               </div>
             </div>
+            <div class="settings-header theme" data-target="#themes-container">
+              <h1>Color Themes</h1>
+              <img src="/images/down-arrow.svg" alt="Chevron arrow">
+            </div>
+            <div id="themes-container">
+              <div class="theme-container default <%= preferences.theme === 'default' ? 'active' : '' %>" data-theme="default">
+                <h4>Default</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container metallic <%= preferences.theme === 'metallic' ? 'active' : '' %>" data-theme="metallic">
+                <h4>Metallic</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container bright <%= preferences.theme === 'bright' ? 'active' : '' %>" data-theme="bright">
+                <h4>Bright</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container earth <%= preferences.theme === 'earth' ? 'active' : '' %>" data-theme="earth">
+                <h4>Earth</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container regal <%= preferences.theme === 'regal' ? 'active' : '' %>" data-theme="regal">
+                <h4>Regal</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container forest <%= preferences.theme === 'forest' ? 'active' : '' %>" data-theme="forest">
+                <h4>Forest</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container ocean <%= preferences.theme === 'ocean' ? 'active' : '' %>" data-theme="ocean">
+                <h4>Ocean</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container fire <%= preferences.theme === 'fire' ? 'active' : '' %>" data-theme="fire">
+                <h4>Fire</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container jewel <%= preferences.theme === 'jewel' ? 'active' : '' %>" data-theme="jewel">
+                <h4>Jewel</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container pastel <%= preferences.theme === 'pastel' ? 'active' : '' %>" data-theme="pastel">
+                <h4>Pastel</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container neutral <%= preferences.theme === 'neutral' ? 'active' : '' %>" data-theme="neutral">
+                <h4>Neutral</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+              <div class="theme-container assisted <%= preferences.theme === 'assisted' ? 'active' : '' %>" data-theme="assisted">
+                <h4>Assisted</h4>
+                <div class="theme-colors">
+                  <div class="Very_interested"></div>
+                  <div class="Interested"></div>
+                  <div class="Somewhat_interested"></div>
+                  <div class="Curious"></div>
+                  <div class="Mildly_interested"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -215,6 +341,51 @@
 
 
   /*-------------------- EVENT HANDLERS --------------------*/
+
+  $('.settings-header').on('click', function() {
+    const selector = $(this).data('target');
+    $(this).toggleClass('closed');
+    if ($(this).hasClass('closed')) {
+      $(selector).slideUp(1000);
+    } else {
+      $(selector).slideDown(1000);
+    }
+  });
+
+  $('.theme-container').on('click', function() {
+    console.log('clicking');
+    const thisEl = $(this);
+    if (thisEl.hasClass('active')) return;
+    const theme = thisEl.data('theme');
+    const themeTitle = thisEl.children('h4').text();
+    $.ajax({
+      type: "PUT",
+      url: '/users/<%= user._id %>/preferences/theme',
+      data: {
+        theme
+      },
+      success: res => {
+        if (res.error) return handleSwalError(res.error);
+
+        swal({
+          icon: 'success',
+          title: 'Theme Changed',
+          text: 'Your default theme is now: '+themeTitle
+        });
+        
+        console.log(res);
+
+        const themeClasses = 'default metallic bright earth regal forest ocean fire jewel pastel neutral assisted';
+        $('#all-jobs-table tbody tr').removeClass(themeClasses).addClass(theme);
+
+        $('.theme-container').removeClass('active');
+        thisEl.addClass('active');
+      },
+      error: function() {
+        console.log(arguments);
+      }
+    })
+  })
 
   $(document).ready(init);
 
@@ -535,8 +706,9 @@
     const rowID = `#job-${jobID}`;
     
     $('#job-link-preview').addClass('viewing loading').data('rowID', rowID);
-    const interest = $(rowID).find('.interest .job-text').text();
-    $('#loader').removeClass().addClass(`interest-${interest.replaceAll(' ', '_')}`);
+    const loaderClass =$(rowID).prop('className').replaceAll('odd', '').replaceAll('even', '');
+    // const interest = $(rowID).find('.interest .job-text').text();
+    $('#loader').removeClass().addClass(loaderClass);
     
     const jobLinkTextEl = $(`#job-${jobID}`).find('.job-link-cell .job-input')[0];
     const cellPos = jobLinkTextEl.getBoundingClientRect();

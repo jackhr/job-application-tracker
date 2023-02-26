@@ -1,0 +1,468 @@
+.theme-container.default .theme-colors .Very_interested,
+tr.default.interest-Very_interested {
+  background-color: var(--yellow) !important;
+}
+#loader.default.interest-Very_interested {
+  border-top-color: var(--yellow) !important;
+}
+.theme-container.default .theme-colors .Interested,
+tr.default.interest-Interested {
+  background-color: var(--green) !important;
+}
+#loader.default.interest-Interested {
+  border-top-color: var(--green) !important;
+}
+.theme-container.default .theme-colors .Somewhat_interested,
+tr.default.interest-Somewhat_interested {
+  background-color: var(--blue_light) !important;
+}
+#loader.default.interest-Somewhat_interested {
+  border-top-color: var(--blue_light) !important;
+}
+.theme-container.default .theme-colors .Curious,
+tr.default.interest-Curious {
+  background-color: var(--orange) !important;
+}
+#loader.default.interest-Curious {
+  border-top-color: var(--orange) !important;
+}
+.theme-container.default .theme-colors .Mildly_interested,
+tr.default.interest-Mildly_interested {
+  background-color: var(--grey) !important;
+}
+#loader.default.interest-Mildly_interested {
+  border-top-color: var(--grey) !important;
+}
+
+.theme-container.metallic .theme-colors .Very_interested,
+tr.metallic.interest-Very_interested {
+  background-color: var(--metallic_very_interested) !important;
+}
+#loader.metallic.interest-Very_interested {
+  border-top-color: var(--metallic_very_interested) !important;
+}
+.theme-container.metallic .theme-colors .Interested,
+tr.metallic.interest-Interested {
+  background-color: var(--metallic_interested) !important;
+}
+#loader.metallic.interest-Interested {
+  border-top-color: var(--metallic_interested) !important;
+}
+.theme-container.metallic .theme-colors .Somewhat_interested,
+tr.metallic.interest-Somewhat_interested {
+  background-color: var(--metallic_somewhat_interested) !important;
+}
+#loader.metallic.interest-Somewhat_interested {
+  border-top-color: var(--metallic_somewhat_interested) !important;
+}
+.theme-container.metallic .theme-colors .Curious,
+tr.metallic.interest-Curious {
+  background-color: var(--metallic_curious) !important;
+}
+#loader.metallic.interest-Curious {
+  border-top-color: var(--metallic_curious) !important;
+}
+.theme-container.metallic .theme-colors .Mildly_interested,
+tr.metallic.interest-Mildly_interested {
+  background-color: var(--metallic_mildly_interested) !important;
+}
+#loader.metallic.interest-Mildly_interested {
+  border-top-color: var(--metallic_mildly_interested) !important;
+}
+
+.theme-container.bright .theme-colors .Very_interested,
+tr.bright.interest-Very_interested {
+  background-color: var(--bright_very_interested) !important;
+}
+#loader.bright.interest-Very_interested {
+  border-top-color: var(--bright_very_interested) !important;
+}
+.theme-container.bright .theme-colors .Interested,
+tr.bright.interest-Interested {
+  background-color: var(--bright_interested) !important;
+}
+#loader.bright.interest-Interested {
+  border-top-color: var(--bright_interested) !important;
+}
+.theme-container.bright .theme-colors .Somewhat_interested,
+tr.bright.interest-Somewhat_interested {
+  background-color: var(--bright_somewhat_interested) !important;
+}
+#loader.bright.interest-Somewhat_interested {
+  border-top-color: var(--bright_somewhat_interested) !important;
+}
+.theme-container.bright .theme-colors .Curious,
+tr.bright.interest-Curious {
+  background-color: var(--bright_curious) !important;
+}
+#loader.bright.interest-Curious {
+  border-top-color: var(--bright_curious) !important;
+}
+.theme-container.bright .theme-colors .Mildly_interested,
+tr.bright.interest-Mildly_interested {
+  background-color: var(--bright_mildly_interested) !important;
+}
+#loader.bright.interest-Mildly_interested {
+  border-top-color: var(--bright_mildly_interested) !important;
+}
+
+.theme-container.earth .theme-colors .Very_interested,
+tr.earth.interest-Very_interested {
+  background-color: var(--earth_very_interested) !important;
+}
+#loader.earth.interest-Very_interested {
+  border-top-color: var(--earth_very_interested) !important;
+}
+.theme-container.earth .theme-colors .Interested,
+tr.earth.interest-Interested {
+  background-color: var(--earth_interested) !important;
+}
+#loader.earth.interest-Interested {
+  border-top-color: var(--earth_interested) !important;
+}
+.theme-container.earth .theme-colors .Somewhat_interested,
+tr.earth.interest-Somewhat_interested {
+  background-color: var(--earth_somewhat_interested) !important;
+}
+#loader.earth.interest-Somewhat_interested {
+  border-top-color: var(--earth_somewhat_interested) !important;
+}
+.theme-container.earth .theme-colors .Curious,
+tr.earth.interest-Curious {
+  background-color: var(--earth_curious) !important;
+}
+#loader.earth.interest-Curious {
+  border-top-color: var(--earth_curious) !important;
+}
+.theme-container.earth .theme-colors .Mildly_interested,
+tr.earth.interest-Mildly_interested {
+  background-color: var(--earth_mildly_interested) !important;
+}
+#loader.earth.interest-Mildly_interested {
+  border-top-color: var(--earth_mildly_interested) !important;
+}
+
+.theme-container.regal .theme-colors .Very_interested,
+tr.regal.interest-Very_interested {
+  background-color: var(--regal_very_interested) !important;
+}
+#loader.regal.interest-Very_interested {
+  border-top-color: var(--regal_very_interested) !important;
+}
+.theme-container.regal .theme-colors .Interested,
+tr.regal.interest-Interested {
+  background-color: var(--regal_interested) !important;
+}
+#loader.regal.interest-Interested {
+  border-top-color: var(--regal_interested) !important;
+}
+.theme-container.regal .theme-colors .Somewhat_interested,
+tr.regal.interest-Somewhat_interested {
+  background-color: var(--regal_somewhat_interested) !important;
+}
+#loader.regal.interest-Somewhat_interested {
+  border-top-color: var(--regal_somewhat_interested) !important;
+}
+.theme-container.regal .theme-colors .Curious,
+tr.regal.interest-Curious {
+  background-color: var(--regal_curious) !important;
+}
+#loader.regal.interest-Curious {
+  border-top-color: var(--regal_curious) !important;
+}
+.theme-container.regal .theme-colors .Mildly_interested,
+tr.regal.interest-Mildly_interested {
+  background-color: var(--regal_mildly_interested) !important;
+}
+#loader.regal.interest-Mildly_interested {
+  border-top-color: var(--regal_mildly_interested) !important;
+}
+
+.theme-container.forest .theme-colors .Very_interested,
+tr.forest.interest-Very_interested {
+  background-color: var(--forest_very_interested) !important;
+}
+#loader.forest.interest-Very_interested {
+  border-top-color: var(--forest_very_interested) !important;
+}
+.theme-container.forest .theme-colors .Interested,
+tr.forest.interest-Interested {
+  background-color: var(--forest_interested) !important;
+}
+#loader.forest.interest-Interested {
+  border-top-color: var(--forest_interested) !important;
+}
+.theme-container.forest .theme-colors .Somewhat_interested,
+tr.forest.interest-Somewhat_interested {
+  background-color: var(--forest_somewhat_interested) !important;
+}
+#loader.forest.interest-Somewhat_interested {
+  border-top-color: var(--forest_somewhat_interested) !important;
+}
+.theme-container.forest .theme-colors .Curious,
+tr.forest.interest-Curious {
+  background-color: var(--forest_curious) !important;
+}
+#loader.forest.interest-Curious {
+  border-top-color: var(--forest_curious) !important;
+}
+.theme-container.forest .theme-colors .Mildly_interested,
+tr.forest.interest-Mildly_interested {
+  background-color: var(--forest_mildly_interested) !important;
+}
+#loader.forest.interest-Mildly_interested {
+  border-top-color: var(--forest_mildly_interested) !important;
+}
+
+.theme-container.ocean .theme-colors .Very_interested,
+tr.ocean.interest-Very_interested {
+  background-color: var(--ocean_very_interested) !important;
+}
+#loader.ocean.interest-Very_interested {
+  border-top-color: var(--ocean_very_interested) !important;
+}
+.theme-container.ocean .theme-colors .Interested,
+tr.ocean.interest-Interested {
+  background-color: var(--ocean_interested) !important;
+}
+#loader.ocean.interest-Interested {
+  border-top-color: var(--ocean_interested) !important;
+}
+.theme-container.ocean .theme-colors .Somewhat_interested,
+tr.ocean.interest-Somewhat_interested {
+  background-color: var(--ocean_somewhat_interested) !important;
+}
+#loader.ocean.interest-Somewhat_interested {
+  border-top-color: var(--ocean_somewhat_interested) !important;
+}
+.theme-container.ocean .theme-colors .Curious,
+tr.ocean.interest-Curious {
+  background-color: var(--ocean_curious) !important;
+}
+#loader.ocean.interest-Curious {
+  border-top-color: var(--ocean_curious) !important;
+}
+.theme-container.ocean .theme-colors .Mildly_interested,
+tr.ocean.interest-Mildly_interested {
+  background-color: var(--ocean_mildly_interested) !important;
+}
+#loader.ocean.interest-Mildly_interested {
+  border-top-color: var(--ocean_mildly_interested) !important;
+}
+
+.theme-container.fire .theme-colors .Very_interested,
+tr.fire.interest-Very_interested {
+  background-color: var(--fire_very_interested) !important;
+}
+#loader.fire.interest-Very_interested {
+  border-top-color: var(--fire_very_interested) !important;
+}
+.theme-container.fire .theme-colors .Interested,
+tr.fire.interest-Interested {
+  background-color: var(--fire_interested) !important;
+}
+#loader.fire.interest-Interested {
+  border-top-color: var(--fire_interested) !important;
+}
+.theme-container.fire .theme-colors .Somewhat_interested,
+tr.fire.interest-Somewhat_interested {
+  background-color: var(--fire_somewhat_interested) !important;
+}
+#loader.fire.interest-Somewhat_interested {
+  border-top-color: var(--fire_somewhat_interested) !important;
+}
+.theme-container.fire .theme-colors .Curious,
+tr.fire.interest-Curious {
+  background-color: var(--fire_curious) !important;
+}
+#loader.fire.interest-Curious {
+  border-top-color: var(--fire_curious) !important;
+}
+.theme-container.fire .theme-colors .Mildly_interested,
+tr.fire.interest-Mildly_interested {
+  background-color: var(--fire_mildly_interested) !important;
+}
+#loader.fire.interest-Mildly_interested {
+  border-top-color: var(--fire_mildly_interested) !important;
+}
+
+.theme-container.jewel .theme-colors .Very_interested,
+tr.jewel.interest-Very_interested {
+  background-color: var(--jewel_very_interested) !important;
+}
+#loader.jewel.interest-Very_interested {
+  border-top-color: var(--jewel_very_interested) !important;
+}
+.theme-container.jewel .theme-colors .Interested,
+tr.jewel.interest-Interested {
+  background-color: var(--jewel_interested) !important;
+}
+#loader.jewel.interest-Interested {
+  border-top-color: var(--jewel_interested) !important;
+}
+.theme-container.jewel .theme-colors .Somewhat_interested,
+tr.jewel.interest-Somewhat_interested {
+  background-color: var(--jewel_somewhat_interested) !important;
+}
+#loader.jewel.interest-Somewhat_interested {
+  border-top-color: var(--jewel_somewhat_interested) !important;
+}
+.theme-container.jewel .theme-colors .Curious,
+tr.jewel.interest-Curious {
+  background-color: var(--jewel_curious) !important;
+}
+#loader.jewel.interest-Curious {
+  border-top-color: var(--jewel_curious) !important;
+}
+.theme-container.jewel .theme-colors .Mildly_interested,
+tr.jewel.interest-Mildly_interested {
+  background-color: var(--jewel_mildly_interested) !important;
+}
+#loader.jewel.interest-Mildly_interested {
+  border-top-color: var(--jewel_mildly_interested) !important;
+}
+
+.theme-container.pastel .theme-colors .Very_interested,
+tr.pastel.interest-Very_interested {
+  background-color: var(--pastel_very_interested) !important;
+}
+#loader.pastel.interest-Very_interested {
+  border-top-color: var(--pastel_very_interested) !important;
+}
+.theme-container.pastel .theme-colors .Interested,
+tr.pastel.interest-Interested {
+  background-color: var(--pastel_interested) !important;
+}
+#loader.pastel.interest-Interested {
+  border-top-color: var(--pastel_interested) !important;
+}
+.theme-container.pastel .theme-colors .Somewhat_interested,
+tr.pastel.interest-Somewhat_interested {
+  background-color: var(--pastel_somewhat_interested) !important;
+}
+#loader.pastel.interest-Somewhat_interested {
+  border-top-color: var(--pastel_somewhat_interested) !important;
+}
+.theme-container.pastel .theme-colors .Curious,
+tr.pastel.interest-Curious {
+  background-color: var(--pastel_curious) !important;
+}
+#loader.pastel.interest-Curious {
+  border-top-color: var(--pastel_curious) !important;
+}
+.theme-container.pastel .theme-colors .Mildly_interested,
+tr.pastel.interest-Mildly_interested {
+  background-color: var(--pastel_mildly_interested) !important;
+}
+#loader.pastel.interest-Mildly_interested {
+  border-top-color: var(--pastel_mildly_interested) !important;
+}
+
+.theme-container.bold .theme-colors .Very_interested,
+tr.bold.interest-Very_interested {
+  background-color: var(--bold_very_interested) !important;
+}
+#loader.bold.interest-Very_interested {
+  border-top-color: var(--bold_very_interested) !important;
+}
+.theme-container.bold .theme-colors .Interested,
+tr.bold.interest-Interested {
+  background-color: var(--bold_interested) !important;
+}
+#loader.bold.interest-Interested {
+  border-top-color: var(--bold_interested) !important;
+}
+.theme-container.bold .theme-colors .Somewhat_interested,
+tr.bold.interest-Somewhat_interested {
+  background-color: var(--bold_somewhat_interested) !important;
+}
+#loader.bold.interest-Somewhat_interested {
+  border-top-color: var(--bold_somewhat_interested) !important;
+}
+.theme-container.bold .theme-colors .Curious,
+tr.bold.interest-Curious {
+  background-color: var(--bold_curious) !important;
+}
+#loader.bold.interest-Curious {
+  border-top-color: var(--bold_curious) !important;
+}
+.theme-container.bold .theme-colors .Mildly_interested,
+tr.bold.interest-Mildly_interested {
+  background-color: var(--bold_mildly_interested) !important;
+}
+#loader.bold.interest-Mildly_interested {
+  border-top-color: var(--bold_mildly_interested) !important;
+}
+
+.theme-container.neutral .theme-colors .Very_interested,
+tr.neutral.interest-Very_interested {
+  background-color: var(--neutral_very_interested) !important;
+}
+#loader.neutral.interest-Very_interested {
+  border-top-color: var(--neutral_very_interested) !important;
+}
+.theme-container.neutral .theme-colors .Interested,
+tr.neutral.interest-Interested {
+  background-color: var(--neutral_interested) !important;
+}
+#loader.neutral.interest-Interested {
+  border-top-color: var(--neutral_interested) !important;
+}
+.theme-container.neutral .theme-colors .Somewhat_interested,
+tr.neutral.interest-Somewhat_interested {
+  background-color: var(--neutral_somewhat_interested) !important;
+}
+#loader.neutral.interest-Somewhat_interested {
+  border-top-color: var(--neutral_somewhat_interested) !important;
+}
+.theme-container.neutral .theme-colors .Curious,
+tr.neutral.interest-Curious {
+  background-color: var(--neutral_curious) !important;
+}
+#loader.neutral.interest-Curious {
+  border-top-color: var(--neutral_curious) !important;
+}
+.theme-container.neutral .theme-colors .Mildly_interested,
+tr.neutral.interest-Mildly_interested {
+  background-color: var(--neutral_mildly_interested) !important;
+}
+#loader.neutral.interest-Mildly_interested {
+  border-top-color: var(--neutral_mildly_interested) !important;
+}
+
+.theme-container.assisted .theme-colors .Very_interested,
+tr.assisted.interest-Very_interested {
+  background-color: var(--assisted_very_interested) !important;
+}
+#loader.assisted.interest-Very_interested {
+  border-top-color: var(--assisted_very_interested) !important;
+}
+.theme-container.assisted .theme-colors .Interested,
+tr.assisted.interest-Interested {
+  background-color: var(--assisted_interested) !important;
+}
+#loader.assisted.interest-Interested {
+  border-top-color: var(--assisted_interested) !important;
+}
+.theme-container.assisted .theme-colors .Somewhat_interested,
+tr.assisted.interest-Somewhat_interested {
+  background-color: var(--assisted_somewhat_interested) !important;
+}
+#loader.assisted.interest-Somewhat_interested {
+  border-top-color: var(--assisted_somewhat_interested) !important;
+}
+.theme-container.assisted .theme-colors .Curious,
+tr.assisted.interest-Curious {
+  background-color: var(--assisted_curious) !important;
+}
+#loader.assisted.interest-Curious {
+  border-top-color: var(--assisted_curious) !important;
+}
+.theme-container.assisted .theme-colors .Mildly_interested,
+tr.assisted.interest-Mildly_interested {
+  background-color: var(--assisted_mildly_interested) !important;
+}
+#loader.assisted.interest-Mildly_interested {
+  border-top-color: var(--assisted_mildly_interested) !important;
+}
+

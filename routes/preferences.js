@@ -5,6 +5,8 @@ var ensureLoggedIn = require('../config/ensureLoggedIn');
 
 router.put('/users/:id/preferences', ensureLoggedIn, preferencesCtrl.update);
 
+router.put('/users/:id/preferences/theme', ensureLoggedIn, preferencesCtrl.updateTheme);
+
 router.delete('/users/:id/preferences', ensureLoggedIn, preferencesCtrl.delete);
 
 module.exports = router;

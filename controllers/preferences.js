@@ -3,8 +3,26 @@ const Preferences = require('../models/preferences');
 
 module.exports = {
   update,
+  updateTheme,
   delete: deleteOne
 };
+
+async function updateTheme(req, res) {
+  
+  try {
+    const user = await User.findById(req.user._id).populate('preferences').exec();
+    user.preferences.theme = req.body.theme;
+    await user.preferences.save();
+
+    res.json(user.preferences);
+  } catch(error) {
+    res.json({
+      status: 500,
+      error: error.message
+    });
+  }
+
+}
 
 async function update(req, res) {
   
