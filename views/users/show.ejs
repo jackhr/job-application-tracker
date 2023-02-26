@@ -327,6 +327,9 @@
         { "visible": JSON.parse('<%= JSON.stringify(preferences.showNotes) %>'), "targets": 7 },
         { "visible": JSON.parse('<%= JSON.stringify(preferences.showContact) %>'), "targets": 9 },
         { "visible": JSON.parse('<%= JSON.stringify(preferences.showCoverLetter) %>'), "targets": 12 },
+        { "width": "160px", "targets": 8 },
+        { "width": "160px", "targets": 11 },
+        { "width": "160px", "targets": 13 },
       ],
       order: [[1, 'asc']],
       scrollY:        '80vh',
@@ -449,7 +452,7 @@
           ];
           $(this).parents('tr')
           .removeClass(classNames.join(' '))
-          .addClass(`interest-${$(this).val()}`);
+          .addClass(`interest-${$(this).val().replaceAll(' ', '_')}`);
         }
       }
     });

@@ -1,0 +1,94 @@
+:root {
+  --yellow: #f6e16f;
+  --green: #3ad73a;
+  --grey: #ddd;
+  --grey_light: #ececec;
+  --red: #da4707;
+  --blue: #319eea;
+  --blue_light: #73afff;
+  --orange: #ffb630;
+
+  --earth_tones_very_interested: #7DF9FF;
+  --earth_tones_interested: #228B22;
+  --earth_tones_somewhat_interested: #0077BE;
+  --earth_tones_curious: #FF4500;
+  --earth_tones_mildly_interested: #FADADD;
+
+  --regal_very_interested: #6B3FA0;
+  --regal_interested: #008080;
+  --regal_somewhat_interested: #4682B4;
+  --regal_curious: #FFDB58;
+  --regal_mildly_interested: #E0B0FF;
+
+  --forest_very_interested: #A3C1AD;
+  --forest_interested: #8DB600;
+  --forest_somewhat_interested: #548D44;
+  --forest_curious: #4F7942;
+  --forest_mildly_interested: #014421;
+
+  --ocean_1_very_interested: #00CED1;
+  --ocean_1_interested: #097FA4;
+  --ocean_1_somewhat_interested: #0077BE;
+  --ocean_1_curious: #FF4040;
+  --ocean_1_mildly_interested: #C4C4C4;
+
+  --ocean_2_very_interested: #0047AB;
+  --ocean_2_interested: #008080;
+  --ocean_2_somewhat_interested: #40E0D0;
+  --ocean_2_curious: #FF7F50;
+  --ocean_2_mildly_interested: #F5DEB3;
+
+  --fire_very_interested: #FF4500;
+  --fire_interested: #FF7F50;
+  --fire_somewhat_interested: #FFA07A;
+  --fire_curious: #FFC0CB;
+  --fire_mildly_interested: #FFDAB9;
+
+  --jewel_tones_very_interested: #9400D3;
+  --jewel_tones_interested: #00BFFF;
+  --jewel_tones_somewhat_interested: #32CD32;
+  --jewel_tones_curious: #FFD700;
+  --jewel_tones_mildly_interested: #FF1493;
+
+  --pastel_very_interested: #FFC8DD;
+  --pastel_interested: #D7A9E3;
+  --pastel_somewhat_interested: #A6E3E9;
+  --pastel_curious: #F5B5FC;
+  --pastel_mildly_interested: #F3D1DC;
+
+  --bold_primary_very_interested: #FF5733;
+  --bold_primary_interested: #FEF65B;
+  --bold_primary_somewhat_interested: #FFC300;
+  --bold_primary_curious: #00BFFF;
+  --bold_primary_mildly_interested: #CC8AFF;
+
+  --neutral_very_interested: #E8E8E8;
+  --neutral_interested: #D3D3D3;
+  --neutral_somewhat_interested: #BEBEBE;
+  --neutral_curious: #A9A9A9;
+  --neutral_mildly_interested: #949494;
+
+  --metallic_very_interested: #C0C0C0;
+  --metallic_interested: #BDB76B;
+  --metallic_somewhat_interested: #CD7F32;
+  --metallic_curious: #FFD700;
+  --metallic_mildly_interested: #FFA500;
+
+  --bright_very_interested: #FF1493;
+  --bright_interested: #00FF00;
+  --bright_somewhat_interested: #00FFFF;
+  --bright_curious: #FFFF00;
+  --bright_mildly_interested: #FF4500;
+
+  --grayscale_very_interested: #222222;
+  --grayscale_interested: #444444;
+  --grayscale_somewhat_interested: #777777;
+  --grayscale_curious: #AAAAAA;
+  --grayscale_mildly_interested: #CCCCCC;
+
+  --assisted_very_interested: #00CCFF;
+  --assisted_interested: #00FF66;
+  --assisted_somewhat_interested: #FFA500;
+  --assisted_curious: #FF69B4;
+  --assisted_mildly_interested: #D3D3D3;
+}
