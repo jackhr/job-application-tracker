@@ -129,16 +129,16 @@ header {
 .response-cell .job-text {
   cursor: pointer;
 }
-tr.pref-1 {
+tr.interest-1 {
   background-color: var(--yellow) !important;
 }
-tr.pref-2 {
+tr.interest-2 {
   background-color: var(--green) !important;
 }
-tr.pref-3 {
+tr.interest-3 {
   background-color: var(--blue_light) !important;
 }
-tr.pref-4 {
+tr.interest-4 {
   background-color: var(--grey) !important;
 }
 .status-cell.Not.Started.Yet {
@@ -165,19 +165,19 @@ tr.pref-4 {
 
 #all-jobs-table.hide-colors .odd .response-cell,
 #all-jobs-table.hide-colors .odd .status-cell,
-#all-jobs-table.hide-colors .odd.pref-1,
-#all-jobs-table.hide-colors .odd.pref-2,
-#all-jobs-table.hide-colors .odd.pref-3,
-#all-jobs-table.hide-colors .odd.pref-4
+#all-jobs-table.hide-colors .odd.interest-1,
+#all-jobs-table.hide-colors .odd.interest-2,
+#all-jobs-table.hide-colors .odd.interest-3,
+#all-jobs-table.hide-colors .odd.interest-4
 {
   background-color: var(--grey_light) !important;
 }
 #all-jobs-table.hide-colors .even .response-cell,
 #all-jobs-table.hide-colors .even .status-cell,
-#all-jobs-table.hide-colors .even.pref-1,
-#all-jobs-table.hide-colors .even.pref-2,
-#all-jobs-table.hide-colors .even.pref-3,
-#all-jobs-table.hide-colors .even.pref-4
+#all-jobs-table.hide-colors .even.interest-1,
+#all-jobs-table.hide-colors .even.interest-2,
+#all-jobs-table.hide-colors .even.interest-3,
+#all-jobs-table.hide-colors .even.interest-4
 {
   background-color: var(--grey) !important;
 }
@@ -315,6 +315,8 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   transition: opacity 0.4s ease;
   pointer-events: none;
   z-index: 50;
+  height: 100vh;
+  max-height: 100vh;
 }
 .viewing {
   opacity: 1 !important;
@@ -323,13 +325,19 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
 #settings-main {
   background: #fff;
   border-radius: 12px;
-  padding: 24px;
+  padding: 24px 0;
   min-height: 500px;
   min-width: 400px;
   display: flex;
   align-items: center;
   flex-direction: column;
   box-shadow: 0 0 34px 12px rgb(0 0 0 / 20%);
+  max-height: 90%;
+}
+#settings-container {
+  width: 100%;
+  padding: 0 24px;
+  overflow-y: auto;
 }
 .preference-wrapper {
   display: flex;
@@ -417,16 +425,16 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   margin: auto;
   display: none;
 }
-#loader.pref-1 {
+#loader.interest-1 {
   border-top-color: var(--yellow);
 }
-#loader.pref-2 {
+#loader.interest-2 {
   border-top-color: var(--green);
 }
-#loader.pref-3 {
+#loader.interest-3 {
   border-top-color: var(--blue_light);
 }
-#loader.pref-4 {
+#loader.interest-4 {
   border-top-color: var(--grey);
 }
 #job-link-preview.loading #loader {

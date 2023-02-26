@@ -37,6 +37,11 @@ const jobSchema = Schema({
     enum: [1, 2, 3, 4, 5],
     default: 3
   },
+  interest: {
+    type: Number,
+    enum: [1, 2, 3, 4, 5],
+    default: 3
+  },
   salary: {
     type: Number,
     default: 0,
