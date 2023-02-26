@@ -45,7 +45,7 @@ async function update(req, res) {
 
 async function create(req, res) {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).populate('preferences').exec();
     const contact = await Contact.create({});
     const job = await Job.create({
       companyName: `My New Company ${++user.applicationCount}`,
@@ -54,7 +54,10 @@ async function create(req, res) {
     });
     await user.save();
     job.contact = contact;
-    res.json(job);
+    res.json({
+      job,
+      preferences: user.preferences
+    });
   } catch(error) {
     res.json({
       error: error.message
