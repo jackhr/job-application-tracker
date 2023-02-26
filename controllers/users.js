@@ -7,7 +7,6 @@ const MobileDetect = require('mobile-detect');
 
 module.exports = {
   show,
-  getAll,
   create,
   login,
   logout
@@ -26,14 +25,6 @@ async function show(req, res) {
     user: req.user,
     onMobile: Number(req.cookies.onMobile)
   });
-}
-
-function getAll(req, res) {
-  User.find({}, (err, users) => {
-    res.render('users/sign-in.ejs', {
-      users
-    });
-  })
 }
 
 async function create(req, res) {
@@ -90,10 +81,8 @@ function logout(req, res) {
 
 function createJWT(user) {
   return jwt.sign(
-    // data payload
     { user },
     process.env.SECRET,
-    // expires in 1 hour
     { expiresIn: ('1h') }
   );
 }
