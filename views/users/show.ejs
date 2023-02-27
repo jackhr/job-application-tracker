@@ -478,7 +478,9 @@
   /*-------------------- HELPER FUNCTIONS --------------------*/
   
   function init() {
-    state.jobs = JSON.parse(`<%- JSON.stringify(jobs); %>`).reduce((acc, job) => acc[job._id] = formatDateFields(job), {});
+    state.jobs = JSON.parse(`<%- JSON.stringify(jobs); %>`).reduce((acc, job) => {
+      return acc[job._id] = formatDateFields(job), acc;
+    }, {});
     state.dtOptions = {};
     state.currCompanyWidth = null;
   
