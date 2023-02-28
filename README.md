@@ -45,6 +45,7 @@ It's all in the name! Use this Job Application Tracker to help yourself keep tra
 
 - [x] Create MVP application
 - [x] General authentication
+- [x] Add color theme selection in settings tab.
 - [ ] Provide a snapshot of "What's going on". A quick bit of analytical data.
 - [ ] Add more settings to give a more comforting UX
 - [ ] Convert Job retrieval to ajax request rather than on page load with ejs
