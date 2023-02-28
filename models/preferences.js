@@ -26,6 +26,10 @@ const preferencesSchema = Schema({
     type: Boolean,
     default: true
   },
+  showSalary: {
+    type: Boolean,
+    default: true
+  },
   theme: {
     type: String,
     default: 'default'

@@ -197,6 +197,12 @@
               </div>
             </div>
             <div class="preference-wrapper">
+              <label>View Salary in the main table?</label>
+              <div data-preference="showSalary" data-col-idx="6" class="toggle <%= preferences.showSalary ? 'on' : '' %>">
+                <div class="circle"></div>
+              </div>
+            </div>
+            <div class="preference-wrapper">
               <label>Display colors?</label>
               <div data-preference="showColors" class="toggle <%= preferences.showColors ? 'on' : '' %>">
                 <div class="circle"></div>
@@ -497,6 +503,7 @@
       columnDefs: [
         { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLocation) %>'), "targets": 3 },
         { "visible": JSON.parse('<%= JSON.stringify(preferences.showJobLink) %>'), "targets": 4 },
+        { "visible": JSON.parse('<%= JSON.stringify(preferences.showSalary) %>'), "targets": 6 },
         { "visible": JSON.parse('<%= JSON.stringify(preferences.showNotes) %>'), "targets": 7 },
         { "visible": JSON.parse('<%= JSON.stringify(preferences.showContact) %>'), "targets": 9 },
         { "visible": JSON.parse('<%= JSON.stringify(preferences.showCoverLetter) %>'), "targets": 12 },
