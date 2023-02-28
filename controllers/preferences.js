@@ -10,7 +10,7 @@ module.exports = {
 async function updateTheme(req, res) {
   
   try {
-    const user = await User.findById(req.user._id).populate('preferences').exec();
+    const user = await User.findById(req.session.user._id).populate('preferences').exec();
     user.preferences.theme = req.body.theme;
     await user.preferences.save();
 
@@ -27,7 +27,7 @@ async function updateTheme(req, res) {
 async function update(req, res) {
   
   try {
-    const user = await User.findById(req.user._id).populate('preferences').exec();
+    const user = await User.findById(req.session.user._id).populate('preferences').exec();
     user.preferences[req.body.preference] = !user.preferences[req.body.preference];
     await user.preferences.save();
 
@@ -43,7 +43,7 @@ async function update(req, res) {
 
 async function deleteOne(req, res) {
 
-  const preferences = await Preferences.findByIdAndDelete(req.user.preferences);
+  const preferences = await Preferences.findByIdAndDelete(req.session.user.preferences);
   
   if (req.xhr) return res.json(preferences);
 

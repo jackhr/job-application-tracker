@@ -45,12 +45,12 @@ async function update(req, res) {
 
 async function create(req, res) {
   try {
-    const user = await User.findById(req.user._id).populate('preferences').exec();
+    const user = await User.findById(req.session.user._id).populate('preferences').exec();
     const contact = await Contact.create({});
     const job = await Job.create({
       companyName: `My New Company ${++user.applicationCount}`,
       contact: contact._id,
-      user: req.user._id
+      user: req.session.user._id
     });
     await user.save();
     job.contact = contact;
@@ -68,7 +68,7 @@ async function create(req, res) {
 async function deleteOne(req, res) {
   try {
     const job = await Job.findByIdAndDelete(req.params.id);
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.session.user._id);
     user.applicationCount--;
     await user.save();
     await Contact.findByIdAndDelete(job.contact);

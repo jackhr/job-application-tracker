@@ -13,25 +13,19 @@ module.exports = {
 };
 
 async function show(req, res) {
-
-  
-  
-  const token = req.cookies.token;
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  const userId = payload.user._id;
-  if (userId !== req.params.id) return redirect('/users/'+userId);
-  const jobs = await Job.find({user: req.params.id}).populate(['contact']).exec()
-  const preferences = await Preferences.findById(req.user.preferences);
+  const jobs = await Job.find({user: req.session.user._id}).populate(['contact']).exec()
+  const preferences = await Preferences.findById(req.session.user.preferences);
   return res.render('users/show', {
     jobs,
     preferences,
-    user: req.user,
-    onMobile: Number(req.cookies.onMobile)
+    user: req.session.user,
+    onMobile: Number(req.session.onMobile)
   });
 }
 
 async function create(req, res) {
   try {
+    if (req.body.password.length < 5) throw new Error();
     const existingUser = await User.find({'email': req.body.email});
     if (existingUser.length) {
       req.session.emailExists = true;
@@ -43,9 +37,10 @@ async function create(req, res) {
       preferences: preferences._id
     });
     const md = new MobileDetect(req.headers['user-agent']);
-    createCookies(res, {
+    updateSessionVals(req, {
       token: createJWT(user),
-      onMobile: Number(!!md.phone())
+      onMobile: Number(!!md.phone()),
+      user
     });
     res.redirect(`/users/${user._id}`);
   } catch(error) {
@@ -67,17 +62,17 @@ async function login(req, res) {
     return res.redirect('/');
   }
   const md = new MobileDetect(req.headers['user-agent']);
-  createCookies(res, {
+  updateSessionVals(req, {
     token: createJWT(user),
-    onMobile: Number(!!md.phone())
+    onMobile: Number(!!md.phone()),
+    user
   });
   res.redirect('/users/'+user._id);
 }
 
 function logout(req, res) {
-  res.clearCookie('token');
-  res.clearCookie('onMobile');
-  res.redirect('/');
+  req.session.destroy();
+  return res.redirect('/');
 }
 
 /*-- Helper Functions --*/
@@ -86,13 +81,18 @@ function createJWT(user) {
   return jwt.sign(
     { user },
     process.env.SECRET,
-    { expiresIn: ('1h') }
+    { expiresIn: process.env.JWT_MAX_AGE.toString() }
   );
 }
 
-function createCookies(res, cookiesObj) {
-  for (let cookieName in cookiesObj) {
-    const cookieVal = cookiesObj[cookieName];
-    res.cookie(cookieName, cookieVal, { httpOnly: true });
+function updateSessionVals(req, newSessionVals) {
+  for (const sessionKey in newSessionVals) {
+    const sessionVal = newSessionVals[sessionKey];
+    if (sessionKey === 'user') {
+      if (typeof sessionVal.preferences === 'object') {
+        sessionVal.preferences = sessionVal.preferences._id
+      }
+    }
+    req.session[sessionKey] = sessionVal;
   }
 }

@@ -1,10 +1,12 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var methodOverride = require('method-override');
-var session = require('express-session');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const methodOverride = require('method-override');
+const session = require('express-session');
+const checkSession = require('./config/checkSession');
+const checkToken = require('./config/checkToken');
 
 // It's very important to require dotenv before any other module
 // that depends upon the properties added to process.env 
@@ -12,13 +14,13 @@ require('dotenv').config();
 // connect to the database with Mongoose
 require('./config/database');
 
-var indexRouter = require('./routes/index');
-var preferencesRouter = require('./routes/preferences');
-var usersRouter = require('./routes/users');
-var jobsRouter = require('./routes/jobs');
-var contactsRouter = require('./routes/contacts');
+const indexRouter = require('./routes/index');
+const preferencesRouter = require('./routes/preferences');
+const usersRouter = require('./routes/users');
+const jobsRouter = require('./routes/jobs');
+const contactsRouter = require('./routes/contacts');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,12 +35,16 @@ app.use(methodOverride('_method'));
 app.use(session({
   secret: process.env.EXPRESS_SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { 
+    maxAge: parseInt(process.env.SESSION_MAX_AGE),
+  }
 }));
 
-// Middleware to verify token and assign user object to req.user
+// Middleware to verify session and token
 // Be sure to mount before routes
-app.use(require('./config/checkToken'));
+app.use(checkSession);
+app.use(checkToken);
 
 app.use('/', indexRouter);
 app.use('/', preferencesRouter);

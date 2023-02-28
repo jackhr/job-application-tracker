@@ -359,7 +359,6 @@
   });
 
   $('.theme-container').on('click', function() {
-    console.log('clicking');
     const thisEl = $(this);
     if (thisEl.hasClass('active')) return;
     const theme = thisEl.data('theme');
@@ -372,8 +371,6 @@
       },
       success: res => {
         if (res.error) return handleSwalError(res.error);
-
-        console.log(res);
 
         const themeClasses = 'default metallic bright earth regal forest ocean fire jewel pastel neutral assisted';
         $('#all-jobs-table tbody tr').removeClass(themeClasses).addClass(theme);
@@ -788,7 +785,6 @@
 
   function scrollToNewRow(selector) {
     const row = $(selector)[0];
-    console.log(row);
 
     $('.dataTables_scrollBody')[0].scrollBy({
       top: (($(window).height()/2) + (row.getBoundingClientRect().y * -1)) * -1,
