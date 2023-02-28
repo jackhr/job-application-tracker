@@ -40,7 +40,8 @@ async function create(req, res) {
     updateSessionVals(req, {
       token: createJWT(user),
       onMobile: Number(!!md.phone()),
-      user
+      loggedIn: true,
+      user,
     });
     res.redirect(`/users/${user._id}`);
   } catch(error) {
@@ -65,6 +66,7 @@ async function login(req, res) {
   updateSessionVals(req, {
     token: createJWT(user),
     onMobile: Number(!!md.phone()),
+    loggedIn: true,
     user
   });
   res.redirect('/users/'+user._id);
