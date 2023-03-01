@@ -50,4 +50,5 @@ It's all in the name! Use this Job Application Tracker to help yourself keep tra
 - [ ] Add more settings to give a more comforting UX
 - [ ] Convert Job retrieval to ajax request rather than on page load with ejs
 - [ ] Option to recover password (incase you forget...)
+- [ ] Allows single job application view to see one job application in greater context.
 - [ ] Improve styling (CSS never ends!)
