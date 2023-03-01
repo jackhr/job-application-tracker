@@ -13,8 +13,11 @@ module.exports = {
 };
 
 async function show(req, res) {
-  const jobs = await Job.find({user: req.session.user._id}).populate(['contact']).exec()
+  console.log(req.url);
+  const jobs = await Job.find({user: req.session.user._id}).populate(['contact']).exec();
   const preferences = await Preferences.findById(req.session.user.preferences);
+  console.log(preferences);
+  console.log('we are in the show function');
   return res.render('users/show', {
     jobs,
     preferences,
@@ -52,7 +55,7 @@ async function create(req, res) {
 }
 
 async function login(req, res) {
-  const user = await User.findOne({ email: req.body.email }).populate('preferences').exec();
+  const user = await User.findOne({ email: req.body.email });
   if (!user) {
     req.session.invalidCreds = true;
     return res.redirect('/');
@@ -69,7 +72,8 @@ async function login(req, res) {
     loggedIn: true,
     user
   });
-  res.redirect('/users/'+user._id);
+  // return res.redirect(`/`);
+  return res.redirect(`/users/${user._id}`);
 }
 
 function logout(req, res) {

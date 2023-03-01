@@ -16,6 +16,7 @@ module.exports = function(req, res, next) {
         return next();
       });
     }
+  } else {
+    return next();
   }
-  next();
 };
