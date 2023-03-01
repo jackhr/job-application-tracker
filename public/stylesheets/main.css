@@ -107,6 +107,7 @@ header {
 #all-jobs-table tbody tr {
   position: relative;
   height: 54px;
+  transition: background-color 0.7s ease;
 }
 .no-break-cell span {
   display: block;
