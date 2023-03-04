@@ -34,6 +34,15 @@ const preferencesSchema = Schema({
     type: String,
     default: 'default'
   },
+  orderColIdx: {
+    type: Number,
+    default: 1
+  },
+  orderDirection: {
+    type: String,
+    enum: ['asc', 'desc'],
+    default: 'desc'
+  },
 }, {
   timestamps: true
 });

@@ -13,11 +13,8 @@ module.exports = {
 };
 
 async function show(req, res) {
-  console.log(req.url);
   const jobs = await Job.find({user: req.session.user._id}).populate(['contact']).exec();
   const preferences = await Preferences.findById(req.session.user.preferences);
-  console.log(preferences);
-  console.log('we are in the show function');
   return res.render('users/show', {
     jobs,
     preferences,
@@ -72,7 +69,6 @@ async function login(req, res) {
     loggedIn: true,
     user
   });
-  // return res.redirect(`/`);
   return res.redirect(`/users/${user._id}`);
 }
 

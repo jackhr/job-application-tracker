@@ -203,12 +203,19 @@
               </div>
             </div>
             <div class="preference-wrapper">
+              <label>Ordering Direction?</label>
+              <select class="order-direction">
+                <option <%= preferences.orderDirection === "asc" ? "selected" : "" %> value="asc">Ascending</option>
+                <option <%= preferences.orderDirection === "desc" ? "selected" : "" %> value="desc">Descending</option>
+              </select>
+            </div>
+            <div class="preference-wrapper">
               <label>Display colors?</label>
               <div data-preference="showColors" class="toggle <%= preferences.showColors ? 'on' : '' %>">
                 <div class="circle"></div>
               </div>
             </div>
-            <div class="settings-header theme" data-target="#themes-container">
+            <div class="settings-header theme closed" data-target="#themes-container">
               <h1>Color Themes</h1>
               <img src="/images/down-arrow.svg" alt="Chevron arrow">
             </div>
@@ -413,34 +420,15 @@
   $('.main-section.settings .close-btn').on('click', () => $('.main-section.settings').removeClass('viewing'))
   
   $('.preference-wrapper .toggle').on('click', function() {
-    const toggle = $(this);
-    const preference = toggle.data('preference');
+    
+    handleChangePreference($(this), $(this).data('preference'));
+    
+  });
+  
+  $('select.order-direction').on('input', function() {
 
-    $.ajax({
-      type: "PUT",
-      url: '/users/<%= user._id %>/preferences',
-      data: {
-        preference
-      },
-      success: res => {
-        if (res.error) return handleSwalError(res.error);
+    handleChangePreference($(this), $(this).val(), true);
 
-        toggle.toggleClass('on', res[preference]);
-        $('#all-jobs-table').toggleClass('hide-colors', !res.showColors);
-        
-        if (toggle.data('col-idx')) {
-          state.jobsTable
-            .column(toggle.data('col-idx'))
-            .visible(res[preference])
-            .columns
-            .adjust()
-            .draw();
-        }
-      },
-      error: function() {
-        console.log(arguments);
-      }
-    })
   });
 
   $('#job-link-preview .header .options img').on('click', async function() {
@@ -480,6 +468,13 @@
     }, {});
     state.dtOptions = {};
     state.currCompanyWidth = null;
+    state.orderSelector = '.dataTables_scrollHead thead th:eq(<%- preferences.orderColIdx; %>)';
+    state.orderOptions = [
+      [
+        Number('<%- preferences.orderColIdx; %>'),
+        '<%- preferences.orderDirection; %>'
+      ]
+    ];
   
     try {
       state.dtOptions.buttons = JSON.parse(`<%- (Number(onMobile) ? '[]' : '["copy","csv","excel","pdf","print"]') %>`);
@@ -510,7 +505,7 @@
         { "width": "160px", "targets": 11 },
         { "width": "160px", "targets": 13 },
       ],
-      order: [[1, 'asc']],
+      order: [...state.orderOptions],
       scrollY:        '80vh',
       scrollX:        true,
       scrollCollapse: true,
@@ -546,6 +541,43 @@
     });
   }
 
+  function handleChangePreference(clickableEl, preference, isOrderDirection = false) {
+
+    console.log(arguments);
+    const data = { preference };
+    if (isOrderDirection) data.isOrderDirection = true;
+
+    $.ajax({
+      type: "PUT",
+      url: '/users/<%= user._id %>/preferences',
+      data,
+      success: res => {
+        if (res.error) return handleSwalError(res.error);
+
+        if (isOrderDirection) {
+          const header = $(state.orderSelector);
+          if (!header.hasClass(`sorting_${preference}`)) header.trigger('click');
+        } else {
+          clickableEl.toggleClass('on', res[preference]);
+        }
+        
+        $('#all-jobs-table').toggleClass('hide-colors', !res.showColors);
+        
+        if (clickableEl.data('col-idx')) {
+          state.jobsTable
+            .column(clickableEl.data('col-idx'))
+            .visible(res[preference])
+            .columns
+            .adjust()
+            .draw();
+        }
+      },
+      error: function() {
+        console.log(arguments);
+      }
+    });
+  }
+  
   function formatDateFields(job) {
     job.dateApplied = new Date(job.dateApplied);
     
@@ -706,6 +738,13 @@
       }
     );
 
+    $(state.orderSelector).on('click', function() {
+
+      const preference = $(this).hasClass(`sorting_desc`) ? 'desc' : 'asc';
+
+      $('select.order-direction').val(preference);
+
+    });
   }
 
   function handleViewingLinkPreview(jobID) {

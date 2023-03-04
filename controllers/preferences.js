@@ -25,10 +25,16 @@ async function updateTheme(req, res) {
 }
 
 async function update(req, res) {
+
+  console.log('req.body:', req.body);
   
   try {
     const user = await User.findById(req.session.user._id).populate('preferences').exec();
-    user.preferences[req.body.preference] = !user.preferences[req.body.preference];
+    if (req.body.isOrderDirection) {
+      user.preferences.orderDirection = req.body.preference;
+    } else {
+      user.preferences[req.body.preference] = !user.preferences[req.body.preference];
+    }
     await user.preferences.save();
 
     res.json(user.preferences);
