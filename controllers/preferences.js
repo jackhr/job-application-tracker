@@ -16,6 +16,7 @@ async function updateTheme(req, res) {
 
     res.json(user.preferences);
   } catch(error) {
+    console.log(error);
     res.json({
       status: 500,
       error: error.message
@@ -25,9 +26,6 @@ async function updateTheme(req, res) {
 }
 
 async function update(req, res) {
-
-  console.log('req.body:', req.body);
-  
   try {
     const user = await User.findById(req.session.user._id).populate('preferences').exec();
     if (req.body.isOrderDirection) {
@@ -39,6 +37,7 @@ async function update(req, res) {
 
     res.json(user.preferences);
   } catch(error) {
+    console.log(error);
     res.json({
       status: 500,
       error: error.message

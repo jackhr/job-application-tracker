@@ -204,10 +204,21 @@
             </div>
             <div class="preference-wrapper">
               <label>Ordering Direction?</label>
-              <select class="order-direction">
-                <option <%= preferences.orderDirection === "asc" ? "selected" : "" %> value="asc">Ascending</option>
-                <option <%= preferences.orderDirection === "desc" ? "selected" : "" %> value="desc">Descending</option>
-              </select>
+              <div class="custom-select">
+                <span data-selected="<%= preferences.orderDirection === "asc" ? "true" : "false" %>" class="asc">Ascending</span>
+                <span data-selected="<%= preferences.orderDirection === "desc" ? "true" : "false" %>" class="desc">Descending</span>
+                <img src="/images/down-arrow.svg" alt="Chevron arrow" style="width: 12px;">
+                <div class="custom-options-container">
+                  <div data-selected="<%= preferences.orderDirection === "asc" ? "true" : "false" %>" class="option" value="asc">
+                    <img src="/images/checkmark.svg" alt="Checkmark icon.">
+                    <span>Ascending</span>
+                  </div>
+                  <div data-selected="<%= preferences.orderDirection === "desc" ? "true" : "false" %>" class="option" value="desc">
+                    <img src="/images/checkmark.svg" alt="Checkmark icon.">
+                    <span>Descending</span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="preference-wrapper">
               <label>Display colors?</label>
@@ -215,7 +226,7 @@
                 <div class="circle"></div>
               </div>
             </div>
-            <div class="settings-header theme closed" data-target="#themes-container">
+            <div class="settings-header theme" data-target="#themes-container">
               <h1>Color Themes</h1>
               <img src="/images/down-arrow.svg" alt="Chevron arrow">
             </div>
@@ -391,7 +402,14 @@
     })
   })
 
-  $(document).ready(init);
+  $(document)
+    .ready(init)
+    .on('click', evt => {
+      var container = $('.custom-options-container');
+      if (!container.is(event.target) && container.has(event.target).length === 0) {
+        $('.custom-select').removeClass('selecting-option');
+      }
+    });
 
   $(window).on('resize', () => {
 
@@ -421,15 +439,28 @@
   
   $('.preference-wrapper .toggle').on('click', function() {
     
-    handleChangePreference($(this), $(this).data('preference'));
+    handleChangePreference({
+      clickableEl: $(this),
+      preference: $(this).data('preference'),
+    });
     
   });
   
-  $('select.order-direction').on('input', function() {
-
-    handleChangePreference($(this), $(this).val(), true);
-
+  $('.custom-select').on('click', function(evt) {
+    if ($(evt.target).hasClass('option')) return;
+    setTimeout(() => $(this).addClass('selecting-option'), 50);
   });
+
+  $('.custom-options-container .option').on('mouseup', function(evt) {
+    $(this).parents('.custom-select').removeClass('selecting-option');
+    handleChangePreference({
+      clickableEl: $(this),
+      preference: $(this).attr('value'),
+      isOrderDirection: true,
+    });
+  });
+  
+  $('.custom-options-container').on('click', e => e.stopPropagation());
 
   $('#job-link-preview .header .options img').on('click', async function() {
 
@@ -541,9 +572,10 @@
     });
   }
 
-  function handleChangePreference(clickableEl, preference, isOrderDirection = false) {
+  function handleChangePreference(options) {
 
-    console.log(arguments);
+    const { clickableEl, preference, isOrderDirection } = options;
+
     const data = { preference };
     if (isOrderDirection) data.isOrderDirection = true;
 
@@ -557,6 +589,16 @@
         if (isOrderDirection) {
           const header = $(state.orderSelector);
           if (!header.hasClass(`sorting_${preference}`)) header.trigger('click');
+          updateOrderingElements(preference, [
+            {
+              comp: (elem, preference) => $(elem).hasClass(preference),
+              elements: clickableEl.parents('.custom-select').children('span'),
+            },
+            {
+              comp: (elem, preference) => $(elem).attr('value') === preference,
+              elements: clickableEl.parents('.custom-select').find('.option'),
+            }
+          ]);
         } else {
           clickableEl.toggleClass('on', res[preference]);
         }
@@ -745,6 +787,14 @@
       $('select.order-direction').val(preference);
 
     });
+  }
+
+  function updateOrderingElements(preference, elementsArr) {
+    for (let elementsObj of elementsArr) {
+      elementsObj.elements.each((idx, elem) => {
+        elem.dataset.selected = !!elementsObj.comp(elem, preference);
+      });
+    }
   }
 
   function handleViewingLinkPreview(jobID) {

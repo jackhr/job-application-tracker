@@ -327,6 +327,7 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
+  position: relative;
 }
 .preference-wrapper .toggle {
   cursor: pointer;
@@ -356,6 +357,7 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
   margin-left: calc(100% - 26px);
 }
 select.order-direction {
+  display: none;
   width: max-content;
   padding: 0 8px;
   border: none;
@@ -365,6 +367,61 @@ select.order-direction {
   background-color: #bebebe;
   border-radius: 50px;
   padding: 0 8px;
+}
+.custom-select {
+  width: 130px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  height: 30px;
+  background-color: #bebebe;
+  border-radius: 50px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.custom-select > span {
+  display: none;
+}
+.custom-select > span[data-selected="true"] {
+  display: initial;
+}
+/* .custom-select.selecting-option {
+  pointer-events: none;
+} */
+.custom-select.selecting-option .custom-options-container {
+  display: block;
+}
+.custom-options-container {
+  position: absolute;
+  display: none;
+  top: 0;
+  width: 100%;
+  left: 0;
+  background: rgb(89,89,89);
+  border-radius: 12px;
+  color: #fff;
+  padding: 4px;
+  z-index: 12;
+}
+.custom-options-container .option {
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+.custom-options-container .option:hover {
+  background-color: rgb(71,120,226);
+}
+.custom-options-container .option img {
+  opacity: 0;
+  width: 16px;
+  margin: 0 6px -6px 6px;
+}
+.custom-options-container .option[data-selected="true"] img {
+  opacity: 1;
 }
 #settings-main {
   position: relative;
