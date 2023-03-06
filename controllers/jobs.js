@@ -1,9 +1,8 @@
 const Job = require('../models/job');
 const Contact = require('../models/contact');
 const User = require('../models/user');
-const Preferences = require('../models/preferences');
 
-const DEFAULT_EXPIRATION = 60 * 60 * 24; // 1 day
+const REDIS_DEFAULT_EXPIRATION = process.env.REDIS_DEFAULT_EXPIRATION;
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
 const REDIS_HOST = process.env.REDIS_HOST;
 const REDIS_PORT = process.env.REDIS_PORT;
@@ -130,7 +129,7 @@ async function getLinkMetaData(req, res) {
       res.json(metadata);
       if (!metadata.error || metadata.error.name === 'AbortError') {
         // Cache response if no errors
-        redisClient.setex(url, DEFAULT_EXPIRATION, JSON.stringify(metadata));
+        redisClient.setex(url, Number(REDIS_DEFAULT_EXPIRATION), JSON.stringify(metadata));
       }
     }
   });
