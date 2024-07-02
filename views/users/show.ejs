@@ -507,14 +507,6 @@
       ]
     ];
   
-    try {
-      state.dtOptions.buttons = JSON.parse(`<%- (Number(onMobile) ? '[]' : '["copy","csv","excel","pdf","print"]') %>`);
-      state.dtOptions.dom = 'BfrtiplF';
-    } catch (error) {
-      console.log(error);
-      state.dtOptions.dom = 'frtiplF';
-    }
-
     $.fn.dataTable.ext.type.order['date-applied-pre'] = function(dateStr) {
       const htmlArr = dateStr.split("\"");
       const timestampIdx = htmlArr.indexOf(" data-timestamp=") + 1;
