@@ -13,13 +13,15 @@ module.exports = {
 };
 
 async function show(req, res) {
-    const jobs = await Job.find({ user: req.session.user._id, archived: false }).populate(['contact']).exec();
+    const showArchived = req.query.showArchived === "true";
+    const jobs = await Job.find({ user: req.session.user._id, archived: showArchived }).populate(['contact']).exec();
     const preferences = await Preferences.findById(req.session.user.preferences);
     return res.render('users/show', {
         jobs,
         preferences,
         user: req.session.user,
-        onMobile: Number(req.session.onMobile)
+        onMobile: Number(req.session.onMobile),
+        viewingArchived: showArchived
     });
 }
 

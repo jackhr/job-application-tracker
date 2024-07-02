@@ -11,6 +11,11 @@
       </div>
       <div id="nav-options-container">
         <div id="add-job-btn" class="nav-option">Add New Job</div>
+        <% if (viewingArchived) { %>
+            <a href="/users/<%= user._id %>" class="nav-option">Show Active</a>
+        <% } else { %>
+            <a href="/users/<%= user._id %>?showArchived=true" class="nav-option">Show Archived</a>
+        <% } %>
         <div id="settings-btn" class="nav-option">Settings</div>
         <a href="/users/logout" class="nav-option logout">Logout</a>
       </div>
