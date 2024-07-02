@@ -262,10 +262,10 @@ table.dataTable tbody tr:first-child>.dtfc-fixed-left.cast-shadow {
 #all-jobs-table tbody tr:hover .delete-btn {
   display: flex !important;
 }
-.swal-delete-job .swal-button--confirm {
+.swal-delete-job .swal-button--delete {
   background-color: #de4e4e;
 }
-.swal-delete-job .swal-button--confirm:hover {
+.swal-delete-job .swal-button--delete:hover {
   background-color: #c94a4a;
 }
 .job-input {

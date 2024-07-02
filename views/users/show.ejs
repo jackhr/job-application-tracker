@@ -55,7 +55,7 @@
           </thead>
           <tbody>
             <% jobs.forEach(job => { %>
-              <% const UTCAppliedTS = job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000); %>
+              <% const UTCAppliedTS = job.dateApplied ? job.dateApplied.getTime() + (job.dateApplied.getTimezoneOffset() * 60*1000) : new Date; %>
               <% job.dateApplied = new Date(UTCAppliedTS); %>
               <tr id="job-<%= job._id %>" class="interest-<%= job.interest.replaceAll(' ', '_') %> <%= preferences.theme %>" data-job-id="<%= job._id %>">
                 <td class="company">
@@ -646,33 +646,20 @@
     $('#all-jobs-table tbody tr .delete-btn').off('click').on('click', function() {
       const jobID = $(this).parents('tr').data('job-id');
       const company = $(this).parents('tr').find('td.company .job-input').val();
-  
+
       swal({
         icon: 'warning',
         title: 'Delete Job Application',
         text: `Are you sure you would like to delete your application for ${company}`,
-        buttons: ["GO BACK", "Yes, Delete"],
+        buttons: {
+            "delete": "Yes, Delete",
+            "archive": "Archive for now",
+            "cancel": "GO BACK" 
+        },
         className: 'swal-delete-job'
-      }).then(deleteJob => {
-        if (deleteJob) {
-          $.ajax({
-            type: "POST",
-            url: `/jobs/${jobID}?_method=DELETE`,
-            data: {},
-            success: res => {
-              if (res.loggedOut) return window.location = '/';
-              if (res.status == 200) {
-                $('#all-jobs-table')
-                  .dataTable()
-                  .api()
-                  .rows($(`#job-${jobID}`))
-                  .remove()
-                  .draw(false);
-              }
-            },
-            error: () => console.log(arguments)
-          });
-        }
+      }).then(choice => {
+        if (choice === "delete") deleteJob(jobID);
+        if (choice === "archive") archiveJob(jobID);
       });
     });
   
@@ -786,6 +773,60 @@
 
       $('select.order-direction').val(preference);
 
+    });
+  }
+
+  function deleteJob(jobID) {
+    $.ajax({
+        type: "POST",
+        url: `/jobs/${jobID}?_method=DELETE`,
+        data: {},
+        success: res => {
+            if (res.loggedOut) return window.location = '/';
+            if (res.status == 200) {
+                $('#all-jobs-table')
+                    .dataTable()
+                    .api()
+                    .rows($(`#job-${jobID}`))
+                    .remove()
+                    .draw(false);
+
+                swal({
+                    icon: 'success',
+                    title: 'Success',
+                    text: "Job successfully deleted",
+                });
+            }
+        },
+        error: () => console.log(arguments)
+    });
+  }
+
+  function archiveJob(jobID) {
+    $.ajax({
+        type: "PUT",
+        url: `/jobs/${jobID}`,
+        data: {
+            archived: true
+        },
+        success: res => {
+            if (res.loggedOut) return window.location = '/';
+            if (res.archived) {
+                $('#all-jobs-table')
+                    .dataTable()
+                    .api()
+                    .rows($(`#job-${jobID}`))
+                    .remove()
+                    .draw(false);
+
+                swal({
+                    icon: 'success',
+                    title: 'Success',
+                    text: "Job successfully archived",
+                });
+            }
+        },
+        error: () => console.log(arguments)
     });
   }
 
