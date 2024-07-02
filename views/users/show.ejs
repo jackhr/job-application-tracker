@@ -640,23 +640,28 @@
 
   function initEvents() {
 
+    const viewingArchived = '<%= JSON.stringify(viewingArchived); %>' === "true";
+
     $('#all-jobs-table tbody tr .delete-btn').off('click').on('click', function() {
       const jobID = $(this).parents('tr').data('job-id');
       const company = $(this).parents('tr').find('td.company .job-input').val();
+
+      const buttons = {
+        "delete": "Yes, Delete",
+        [viewingArchived ? "unarchive" : "archive"]: `${viewingArchived ? "Unarchive" : "Archive for now"}`,
+        "cancel": "GO BACK"
+      };
 
       swal({
         icon: 'warning',
         title: 'Delete Job Application',
         text: `Are you sure you would like to delete your application for ${company}`,
-        buttons: {
-            "delete": "Yes, Delete",
-            "archive": "Archive for now",
-            "cancel": "GO BACK" 
-        },
+        buttons,
         className: 'swal-delete-job'
       }).then(choice => {
         if (choice === "delete") deleteJob(jobID);
-        if (choice === "archive") archiveJob(jobID);
+        if (choice === "archive") handleArchiveJob(jobID);
+        if (choice === "unarchive") handleArchiveJob(jobID, false);
       });
     });
   
@@ -799,29 +804,27 @@
     });
   }
 
-  function archiveJob(jobID) {
+  function handleArchiveJob(jobID, archiveVal = true) {
     $.ajax({
         type: "PUT",
         url: `/jobs/${jobID}`,
         data: {
-            archived: true
+            archived: archiveVal
         },
         success: res => {
             if (res.loggedOut) return window.location = '/';
-            if (res.archived) {
-                $('#all-jobs-table')
-                    .dataTable()
-                    .api()
-                    .rows($(`#job-${jobID}`))
-                    .remove()
-                    .draw(false);
+            $('#all-jobs-table')
+                .dataTable()
+                .api()
+                .rows($(`#job-${jobID}`))
+                .remove()
+                .draw(false);
 
-                swal({
-                    icon: 'success',
-                    title: 'Success',
-                    text: "Job successfully archived",
-                });
-            }
+            swal({
+                icon: 'success',
+                title: 'Success',
+                text: `Job successfully ${archiveVal ? "unarchived" : "archived"}`,
+            });
         },
         error: () => console.log(arguments)
     });
