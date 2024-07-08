@@ -584,6 +584,7 @@ select.order-direction {
     padding  : 6px;
     width    : max-content;
     max-width: 300px;
+    word-wrap: break-word;
 }
 
 .job-input.salary {
