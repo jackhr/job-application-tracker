@@ -6,7 +6,7 @@
     <img id="main-img" src="images/main.jpg" alt="">
     <h1>Welcome to your favorite job application tracker</h1>
     <form method="POST" id="sign-in-form">
-      <div class="input-container name">
+      <div class="input-container name" style="display: none;">
         <label>Name:</label>
         <input id="name" type="text" name="name">
       </div>
@@ -20,8 +20,8 @@
         <img class="toggle-pass hide" src="images/eye-strikethrough.svg" alt="Closed eye icon.">
         <img class="toggle-pass view" src="images/eye.svg" alt="Open eye icon.">
       </div>
-      <button onclick="handleSignIn(event);">Sign Up</button>
-      <span><span id="swap-form-pre">Already a user?</span> <span id="swap-form" onclick="toggleForm()">Sign In</span></span>
+      <button onclick="handleSignIn(event);">Sign In</button>
+      <span><span id="swap-form-pre">Not a user?</span> <span id="swap-form" onclick="toggleForm()">Sign Up</span></span>
     </form>
   </div>
 </body>
